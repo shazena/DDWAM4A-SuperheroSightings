@@ -4,28 +4,31 @@ CREATE DATABASE SuperheroSightingsDB;
 
 USE SuperheroSightingsDB;
 
-CREATE TABLE `Super` (
-    SuperName VARCHAR(50) PRIMARY KEY,
+CREATE TABLE Superhero (
+    SuperheroId INT PRIMARY KEY AUTO_INCREMENT,
+    SuperheroName VARCHAR(50),
     `Description` VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE Power (
-    PowerName VARCHAR(50) NOT NULL PRIMARY KEY
+	PowerId INT PRIMARY KEY AUTO_INCREMENT,
+    PowerName VARCHAR(50) NOT NULL 
 );
 
 
-CREATE TABLE PowerSuper (
-    SuperName VARCHAR(50) NOT NULL,
-    PowerName VARCHAR(50) NOT NULL,
-    PRIMARY KEY pk_PowerSuper (SuperName , PowerName),
-    CONSTRAINT fk_PowerSuper_Super FOREIGN KEY (SuperName)
-        REFERENCES `Super` (SuperName),
-    CONSTRAINT fk_PowerSuper_Power FOREIGN KEY (PowerName)
-        REFERENCES Power (PowerName)
+CREATE TABLE PowerSuperhero (
+	SuperheroId INT,
+    PowerId INT,
+    PRIMARY KEY pk_PowerSuperhero (SuperheroId , PowerId),
+    CONSTRAINT fk_PowerSuperhero_Superhero FOREIGN KEY (SuperheroId)
+        REFERENCES Superhero (SuperheroId),
+    CONSTRAINT fk_PowerSuperhero_Power FOREIGN KEY (PowerId)
+        REFERENCES Power (PowerId)
 );
 
 CREATE TABLE `Organization` (
-    OrgName VARCHAR(50) PRIMARY KEY,
+	OrgId INT PRIMARY KEY AUTO_INCREMENT,
+    OrgName VARCHAR(50) NOT NULL,
     `Description` VARCHAR(255) NOT NULL,
     Address VARCHAR(50) NOT NULL,
     City VARCHAR(50) NOT NULL,
@@ -34,14 +37,14 @@ CREATE TABLE `Organization` (
     PhoneNumber CHAR(10) NOT NULL
 );
 
-CREATE TABLE SuperOrganization (
-    SuperName VARCHAR(50) NOT NULL,
-    OrgName VARCHAR(50) NOT NULL,
-    PRIMARY KEY pk_SuperOrganization (SuperName , OrgName),
-    CONSTRAINT fk_SuperOrganization_Super FOREIGN KEY (SuperName)
-        REFERENCES `Super` (SuperName),
-    CONSTRAINT fk_SuperOrganization_Power FOREIGN KEY (OrgName)
-        REFERENCES `Organization` (OrgName)
+CREATE TABLE SuperheroOrganization (
+	SuperheroId INT,
+    OrgId INT,
+    PRIMARY KEY pk_SuperheroOrganization (SuperheroId , OrgId),
+    CONSTRAINT fk_SuperheroOrganization_Superhero FOREIGN KEY (SuperheroId)
+        REFERENCES Superhero (SuperheroId),
+    CONSTRAINT fk_SuperheroOrganization_Organization FOREIGN KEY (OrgId)
+        REFERENCES `Organization` (OrgId)
 );
 
 CREATE TABLE Location (
@@ -60,9 +63,9 @@ CREATE TABLE Sighting (
     SightingID INT PRIMARY KEY AUTO_INCREMENT,
     `Date` DATE NOT NULL,
     LocationID INT NOT NULL,
-    SuperName VARCHAR(50) NOT NULL,
+    SuperheroId INT NOT NULL,
     CONSTRAINT fk_Sighting_Location FOREIGN KEY (LocationID)
         REFERENCES Location (LocationID),
-    CONSTRAINT fk_Sighting_Super FOREIGN KEY (SuperName)
-        REFERENCES `Super` (SuperName)
+    CONSTRAINT fk_Sighting_Superhero FOREIGN KEY (SuperheroId)
+        REFERENCES Superhero (SuperheroId)
 );
