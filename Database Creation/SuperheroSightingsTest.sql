@@ -37,7 +37,6 @@ CREATE TABLE Location (
     Longitude DECIMAL(9 , 6 ) NOT NULL
 );
 
-
 CREATE TABLE `Organization` (
     OrgId INT PRIMARY KEY AUTO_INCREMENT,
     OrgName VARCHAR(50) NOT NULL,
@@ -57,7 +56,6 @@ CREATE TABLE SuperheroOrganization (
     CONSTRAINT fk_SuperheroOrganization_Organization FOREIGN KEY (OrgId)
         REFERENCES `Organization` (OrgId)
 );
-
 
 CREATE TABLE Sighting (
     SightingID INT PRIMARY KEY AUTO_INCREMENT,
