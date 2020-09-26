@@ -6,7 +6,7 @@ USE SuperheroSightingsDB;
 
 CREATE TABLE Superhero (
     SuperheroId INT PRIMARY KEY AUTO_INCREMENT,
-    SuperheroName VARCHAR(50),
+    SuperheroName VARCHAR(50) NOT NULL,
     `Description` VARCHAR(255) NOT NULL
 );
 
