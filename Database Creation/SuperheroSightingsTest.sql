@@ -6,7 +6,7 @@ USE SuperheroSightingsDBTest;
 
 CREATE TABLE Superhero (
     SuperheroId INT PRIMARY KEY AUTO_INCREMENT,
-    SuperheroName VARCHAR(50),
+    SuperheroName VARCHAR(50) NOT NULL,
     `Description` VARCHAR(255) NOT NULL
 );
 
@@ -15,7 +15,7 @@ CREATE TABLE Power (
     PowerName VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE PowerSuperhero (
+CREATE TABLE SuperheroPower (
     SuperheroId INT,
     PowerId INT,
     PRIMARY KEY pk_PowerSuperhero (SuperheroId , PowerId),
