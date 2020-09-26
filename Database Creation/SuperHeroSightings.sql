@@ -15,7 +15,7 @@ CREATE TABLE Power (
     PowerName VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE PowerSuperhero (
+CREATE TABLE SuperheroPower (
     SuperheroId INT,
     PowerId INT,
     PRIMARY KEY pk_PowerSuperhero (SuperheroId , PowerId),
