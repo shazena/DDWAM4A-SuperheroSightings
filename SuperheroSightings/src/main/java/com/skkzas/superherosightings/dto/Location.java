@@ -15,9 +15,18 @@ public class Location {
     private String description;
     private String address;
     private String city;
+    private String state;
     private String zip;
     private String latitude;
     private String longitude;
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public int getLocationId() {
         return locationId;
@@ -85,15 +94,16 @@ public class Location {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 17 * hash + this.locationId;
-        hash = 17 * hash + Objects.hashCode(this.locationName);
-        hash = 17 * hash + Objects.hashCode(this.description);
-        hash = 17 * hash + Objects.hashCode(this.address);
-        hash = 17 * hash + Objects.hashCode(this.city);
-        hash = 17 * hash + Objects.hashCode(this.zip);
-        hash = 17 * hash + Objects.hashCode(this.latitude);
-        hash = 17 * hash + Objects.hashCode(this.longitude);
+        int hash = 5;
+        hash = 71 * hash + this.locationId;
+        hash = 71 * hash + Objects.hashCode(this.locationName);
+        hash = 71 * hash + Objects.hashCode(this.description);
+        hash = 71 * hash + Objects.hashCode(this.address);
+        hash = 71 * hash + Objects.hashCode(this.city);
+        hash = 71 * hash + Objects.hashCode(this.state);
+        hash = 71 * hash + Objects.hashCode(this.zip);
+        hash = 71 * hash + Objects.hashCode(this.latitude);
+        hash = 71 * hash + Objects.hashCode(this.longitude);
         return hash;
     }
 
@@ -124,6 +134,9 @@ public class Location {
         if (!Objects.equals(this.city, other.city)) {
             return false;
         }
+        if (!Objects.equals(this.state, other.state)) {
+            return false;
+        }
         if (!Objects.equals(this.zip, other.zip)) {
             return false;
         }
@@ -138,7 +151,8 @@ public class Location {
 
     @Override
     public String toString() {
-        return "Location{" + "locationId=" + locationId + ", locationName=" + locationName + ", description=" + description + ", address=" + address + ", city=" + city + ", zip=" + zip + ", latitude=" + latitude + ", longitude=" + longitude + '}';
+        return "Location{" + "locationId=" + locationId + ", locationName=" + locationName + ", description=" + description + ", address=" + address + ", city=" + city + ", state=" + state + ", zip=" + zip + ", latitude=" + latitude + ", longitude=" + longitude + '}';
     }
 
+    
 }
