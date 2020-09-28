@@ -4,17 +4,19 @@ import com.skkzas.superherosightings.dao.LocationDaoDB.LocationMapper;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
-import static java.lang.Integer.min;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Comparator;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Comparator;
+import java.util.List;
+
+import static java.lang.Integer.min;
 
 /**
  *
@@ -90,7 +92,7 @@ public class SightingDaoDB {
     private Superhero getSuperheroForSighting(int id) {
         final String SELECT_SUPERHERO_FOR_SIGHTING = "SELECT * FROM Superhero "
                 + "WHERE SightingId = ?";
-        return jdbc.queryForObject(SELECT_SUPERHERO_FOR_SIGHTING, new SuperheroMapper(), id);
+        return jdbc.queryForObject(SELECT_SUPERHERO_FOR_SIGHTING, new SuperheroDaoDB.SuperheroMapper(), id);
     }
 
     private void associateLocationAndSuperhero(List<Sighting> sightings) {

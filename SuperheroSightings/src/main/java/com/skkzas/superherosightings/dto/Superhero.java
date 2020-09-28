@@ -88,5 +88,5 @@ public class Superhero {
     public String toString() {
         return "Superhero{" + "superheroId=" + superheroId + ", superheroName=" + superheroName + ", superheroDescription=" + superheroDescription + ", power=" + power + '}';
     }
-    
+
 }
