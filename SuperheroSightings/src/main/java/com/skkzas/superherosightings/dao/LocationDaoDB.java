@@ -3,6 +3,7 @@ package com.skkzas.superherosightings.dao;
 import com.skkzas.superherosightings.dao.OrganizationDaoDB.OrganizationMapper;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
+import com.skkzas.superherosightings.dto.Superhero;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -122,6 +123,11 @@ public class LocationDaoDB implements LocationDao {
                 + "WHERE LocationId = ?";
         jdbc.update(DELETE_LOCATION, id);
 
+    }
+
+    @Override
+    public List<Location> getAllLocationsForSuperhero(Superhero superhero) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public static final class LocationMapper implements RowMapper<Location> {

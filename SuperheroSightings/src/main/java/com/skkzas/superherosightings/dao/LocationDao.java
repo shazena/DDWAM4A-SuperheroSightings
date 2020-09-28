@@ -1,6 +1,7 @@
 package com.skkzas.superherosightings.dao;
 
 import com.skkzas.superherosightings.dto.Location;
+import com.skkzas.superherosightings.dto.Superhero;
 import java.util.List;
 
 /**
@@ -20,5 +21,7 @@ public interface LocationDao {
     public void updateLocation(Location location);
 
     public void deleteLocationById(int id);
+
+    public List<Location> getAllLocationsForSuperhero(Superhero superhero);
 
 }
