@@ -21,10 +21,12 @@ import java.util.List;
  * Date Created: Sep 25, 2020
  */
 @Repository
-public class SuperheroDaoDB {
+public class SuperheroDaoDB implements SuperheroDao {
 
     @Autowired
     JdbcTemplate jdbc;
+    
+    @Override
     public Superhero getSuperheroById(int id) {
         try {
             final String GET_SUPERHERO_BY_ID = "SELECT * FROM Superhero "
@@ -35,12 +37,14 @@ public class SuperheroDaoDB {
         }
     }
 
+    @Override
     public List<Superhero> getAllSuperheros() {
         final String GET_ALL_SUPERHEROS = "SELECT * FROM Superhero";
         return jdbc.query(GET_ALL_SUPERHEROS, new SuperheroMapper());
     }
 
     @Transactional
+    @Override
     public Superhero addSuperhero(Superhero Superhero) {
         final String INSERT_SUPERHERO = "INSERT INTO Superhero"
                 + "(SuperheroName, Description) "
@@ -56,6 +60,7 @@ public class SuperheroDaoDB {
         return Superhero;
     }
 
+    @Override
     public void updateSuperhero(Superhero Superhero) {
         final String UPDATE_Superhero = "UPDATE Superhero SET "
                 + "SuperheroName = ?, "
@@ -67,6 +72,7 @@ public class SuperheroDaoDB {
     }
 
     @Transactional
+    @Override
     public void deleteSuperheroById(int id) {
         try {
             final String DELETE_SIGHTING = "DELETE FROM Sighting "

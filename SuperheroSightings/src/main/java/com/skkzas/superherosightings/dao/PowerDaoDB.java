@@ -19,11 +19,12 @@ import java.util.List;
  * Date Created: Sep 25, 2020
  */
 @Repository
-public class PowerDaoDB {
+public class PowerDaoDB implements PowerDao {
 
     @Autowired
     JdbcTemplate jdbc;
 
+    @Override
     public Power getPowerById(int id) {
         try {
             final String GET_POWER_BY_ID = "SELECT * FROM Power "
@@ -34,12 +35,14 @@ public class PowerDaoDB {
         }
     }
 
+    @Override
     public List<Power> getAllPowers() {
         final String GET_ALL_POWERS = "SELECT * FROM Power";
         return jdbc.query(GET_ALL_POWERS, new PowerMapper());
     }
 
     @Transactional
+    @Override
     public Power addPower(Power power) {
         final String INSERT_POWER = "INSERT INTO Power"
                 + "(PowerName) "
@@ -54,6 +57,7 @@ public class PowerDaoDB {
         return power;
     }
 
+    @Override
     public void updatePower(Power power) {
         final String UPDATE_POWER = "UPDATE Power SET "
                 + "PowerName = ?, ";
@@ -63,6 +67,7 @@ public class PowerDaoDB {
     }
 
     @Transactional
+    @Override
     public void deletePowerById(int id) {
         try {
             final String DELETE_SUPERHEROPOWER = "DELETE FROM SuperheroPower "
