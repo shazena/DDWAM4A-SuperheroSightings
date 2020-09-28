@@ -3,6 +3,7 @@ package com.skkzas.superherosightings.dao;
 import com.skkzas.superherosightings.dao.OrganizationDaoDB.OrganizationMapper;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
+import com.skkzas.superherosightings.dto.Superhero;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -20,11 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
  * Date Created: Sep 25, 2020
  */
 @Repository
-public class LocationDaoDB {
+public class LocationDaoDB implements LocationDao {
 
     @Autowired
     JdbcTemplate jdbc;
 
+    @Override
     public Location getLocationById(int id) {
         try {
             final String GET_LOCATION_BY_ID = "SELECT * FROM Location "
@@ -35,11 +37,13 @@ public class LocationDaoDB {
         }
     }
 
+    @Override
     public List<Location> getAllLocations() {
         final String GET_ALL_LOCATIONS = "SELECT * FROM Location";
         return jdbc.query(GET_ALL_LOCATIONS, new LocationMapper());
     }
 
+    @Override
     @Transactional
     public Location addLocation(Location location) {
         final String INSERT_LOCATION = "INSERT INTO Location"
@@ -62,6 +66,7 @@ public class LocationDaoDB {
         return location;
     }
 
+    @Override
     public void updateLocation(Location location) {
         final String UPDATE_LOCATION = "UPDATE Location SET "
                 + "LocationName = ?, "
@@ -118,6 +123,11 @@ public class LocationDaoDB {
                 + "WHERE LocationId = ?";
         jdbc.update(DELETE_LOCATION, id);
 
+    }
+
+    @Override
+    public List<Location> getAllLocationsForSuperhero(Superhero superhero) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public static final class LocationMapper implements RowMapper<Location> {
