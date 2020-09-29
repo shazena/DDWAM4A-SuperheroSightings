@@ -1,6 +1,8 @@
 package com.skkzas.superherosightings.dao;
 
+import com.skkzas.superherosightings.dao.SuperheroDaoDB.SuperheroMapper;
 import com.skkzas.superherosightings.dto.Power;
+import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -60,23 +62,40 @@ public class PowerDaoDB implements PowerDao {
     @Override
     public void updatePower(Power power) {
         final String UPDATE_POWER = "UPDATE Power SET "
-                + "PowerName = ?, ";
+                + "PowerName = ? "
+                + "WHERE PowerId = ?";
 
         jdbc.update(UPDATE_POWER,
-                power.getPowerName());
+                power.getPowerName(),
+                power.getPowerId());
     }
 
     @Transactional
     @Override
     public void deletePowerById(int id) {
-        try {
-            final String DELETE_SUPERHEROPOWER = "DELETE FROM SuperheroPower "
-                    + "WHERE PowerId = ?";
-            jdbc.update(DELETE_SUPERHEROPOWER, id);
-        } catch (DataAccessException e) {
 
+        //first find all supers with that power
+        final String SELECT_SUPERS_WITH_THIS_POWER = "SELECT * FROM Superhero "
+                + "WHERE PowerId = ?";
+        List<Superhero> allSuperheroesWithThisPower = jdbc.query(SELECT_SUPERS_WITH_THIS_POWER, new SuperheroMapper());
+
+        //for each super with that power, delete the sighting for that Super and the Organization link in the bridge table
+        final String DELETE_SUPERHERO_FROM_SUPERORGANIZATION = "DELETE FROM SuperheroOrganization "
+                + "WHERE SuperheroId = ?";
+        final String DELETE_SIGHTING = "DELETE FROM Sighting "
+                + "WHERE SuperheroId = ?";
+
+        for (Superhero superhero : allSuperheroesWithThisPower) {
+            jdbc.update(DELETE_SUPERHERO_FROM_SUPERORGANIZATION, superhero.getSuperheroId());
+            jdbc.update(DELETE_SIGHTING, superhero.getSuperheroId());
         }
 
+        //now delete all those superheroes with that powerId
+        final String DELETE_SUPERHEROES = "DELETE FROM Superhero "
+                + "WHERE PowerId = ?";
+        jdbc.update(DELETE_SUPERHEROES, id);
+
+        //finally, delete the power, you have deleted all dependencies on it
         final String DELETE_POWER = "DELETE FROM Power "
                 + "WHERE PowerId = ?";
         jdbc.update(DELETE_POWER, id);
