@@ -51,6 +51,26 @@ public class PowerDaoDBTest {
         for (Power power : powers) {
             powerDao.deletePowerById(power.getPowerId());
         }
+
+        List<Superhero> supers = superheroDao.getAllSuperheros();
+        for (Superhero superhero : supers) {
+            superheroDao.deleteSuperheroById(superhero.getSuperheroId());
+        }
+
+        List<Organization> organizations = organizationDao.getAllOrganizations();
+        for (Organization organization : organizations) {
+            organizationDao.deleteOrganizationById(organization.getOrganizationById());
+        }
+
+        List<Location> locations = locationDao.getAllLocations();
+        for (Location location : locations) {
+            locationDao.deleteLocationById(location.getLocationId());
+        }
+
+        List<Sighting> sightings = sightingDao.getAllSightings();
+        for (Sighting sighting : sightings) {
+            sightingDao.deleteOSightingById(sighting.getSightingById());
+        }
     }
 
     /**
