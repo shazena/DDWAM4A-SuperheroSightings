@@ -5,6 +5,8 @@
  */
 package com.skkzas.superherosightings.dao;
 
+import com.skkzas.superherosightings.dto.Location;
+import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Superhero;
 import java.util.List;
 
@@ -13,17 +15,19 @@ import java.util.List;
  * @author kristinazakharova
  */
 public interface SuperheroDao {
-    
+
     public Superhero getSuperheroById(int id);
-    
+
     public List<Superhero> getAllSuperheros();
-    
-    public Superhero addSuperhero(Superhero Superhero);
-    
-    public void updateSuperhero(Superhero Superhero);
-    
+
+    public Superhero addSuperhero(Superhero superhero);
+
+    public void updateSuperhero(Superhero superhero);
+
     public void deleteSuperheroById(int id);
-    
-    //getAllSuperherosForOrganization ???
-  
+
+    public List<Superhero> getAllSuperheroesForLocation(Location location);
+
+    public List<Superhero> getAllSuperherosForOrganization(Organization organization);
+
 }

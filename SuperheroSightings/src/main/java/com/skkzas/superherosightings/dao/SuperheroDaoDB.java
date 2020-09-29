@@ -1,6 +1,6 @@
 package com.skkzas.superherosightings.dao;
 
-import com.skkzas.superherosightings.dto.Superhero;
+import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class SuperheroDaoDB implements SuperheroDao {
 
     @Autowired
     JdbcTemplate jdbc;
-    
+
     @Override
     public Superhero getSuperheroById(int id) {
         try {
@@ -45,30 +45,39 @@ public class SuperheroDaoDB implements SuperheroDao {
 
     @Transactional
     @Override
-    public Superhero addSuperhero(Superhero Superhero) {
+    public Superhero addSuperhero(Superhero superhero) {
         final String INSERT_SUPERHERO = "INSERT INTO Superhero"
                 + "(SuperheroName, Description) "
                 + "VALUES(?,?)";
 
         jdbc.update(INSERT_SUPERHERO,
-                Superhero.getSuperheroName(),
-                Superhero.getSuperheroDescription());
+                superhero.getSuperheroName(),
+                superhero.getSuperheroDescription());
 
         int newId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
-        Superhero.setSuperheroId(newId);
+        superhero.setSuperheroId(newId);
 
-        return Superhero;
+        /**
+         * TODO Maybe in front-end, on the add Super page, you can allow the
+         * user to choose an existing or add a new power then you would have to
+         * process that first in the service and then add it to the powerDao if
+         * necessary, then add the power to the superhero, then add the super
+         * here.*
+         */
+        return superhero;
     }
 
     @Override
-    public void updateSuperhero(Superhero Superhero) {
+    public void updateSuperhero(Superhero superhero) {
         final String UPDATE_Superhero = "UPDATE Superhero SET "
                 + "SuperheroName = ?, "
-                + "Description = ? ";
+                + "Description = ? "
+                + "WHERE SuperheroId = ?";
 
         jdbc.update(UPDATE_Superhero,
-                Superhero.getSuperheroName(),
-                Superhero.getSuperheroDescription());
+                superhero.getSuperheroName(),
+                superhero.getSuperheroDescription(),
+                superhero.getSuperheroId());
     }
 
     @Transactional
@@ -84,17 +93,16 @@ public class SuperheroDaoDB implements SuperheroDao {
 
         try {
 
-            final String GET_ORGANIZATION_FOR_Superhero = "SELECT * FROM Organization "
-                    + "WHERE SuperheroId = ?";
-            Organization organization = jdbc.queryForObject(GET_ORGANIZATION_FOR_Superhero, new OrganizationDaoDB.OrganizationMapper(), id);
-
+            //get all organizations
+            
+            
             final String DELETE_SUPERHEROORGANIZATION = "DELETE * FROM SuperheroOrganization "
-                    + "WHERE OrgId = ?";
-            jdbc.update(DELETE_SUPERHEROORGANIZATION, organization.getOrgId());
-
-            final String DELETE_ORGANIZATION = "DELETE FROM Organization "
                     + "WHERE SuperheroId = ?";
-            jdbc.update(DELETE_ORGANIZATION, id);
+            jdbc.update(DELETE_SUPERHEROORGANIZATION, id);
+
+//            final String DELETE_ORGANIZATION = "DELETE FROM Organization "
+//                    + "WHERE SuperheroId = ?";
+//            jdbc.update(DELETE_ORGANIZATION, id);
 
         } catch (DataAccessException e) {
 
@@ -112,6 +120,16 @@ public class SuperheroDaoDB implements SuperheroDao {
                 + "WHERE SuperheroId = ?";
         jdbc.update(DELETE_Superhero, id);
 
+    }
+
+    @Override
+    public List<Superhero> getAllSuperheroesForLocation(Location location) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Superhero> getAllSuperherosForOrganization(Organization organization) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public static final class SuperheroMapper implements RowMapper<Superhero> {
