@@ -4,29 +4,22 @@ CREATE DATABASE SuperheroSightingsDB;
 
 USE SuperheroSightingsDB;
 
-CREATE TABLE Superhero (
-    SuperheroId INT PRIMARY KEY AUTO_INCREMENT,
-    SuperheroName VARCHAR(50) NOT NULL,
-    `Description` VARCHAR(255) NOT NULL
-);
-
 CREATE TABLE Power (
     PowerId INT PRIMARY KEY AUTO_INCREMENT,
     PowerName VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE SuperheroPower (
-    SuperheroId INT,
-    PowerId INT,
-    PRIMARY KEY pk_PowerSuperhero (SuperheroId , PowerId),
-    CONSTRAINT fk_PowerSuperhero_Superhero FOREIGN KEY (SuperheroId)
-        REFERENCES Superhero (SuperheroId),
-    CONSTRAINT fk_PowerSuperhero_Power FOREIGN KEY (PowerId)
+CREATE TABLE Superhero (
+    SuperheroId INT PRIMARY KEY AUTO_INCREMENT,
+    SuperheroName VARCHAR(50) NOT NULL,
+    `Description` VARCHAR(255) NOT NULL,
+    PowerId INT NOT NULL,
+    CONSTRAINT fk_Superhero_Power FOREIGN KEY (PowerId)
         REFERENCES Power (PowerId)
 );
 
 CREATE TABLE Location (
-    LocationID INT PRIMARY KEY AUTO_INCREMENT,
+    LocationId INT PRIMARY KEY AUTO_INCREMENT,
     LocationName VARCHAR(50) NOT NULL,
     `Description` VARCHAR(255) NOT NULL,
     Address VARCHAR(50) NOT NULL,
@@ -60,10 +53,10 @@ CREATE TABLE SuperheroOrganization (
 CREATE TABLE Sighting (
     SightingID INT PRIMARY KEY AUTO_INCREMENT,
     `Date` DATE NOT NULL,
-    LocationID INT NOT NULL,
+    LocationId INT NOT NULL,
     SuperheroId INT NOT NULL,
-    CONSTRAINT fk_Sighting_Location FOREIGN KEY (LocationID)
-        REFERENCES Location (LocationID),
+    CONSTRAINT fk_Sighting_Location FOREIGN KEY (LocationId)
+        REFERENCES Location (LocationId),
     CONSTRAINT fk_Sighting_Superhero FOREIGN KEY (SuperheroId)
         REFERENCES Superhero (SuperheroId)
 );
