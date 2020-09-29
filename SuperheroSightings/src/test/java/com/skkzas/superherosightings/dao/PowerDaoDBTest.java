@@ -96,8 +96,8 @@ public class PowerDaoDBTest {
         power = powerDao.addPower(power);
 
         Power power2 = new Power();
-        power.setPowerName("listening to people");
-        power2 = powerDao.addPower(power);
+        power2.setPowerName("listening to people");
+        power2 = powerDao.addPower(power2);
 
         List<Power> powers = powerDao.getAllPowers();
 
