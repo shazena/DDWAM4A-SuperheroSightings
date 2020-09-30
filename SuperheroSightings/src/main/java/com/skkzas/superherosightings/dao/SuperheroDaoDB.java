@@ -2,6 +2,7 @@ package com.skkzas.superherosightings.dao;
 
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
+import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -31,7 +32,9 @@ public class SuperheroDaoDB implements SuperheroDao {
         try {
             final String GET_SUPERHERO_BY_ID = "SELECT * FROM Superhero "
                     + "WHERE SuperheroId = ?";
-            return jdbc.queryForObject(GET_SUPERHERO_BY_ID, new SuperheroMapper(), id);
+            Superhero superhero = jdbc.queryForObject(GET_SUPERHERO_BY_ID, new SuperheroMapper(), id);
+            superhero.setPower(getPowerForSuperhero(superhero.getSuperheroId()));
+            return superhero;
         } catch (DataAccessException e) {
             return null;
         }
@@ -47,12 +50,13 @@ public class SuperheroDaoDB implements SuperheroDao {
     @Override
     public Superhero addSuperhero(Superhero superhero) {
         final String INSERT_SUPERHERO = "INSERT INTO Superhero"
-                + "(SuperheroName, Description) "
-                + "VALUES(?,?)";
+                + "(SuperheroName, Description, PowerId) "
+                + "VALUES(?,?,?)";
 
         jdbc.update(INSERT_SUPERHERO,
                 superhero.getSuperheroName(),
-                superhero.getSuperheroDescription());
+                superhero.getSuperheroDescription(),
+                superhero.getPower().getPowerId());
 
         int newId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         superhero.setSuperheroId(newId);
@@ -88,32 +92,14 @@ public class SuperheroDaoDB implements SuperheroDao {
                     + "WHERE SuperheroId = ?";
             jdbc.update(DELETE_SIGHTING, id);
         } catch (DataAccessException e) {
-
         }
 
         try {
-
-            //get all organizations
-            
-            
             final String DELETE_SUPERHEROORGANIZATION = "DELETE * FROM SuperheroOrganization "
                     + "WHERE SuperheroId = ?";
             jdbc.update(DELETE_SUPERHEROORGANIZATION, id);
 
-//            final String DELETE_ORGANIZATION = "DELETE FROM Organization "
-//                    + "WHERE SuperheroId = ?";
-//            jdbc.update(DELETE_ORGANIZATION, id);
-
         } catch (DataAccessException e) {
-
-        }
-
-        try {
-            final String DELETE_SUPERHEROPOWER = "DELETE FROM SuperheroPower "
-                    + "WHERE SuperheroId = ?";
-            jdbc.update(DELETE_SUPERHEROPOWER, id);
-        } catch (DataAccessException e) {
-
         }
 
         final String DELETE_Superhero = "DELETE FROM Superhero "
@@ -124,11 +110,41 @@ public class SuperheroDaoDB implements SuperheroDao {
 
     @Override
     public List<Superhero> getAllSuperheroesForLocation(Location location) {
+        /**
+         * TODO Quote from LMS: "The system must be able to report all of the
+         * superheroes sighted at a particular location". So this means that we
+         * need to create a join between the Superhero table, the sighting table
+         * and the Location table. This will not involve the organization
+         * table.(I finally saw your pull request messages.)
+         */
+
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public List<Superhero> getAllSuperherosForOrganization(Organization organization) {
+        /**
+         * TODO Quote from LMS: "The system must be able to report all of the
+         * members of a particular organization". So this means that we need to
+         * be able to get all the superheroes that belong to one organization.
+         * There is some slight overlap with this though because the way our
+         * Organization object is created, it has a list of superheroes in it,
+         * so I'm not sure when this will be used over just getting an
+         * organization. It might not be necessary, but I'd feel comfortable
+         * having it as I think testing mayyyy require it?
+         */
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    //helper method
+    private Power getPowerForSuperhero(int superheroId) {
+        /**
+         * TODO Since our Superhero Object has a Power object in it, when we get
+         * a superhero from the database, we also need to go fetch the power
+         * that they have and add it in to the superhero object. So that's what
+         * needs to be added in here. Retrieve the power object for the
+         * superhero object.
+         */
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
