@@ -21,7 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author kristinazakharova
+ * @author Shazena Khan, Kristina Zakharova, Arfin Shah
+ *
+ * Date Created: Sep 29, 2020
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -41,7 +43,7 @@ public class SuperheroDaoDBTest {
 
     @Autowired
     SightingDao sightingDao;
-    
+
     public SuperheroDaoDBTest() {
     }
 
@@ -59,7 +61,7 @@ public class SuperheroDaoDBTest {
 
         List<Organization> organizations = organizationDao.getAllOrganizations();
         for (Organization organization : organizations) {
-            organizationDao.deleteOrganizationById(organization.getOrganizationById());
+            organizationDao.deleteOrganizationById(organization.getOrgId());
         }
 
         List<Location> locations = locationDao.getAllLocations();
@@ -69,12 +71,13 @@ public class SuperheroDaoDBTest {
 
         List<Sighting> sightings = sightingDao.getAllSightings();
         for (Sighting sighting : sightings) {
-            sightingDao.deleteSightingById(sighting.getSightingById());
+            sightingDao.deleteSightingById(sighting.getSightingId());
         }
     }
 
     /**
-     * Test of getSuperheroById and addSuperhero methods, of class SuperheroDaoDB.
+     * Test of getSuperheroById and addSuperhero methods, of class
+     * SuperheroDaoDB.
      */
     @Test
     public void testAddAndGetSuperhero() {

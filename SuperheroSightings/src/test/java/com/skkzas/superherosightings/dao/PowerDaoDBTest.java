@@ -21,12 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
- * @author kristinazakharova
+ * @author Shazena Khan, Kristina Zakharova, Arfin Shah
+ *
+ * Date Created: Sep 29, 2020
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PowerDaoDBTest {
-    
+
     @Autowired
     PowerDao powerDao;
 
@@ -41,10 +43,10 @@ public class PowerDaoDBTest {
 
     @Autowired
     SightingDao sightingDao;
-    
+
     public PowerDaoDBTest() {
     }
-    
+
     @BeforeEach
     public void setUp() {
         List<Power> powers = powerDao.getAllPowers();
@@ -59,7 +61,7 @@ public class PowerDaoDBTest {
 
         List<Organization> organizations = organizationDao.getAllOrganizations();
         for (Organization organization : organizations) {
-            organizationDao.deleteOrganizationById(organization.getOrganizationById());
+            organizationDao.deleteOrganizationById(organization.getOrgId());
         }
 
         List<Location> locations = locationDao.getAllLocations();
@@ -69,7 +71,7 @@ public class PowerDaoDBTest {
 
         List<Sighting> sightings = sightingDao.getAllSightings();
         for (Sighting sighting : sightings) {
-            sightingDao.deleteOSightingById(sighting.getSightingById());
+            sightingDao.deleteSightingById(sighting.getSightingId());
         }
     }
 
