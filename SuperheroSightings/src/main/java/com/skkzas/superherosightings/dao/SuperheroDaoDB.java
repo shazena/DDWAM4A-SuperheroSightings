@@ -110,57 +110,34 @@ public class SuperheroDaoDB implements SuperheroDao {
 
     @Override
     public List<Superhero> getAllSuperheroesForLocation(Location location) {
-        /**
-         * TODO Quote from LMS: "The system must be able to report all of the
-         * superheroes sighted at a particular location". So this means that we
-         * need to create a join between the Superhero table, the sighting table
-         * and the Location table. This will not involve the organization
-         * table.(I finally saw your pull request messages.)
-         */
         final String SELECT_SUPERHEROES_FOR_LOCATION = "SELECT * FROM Superhero s"
                 + "JOIN Sighting si ON s.SuperheroId = si.SuperheroId"
                 + "JOIN Location l ON si.LocationId = l.LocationId"
                 + "WHERE l.LocationId = ?";
-        List<Superhero> supers = jdbc.query(SELECT_SUPERHEROES_FOR_LOCATION, new SuperheroMapper(), location.getLocationId());
-
-        return supers;
+        List<Superhero> superheroesForLocation = jdbc.query(SELECT_SUPERHEROES_FOR_LOCATION, new SuperheroMapper(), location.getLocationId());
+        for (Superhero superhero : superheroesForLocation) {
+            superhero.setPower(getPowerForSuperhero(superhero.getSuperheroId()));
+        }
+        return superheroesForLocation;
     }
 
     @Override
     public List<Superhero> getAllSuperherosForOrganization(Organization organization) {
-        /**
-         * TODO Quote from LMS: "The system must be able to report all of the
-         * members of a particular organization". So this means that we need to
-         * be able to get all the superheroes that belong to one organization.
-         * There is some slight overlap with this though because the way our
-         * Organization object is created, it has a list of superheroes in it,
-         * so I'm not sure when this will be used over just getting an
-         * organization. It might not be necessary, but I'd feel comfortable
-         * having it as I think testing mayyyy require it?
-         */
         final String SELECT_SUPERHEROES_FOR_ORGANIZATION = "SELECT * FROM Superhero s "
                 + "JOIN SuperheroOrganization so ON s.SuperheroId = so.SuperheroId WHERE so.OrgId = ?";
-        List<Superhero> supers = jdbc.query(SELECT_SUPERHEROES_FOR_ORGANIZATION, new SuperheroMapper(), organization.getOrgId());
-//        for (Superhero s : supers) {
-//            s.setPower(getPowerForSuperhero(s.getSuperheroId()));
-//        }
-        return supers;
+        List<Superhero> superheroesForOrganization = jdbc.query(SELECT_SUPERHEROES_FOR_ORGANIZATION, new SuperheroMapper(), organization.getOrgId());
+        for (Superhero superhero : superheroesForOrganization) {
+            superhero.setPower(getPowerForSuperhero(superhero.getSuperheroId()));
+        }
+        return superheroesForOrganization;
     }
 
     //helper method
     private Power getPowerForSuperhero(int superheroId) {
-        /**
-         * TODO Since our Superhero Object has a Power object in it, when we get
-         * a superhero from the database, we also need to go fetch the power
-         * that they have and add it in to the superhero object. So that's what
-         * needs to be added in here. Retrieve the power object for the
-         * superhero object.
-         */
-
         final String SELECT_POWER_FOR_SUPER = "SELECT p.PowerId, p.PowerName FROM Power p "
                 + "JOIN Superhero s ON s.PowerId = p.PowerId WHERE SuperheroId = ?";
 
-        Power powerForSuperhero = (Power) jdbc.query(SELECT_POWER_FOR_SUPER, new PowerDaoDB.PowerMapper(), superheroId);
+        Power powerForSuperhero = jdbc.queryForObject(SELECT_POWER_FOR_SUPER, new PowerDaoDB.PowerMapper(), superheroId);
 
         return powerForSuperhero;
     }
