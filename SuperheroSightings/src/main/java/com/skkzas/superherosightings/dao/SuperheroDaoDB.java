@@ -117,8 +117,13 @@ public class SuperheroDaoDB implements SuperheroDao {
          * and the Location table. This will not involve the organization
          * table.(I finally saw your pull request messages.)
          */
+        final String SELECT_SUPERHEROES_FOR_LOCATION = "SELECT * FROM Superhero s"
+                + "JOIN Sighting si ON s.SuperheroId = si.SuperheroId"
+                + "JOIN Location l ON si.LocationId = l.LocationId"
+                + "WHERE l.LocationId = ?";
+        List<Superhero> supers = jdbc.query(SELECT_SUPERHEROES_FOR_LOCATION, new SuperheroMapper(), location.getLocationId());
 
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return supers;
     }
 
     @Override
@@ -133,7 +138,13 @@ public class SuperheroDaoDB implements SuperheroDao {
          * organization. It might not be necessary, but I'd feel comfortable
          * having it as I think testing mayyyy require it?
          */
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        final String SELECT_SUPERHEROES_FOR_ORGANIZATION = "SELECT * FROM Superhero s "
+                + "JOIN SuperheroOrganization so ON s.SuperheroId = so.SuperheroId WHERE so.OrgId = ?";
+        List<Superhero> supers = jdbc.query(SELECT_SUPERHEROES_FOR_ORGANIZATION, new SuperheroMapper(), organization.getOrgId());
+//        for (Superhero s : supers) {
+//            s.setPower(getPowerForSuperhero(s.getSuperheroId()));
+//        }
+        return supers;
     }
 
     //helper method
@@ -145,7 +156,13 @@ public class SuperheroDaoDB implements SuperheroDao {
          * needs to be added in here. Retrieve the power object for the
          * superhero object.
          */
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        final String SELECT_POWER_FOR_SUPER = "SELECT p.PowerId, p.PowerName FROM Power p "
+                + "JOIN Superhero s ON s.PowerId = p.PowerId WHERE SuperheroId = ?";
+
+        Power powerForSuperhero = (Power) jdbc.query(SELECT_POWER_FOR_SUPER, new PowerDaoDB.PowerMapper(), superheroId);
+
+        return powerForSuperhero;
     }
 
     public static final class SuperheroMapper implements RowMapper<Superhero> {

@@ -213,7 +213,100 @@ public class SuperheroDaoDBTest {
      */
     @Test
     public void testGetAllSuperheroesForLocation() {
-        //not sure about this one. Location meaning Sighting?
+        //creating 3 supers
+        Power power = new Power();
+        power.setPowerName("flying");
+        power = powerDao.addPower(power);
+
+        Superhero mySuper = new Superhero();
+        mySuper.setSuperheroName("Not Your Ordinary Guy");
+        mySuper.setSuperheroDescription("actually listens and tries to understand");
+        mySuper.setPower(power);
+        superheroDao.addSuperhero(mySuper);
+
+        Power power2 = new Power();
+        power2.setPowerName("listening to people");
+        power2 = powerDao.addPower(power2);
+
+        Superhero mySuper2 = new Superhero();
+        mySuper2.setSuperheroName("Another great superhero");
+        mySuper2.setSuperheroDescription("doesn't judge");
+        mySuper2.setPower(power2);
+        superheroDao.addSuperhero(mySuper2);
+
+        Power power3 = new Power();
+        power3.setPowerName("being invisible");
+        power3 = powerDao.addPower(power3);
+
+        Superhero mySuper3 = new Superhero();
+        mySuper3.setSuperheroName("Third superhero guy");
+        mySuper3.setSuperheroDescription("sometimes disappears");
+        mySuper3.setPower(power3);
+        superheroDao.addSuperhero(mySuper3);
+
+        //checking if all 3 supers were added to DB
+        List<Superhero> supers = superheroDao.getAllSuperheros();
+        assertEquals(3, supers.size());
+        assertTrue(supers.contains(mySuper));
+        assertTrue(supers.contains(mySuper2));
+        assertTrue(supers.contains(mySuper3));
+
+        //creating a location and adding it to a sighting
+        Location superLocation = new Location();
+        superLocation.setLocationName("Super Location");
+        superLocation.setDescription("You can't beat it");
+        superLocation.setAddress("101 Bedford Ave");
+        superLocation.setCity("Brooklyn");
+        superLocation.setState("NY");
+        superLocation.setZip("11211");
+        superLocation.setLatitude("40.720239");
+        superLocation.setLongitude("-73.9546197");
+        locationDao.addLocation(superLocation);
+
+        //first sighting
+        Sighting firstSighting = new Sighting();
+        LocalDate date = LocalDate.parse("2020-01-08"); //not sure about the format yet
+        firstSighting.setDate(date);
+        firstSighting.setLocation(superLocation);
+        firstSighting.setSuperhero(mySuper);
+        sightingDao.addSighting(firstSighting);
+
+        //second sighting (with the same location but different super)
+        Sighting secondSighting = new Sighting();
+        LocalDate date2 = LocalDate.parse("2020-01-09"); //not sure about the format yet
+        secondSighting.setDate(date2);
+        secondSighting.setLocation(superLocation); //same location
+        secondSighting.setSuperhero(mySuper2); //different super
+        sightingDao.addSighting(secondSighting);
+
+        //third sighting (different location)
+        Location superLocation2 = new Location();
+        superLocation2.setLocationName("Super Location 2");
+        superLocation2.setDescription("You can't beat it either");
+        superLocation2.setAddress("102 Bedford Ave");
+        superLocation2.setCity("Brooklyn");
+        superLocation2.setState("NY");
+        superLocation2.setZip("11211");
+        superLocation2.setLatitude("40.720440");
+        superLocation2.setLongitude("-73.955290");
+        locationDao.addLocation(superLocation2);
+
+        Sighting thirdSighting = new Sighting();
+        LocalDate date3 = LocalDate.parse("2020-01-10"); //not sure about the format yet
+        thirdSighting.setDate(date3);
+        thirdSighting.setLocation(superLocation2); //different location
+        thirdSighting.setSuperhero(mySuper3);
+        sightingDao.addSighting(thirdSighting);
+
+        //checking if db contains 2 supers for the same location
+        List<Superhero> supersForLocation = superheroDao.getAllSuperheroesForLocation(superLocation);
+
+        assertEquals(2, supersForLocation.size());
+        assertTrue(supersForLocation.contains(mySuper));
+        assertTrue(supersForLocation.contains(mySuper2));
+
+        //making sure that the the 3rd super wasn't added to that location
+        assertFalse(supersForLocation.contains(mySuper3));
 
     }
 
