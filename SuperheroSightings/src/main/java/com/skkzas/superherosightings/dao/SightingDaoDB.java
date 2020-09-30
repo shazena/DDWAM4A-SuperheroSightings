@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static java.lang.Integer.min;
+import java.time.LocalDate;
 
 /**
  *
@@ -25,15 +26,12 @@ import static java.lang.Integer.min;
  * Date Created: Sep 25, 2020
  */
 @Repository
-public class SightingDaoDB {
+public class SightingDaoDB implements SightingDao {
 
-    //method to get last 10 sightings, organized by date
     @Autowired
     JdbcTemplate jdbc;
-//    private int sightingId;
-//    private LocalDate date;
-//    private Location location;
-//    private Superhero superhero;
+
+    @Override
     public Sighting getSightingById(int id) {
 
         try {
@@ -51,6 +49,7 @@ public class SightingDaoDB {
 
     }
 
+    @Override
     public List<Sighting> getAllSightings() {
         final String SELECT_ALL_SIGHTINGS = "SELECT * FROM Sighting";
         List<Sighting> sightings = jdbc.query(SELECT_ALL_SIGHTINGS, new SightingMapper());
@@ -58,6 +57,7 @@ public class SightingDaoDB {
         return sightings;
     }
 
+    @Override
     public List<Sighting> getLastTenSightings() {
         final String SELECT_ALL_SIGHTINGS = "SELECT * FROM Sighting";
         List<Sighting> sightings = jdbc.query(SELECT_ALL_SIGHTINGS, new SightingMapper());
@@ -67,20 +67,57 @@ public class SightingDaoDB {
         return sightings;
     }
 
+    @Override
     @Transactional
-    public Sighting addSighting(Sighting location) {
-        //NEEDS IMPLEMENTATION
-        return location;
+    public Sighting addSighting(Sighting sighting) {
+        //to add a sighting, you need a location and a superhero in the db already
+
+        final String INSERT_SIGHTING = "INSERT INTO Sighting(date,locationId, superheroId) VALUES "
+                + "(?,?,?)";
+        jdbc.update(INSERT_SIGHTING,
+                sighting.getDate(),
+                sighting.getLocation().getLocationId(),
+                sighting.getSuperhero().getSuperheroId());
+
+        int newId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
+        sighting.setSightingId(newId);
+
+        return sighting;
     }
 
-    public void updateSighting(Sighting location) {
-        //NEEDS IMPLEMENTATION
+    @Override
+    public void updateSighting(Sighting sighting) {
+
+        final String UPDATE_SIGHTING = "UPDATE Sighting SET "
+                + "date = ?, "
+                + "locationId = ?, "
+                + "superheroId = ? "
+                + "WHERE SightingId = ?";
+
+        jdbc.update(UPDATE_SIGHTING,
+                sighting.getDate(),
+                sighting.getLocation().getLocationId(),
+                sighting.getSuperhero().getSuperheroId(),
+                sighting.getSightingId());
 
     }
 
+    @Override
     public void deleteSightingById(int id) {
-        //NEEDS IMPLEMENTATION
+        final String DELETE_SIGHTING = "DELETE FROM Sighting "
+                + "WHERE SightingID = ?";
+        jdbc.update(DELETE_SIGHTING, id);
+    }
 
+    @Override
+    public List<Sighting> getAllSightingsForDate(LocalDate date) {
+        final String GET_SIGHTINGS_FOR_DATE = "SELECT * FROM Sighting si "
+                + "INNER JOIN superhero su ON si.superheroId = su.superheroId "
+                + "WHERE date = ?";
+
+        List<Sighting> sightingsForDate = jdbc.query(GET_SIGHTINGS_FOR_DATE, new SightingMapper());
+        associateLocationAndSuperhero(sightingsForDate);
+        return sightingsForDate;
     }
 
     private Location getLocationForSighting(int id) {

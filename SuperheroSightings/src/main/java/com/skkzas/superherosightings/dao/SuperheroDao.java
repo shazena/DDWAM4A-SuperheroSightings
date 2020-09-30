@@ -12,7 +12,9 @@ import java.util.List;
 
 /**
  *
- * @author kristinazakharova
+ * @author Shazena Khan, Kristina Zakharova, Arfin Shah
+ *
+ * Date Created: Sep 25, 2020
  */
 public interface SuperheroDao {
 

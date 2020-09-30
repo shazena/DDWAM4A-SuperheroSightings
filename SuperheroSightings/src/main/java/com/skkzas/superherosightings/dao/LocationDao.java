@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  *
- * @author Shazena Khan
+ * @author Shazena Khan, Kristina Zakharova, Arfin Shah
  *
  * Date Created: Sep 28, 2020
  */

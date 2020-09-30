@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author Shazena Khan
+ * @author Shazena Khan, Kristina Zakharova, Arfin Shah
  *
  * Date Created: Sep 25, 2020
  */
@@ -91,6 +91,7 @@ public class LocationDaoDB implements LocationDao {
                 location.getLocationId());
     }
 
+    @Override
     @Transactional
     public void deleteLocationById(int id) {
         try {
@@ -103,17 +104,19 @@ public class LocationDaoDB implements LocationDao {
 
         try {
 
-            final String GET_ORGANIZATION_FOR_LOCATION = "SELECT * FROM Organization "
+            final String GET_ORGANIZATIONS_FOR_LOCATION = "SELECT * FROM Organization "
                     + "WHERE LocationId = ?";
-            Organization organization = jdbc.queryForObject(GET_ORGANIZATION_FOR_LOCATION, new OrganizationMapper(), id);
+            List<Organization> listOfOrganizations = jdbc.query(GET_ORGANIZATIONS_FOR_LOCATION, new OrganizationMapper(), id);
 
-            final String DELETE_SUPERHEROORGANIZATION = "DELETE * FROM SuperheroOrganization "
-                    + "WHERE OrgId = ?";
-            jdbc.update(DELETE_SUPERHEROORGANIZATION, organization.getOrgId());
+            for (Organization organization : listOfOrganizations) {
+                final String DELETE_SUPERHEROORGANIZATION = "DELETE * FROM SuperheroOrganization "
+                        + "WHERE OrgId = ?";
+                jdbc.update(DELETE_SUPERHEROORGANIZATION, organization.getOrgId());
+            }
 
-            final String DELETE_ORGANIZATION = "DELETE FROM Organization "
+            final String DELETE_ORGANIZATIONS = "DELETE FROM Organization "
                     + "WHERE LocationId = ?";
-            jdbc.update(DELETE_ORGANIZATION, id);
+            jdbc.update(DELETE_ORGANIZATIONS, id);
 
         } catch (DataAccessException e) {
 
@@ -127,7 +130,13 @@ public class LocationDaoDB implements LocationDao {
 
     @Override
     public List<Location> getAllLocationsForSuperhero(Superhero superhero) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        final String GET_LOCATIONS_FOR_SUPERHERO = "SELECT * FROM  Location l"
+                + "INNER JOIN Sighting si ON si.locationid = l.locationId"
+                + "INNER JOIN Superhero su ON su.superheroId = si.superheroId"
+                + "WHERE su.superheroId = ?";
+        return jdbc.query(GET_LOCATIONS_FOR_SUPERHERO, new LocationMapper());
+
     }
 
     public static final class LocationMapper implements RowMapper<Location> {

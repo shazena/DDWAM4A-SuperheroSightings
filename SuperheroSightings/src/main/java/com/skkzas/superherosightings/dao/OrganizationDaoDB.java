@@ -3,6 +3,7 @@ package com.skkzas.superherosightings.dao;
 import com.skkzas.superherosightings.dto.Organization;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,10 +16,35 @@ import org.springframework.stereotype.Repository;
  * Date Created: Sep 25, 2020
  */
 @Repository
-public class OrganizationDaoDB {
+public class OrganizationDaoDB implements OrganizationDao {
 
     @Autowired
     JdbcTemplate jdbc;
+
+    @Override
+    public Organization getOrganizationById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<Organization> getAllOrganizations() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Organization addOrganization(Organization organization) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateOrganization(Organization organization) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deleteOrganizationById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 //    private int orgId;
 //    private String orgName;
