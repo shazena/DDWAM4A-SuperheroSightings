@@ -43,7 +43,11 @@ public class SuperheroDaoDB implements SuperheroDao {
     @Override
     public List<Superhero> getAllSuperheros() {
         final String GET_ALL_SUPERHEROS = "SELECT * FROM Superhero";
-        return jdbc.query(GET_ALL_SUPERHEROS, new SuperheroMapper());
+        List<Superhero> allSuperheroes = jdbc.query(GET_ALL_SUPERHEROS, new SuperheroMapper());
+        for (Superhero superhero : allSuperheroes) {
+            superhero.setPower(getPowerForSuperhero(superhero.getSuperheroId()));
+        }
+        return allSuperheroes;
     }
 
     @Transactional
@@ -95,24 +99,24 @@ public class SuperheroDaoDB implements SuperheroDao {
         }
 
         try {
-            final String DELETE_SUPERHEROORGANIZATION = "DELETE * FROM SuperheroOrganization "
+            final String DELETE_SUPERHEROORGANIZATION = "DELETE FROM SuperheroOrganization "
                     + "WHERE SuperheroId = ?";
             jdbc.update(DELETE_SUPERHEROORGANIZATION, id);
 
         } catch (DataAccessException e) {
         }
 
-        final String DELETE_Superhero = "DELETE FROM Superhero "
+        final String DELETE_SUPERHERO = "DELETE FROM Superhero "
                 + "WHERE SuperheroId = ?";
-        jdbc.update(DELETE_Superhero, id);
+        jdbc.update(DELETE_SUPERHERO, id);
 
     }
 
     @Override
     public List<Superhero> getAllSuperheroesForLocation(Location location) {
-        final String SELECT_SUPERHEROES_FOR_LOCATION = "SELECT * FROM Superhero s"
-                + "JOIN Sighting si ON s.SuperheroId = si.SuperheroId"
-                + "JOIN Location l ON si.LocationId = l.LocationId"
+        final String SELECT_SUPERHEROES_FOR_LOCATION = "SELECT * FROM Superhero su "
+                + "JOIN Sighting si ON su.SuperheroId = si.SuperheroId "
+                + "JOIN Location l ON si.LocationId = l.LocationId "
                 + "WHERE l.LocationId = ?";
         List<Superhero> superheroesForLocation = jdbc.query(SELECT_SUPERHEROES_FOR_LOCATION, new SuperheroMapper(), location.getLocationId());
         for (Superhero superhero : superheroesForLocation) {
