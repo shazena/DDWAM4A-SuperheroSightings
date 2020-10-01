@@ -75,7 +75,8 @@ public class PowerDaoDB implements PowerDao {
     public void deletePowerById(int id) {
 
         //first find all supers with that power
-        final String SELECT_SUPERS_WITH_THIS_POWER = "SELECT * FROM Superhero "
+        final String SELECT_SUPERS_WITH_THIS_POWER = "SELECT * FROM Superhero su"
+                + "JOIN Power p ON su.PowerId = p.PowerId "
                 + "WHERE PowerId = ?";
         List<Superhero> allSuperheroesWithThisPower = jdbc.query(SELECT_SUPERS_WITH_THIS_POWER, new SuperheroMapper());
 
