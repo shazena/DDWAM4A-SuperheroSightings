@@ -1,6 +1,7 @@
 package com.skkzas.superherosightings.dao;
 
 import com.skkzas.superherosightings.dto.Organization;
+import com.skkzas.superherosightings.dto.Superhero;
 import java.util.List;
 
 /**
@@ -20,4 +21,7 @@ public interface OrganizationDao {
     public void updateOrganization(Organization organization);
 
     public void deleteOrganizationById(int id);
+
+    public List<Organization> getOrganizationsForSuperhero(Superhero superhero);
+
 }

@@ -1,6 +1,7 @@
 package com.skkzas.superherosightings.dto;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -16,7 +17,7 @@ public class Organization {
     private String description;
     private String phoneNumber;
     private Location location;
-    private ArrayList<Superhero> listOfSuperheroes = new ArrayList<>();
+    private List<Superhero> listOfSuperheroes = new ArrayList<>();
 
     public int getOrgId() {
         return orgId;
@@ -58,11 +59,11 @@ public class Organization {
         this.location = location;
     }
 
-    public ArrayList<Superhero> getListOfSuperheroes() {
+    public List<Superhero> getListOfSuperheroes() {
         return listOfSuperheroes;
     }
 
-    public void setListOfSuperheroes(ArrayList<Superhero> listOfSuperheroes) {
+    public void setListOfSuperheroes(List<Superhero> listOfSuperheroes) {
         this.listOfSuperheroes = listOfSuperheroes;
     }
 
