@@ -130,8 +130,8 @@ public class OrganizationDaoDB implements OrganizationDao {
 
     private List<Superhero> getSuperheroesForOrganization(int orgId) {
 
-        final String GET_SUPERHEROES_FOR_ORGANIZATION = "SELECT * FROM Superhero su"
-                + "JOIN SupeheroOrganization so ON su.SuperheroId = so.SuperheroId "
+        final String GET_SUPERHEROES_FOR_ORGANIZATION = "SELECT * FROM Superhero su "
+                + "JOIN SuperheroOrganization so ON su.SuperheroId = so.SuperheroId "
                 + "JOIN Organization o ON o.OrgId = so.OrgId "
                 + "WHERE o.orgId = ?";
 
