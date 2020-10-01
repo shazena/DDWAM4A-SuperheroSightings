@@ -121,13 +121,15 @@ public class SightingDaoDB implements SightingDao {
     }
 
     private Location getLocationForSighting(int id) {
-        final String SELECT_LOCATION_FOR_SIGHTING = "SELECT * FROM Location "
+        final String SELECT_LOCATION_FOR_SIGHTING = "SELECT * FROM Location l"
+                + "JOIN Sighting s ON l.LocationId = s.LocationId "
                 + "WHERE SightingId = ?";
         return jdbc.queryForObject(SELECT_LOCATION_FOR_SIGHTING, new LocationMapper(), id);
     }
 
     private Superhero getSuperheroForSighting(int id) {
-        final String SELECT_SUPERHERO_FOR_SIGHTING = "SELECT * FROM Superhero "
+        final String SELECT_SUPERHERO_FOR_SIGHTING = "SELECT * FROM Superhero su "
+                + "JOIN Sighting si ON su.SuperheroId = si.SuperheroId "
                 + "WHERE SightingId = ?";
         return jdbc.queryForObject(SELECT_SUPERHERO_FOR_SIGHTING, new SuperheroDaoDB.SuperheroMapper(), id);
     }
