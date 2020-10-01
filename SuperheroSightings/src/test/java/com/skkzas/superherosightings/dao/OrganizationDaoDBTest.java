@@ -16,9 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -236,7 +234,69 @@ public class OrganizationDaoDBTest {
         superOrg.setOrgName("new super name");
         organizationDao.updateOrganization(superOrg);
 
+        assertNotEquals(superOrg, fromDao);
+
+        fromDao = organizationDao.getOrganizationById(superOrg.getOrgId());
+
         assertEquals(superOrg, fromDao);
+
+        //updating description
+        superOrg.setDescription("new super description");
+        organizationDao.updateOrganization(superOrg);
+
+        assertNotEquals(superOrg, fromDao);
+
+        fromDao = organizationDao.getOrganizationById(superOrg.getOrgId());
+
+        assertEquals(superOrg, fromDao);
+
+        //updating phone number
+        superOrg.setPhoneNumber("3475876543");
+        organizationDao.updateOrganization(superOrg);
+
+        assertNotEquals(superOrg, fromDao);
+
+        fromDao = organizationDao.getOrganizationById(superOrg.getOrgId());
+
+        assertEquals(superOrg, fromDao);
+
+        //updating location (creating new location too)
+        Location superLocation2 = new Location();
+        superLocation2.setLocationName("Super Location 2");
+        superLocation2.setDescription("You can't beat it either");
+        superLocation2.setAddress("102 Bedford Ave");
+        superLocation2.setCity("Brooklyn");
+        superLocation2.setState("NY");
+        superLocation2.setZip("11211");
+        superLocation2.setLatitude("40.720440");
+        superLocation2.setLongitude("-73.955290");
+        locationDao.addLocation(superLocation2);
+
+        superOrg.setLocation(superLocation2);
+        organizationDao.updateOrganization(superOrg);
+
+        assertNotEquals(superOrg, fromDao);
+
+        fromDao = organizationDao.getOrganizationById(superOrg.getOrgId());
+
+        assertEquals(superOrg, fromDao);
+
+        //updating list of supers (adding a new one)
+        Power power2 = new Power();
+        power2.setPowerName("listening to people");
+        power2 = powerDao.addPower(power2);
+
+        Superhero mySuper2 = new Superhero();
+        mySuper2.setSuperheroName("Another great superhero");
+        mySuper2.setSuperheroDescription("doesn't judge");
+        mySuper2.setPower(power2);
+        superheroDao.addSuperhero(mySuper2);
+
+        supers.add(mySuper2);
+        superOrg.setListOfSuperheroes(supers);
+        organizationDao.updateOrganization(superOrg);
+
+        assertNotEquals(superOrg, fromDao);
 
         fromDao = organizationDao.getOrganizationById(superOrg.getOrgId());
 
