@@ -158,7 +158,7 @@ public class OrganizationDaoDB implements OrganizationDao {
     private void insertSuperheroOrganization(Organization organization) {
         for (Superhero superhero : organization.getListOfSuperheroes()) {
             final String INSERT_SUPERHEROORGANIZATION = "INSERT INTO SuperheroOrganization"
-                    + "(SuperheroId, OrganizationId) VALUES (?,?)";
+                    + "(SuperheroId, OrgId) VALUES (?,?)";
             jdbc.update(INSERT_SUPERHEROORGANIZATION,
                     superhero.getSuperheroId(),
                     organization.getOrgId());

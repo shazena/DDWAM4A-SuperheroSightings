@@ -75,10 +75,10 @@ public class PowerDaoDB implements PowerDao {
     public void deletePowerById(int id) {
 
         //first find all supers with that power
-        final String SELECT_SUPERS_WITH_THIS_POWER = "SELECT * FROM Superhero su"
+        final String SELECT_SUPERS_WITH_THIS_POWER = "SELECT * FROM Superhero su "
                 + "JOIN Power p ON su.PowerId = p.PowerId "
-                + "WHERE PowerId = ?";
-        List<Superhero> allSuperheroesWithThisPower = jdbc.query(SELECT_SUPERS_WITH_THIS_POWER, new SuperheroMapper());
+                + "WHERE su.PowerId = ?";
+        List<Superhero> allSuperheroesWithThisPower = jdbc.query(SELECT_SUPERS_WITH_THIS_POWER, new SuperheroMapper(), id);
 
         //for each super with that power, delete the sighting for that Super and the Organization link in the bridge table
         final String DELETE_SUPERHERO_FROM_SUPERORGANIZATION = "DELETE FROM SuperheroOrganization "
