@@ -131,11 +131,11 @@ public class LocationDaoDB implements LocationDao {
     @Override
     public List<Location> getAllLocationsForSuperhero(Superhero superhero) {
 
-        final String GET_LOCATIONS_FOR_SUPERHERO = "SELECT * FROM  Location l"
-                + "INNER JOIN Sighting si ON si.locationid = l.locationId"
-                + "INNER JOIN Superhero su ON su.superheroId = si.superheroId"
+        final String GET_LOCATIONS_FOR_SUPERHERO = "SELECT * FROM  Location l "
+                + "INNER JOIN Sighting si ON si.locationid = l.locationId "
+                + "INNER JOIN Superhero su ON su.superheroId = si.superheroId "
                 + "WHERE su.superheroId = ?";
-        return jdbc.query(GET_LOCATIONS_FOR_SUPERHERO, new LocationMapper());
+        return jdbc.query(GET_LOCATIONS_FOR_SUPERHERO, new LocationMapper(), superhero.getSuperheroId());
 
     }
 
