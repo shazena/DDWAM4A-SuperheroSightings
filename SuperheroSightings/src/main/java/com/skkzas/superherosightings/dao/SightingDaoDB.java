@@ -1,7 +1,10 @@
 package com.skkzas.superherosightings.dao;
 
 import com.skkzas.superherosightings.dao.LocationDaoDB.LocationMapper;
+import com.skkzas.superherosightings.dao.PowerDaoDB.PowerMapper;
+import com.skkzas.superherosightings.dao.SuperheroDaoDB.SuperheroMapper;
 import com.skkzas.superherosightings.dto.Location;
+import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import java.util.List;
 
 import static java.lang.Integer.min;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  *
@@ -63,8 +68,11 @@ public class SightingDaoDB implements SightingDao {
         List<Sighting> sightings = jdbc.query(SELECT_ALL_SIGHTINGS, new SightingMapper());
         associateLocationAndSuperhero(sightings);
         sightings.sort(Comparator.comparing(Sighting::getDate));
-        sightings = sightings.subList(0, min(sightings.size(), 11));
-        return sightings;
+//        sightings = sightings.subList(0, min(sightings.size(), 11));
+        Collections.reverse(sightings);
+        List<Sighting> lastTenSightings = new ArrayList<>(sightings.subList(0, min(sightings.size(), 10)));
+//        Collections.reverse(lastTenSightings);
+        return lastTenSightings;
     }
 
     @Override
@@ -121,7 +129,7 @@ public class SightingDaoDB implements SightingDao {
     }
 
     private Location getLocationForSighting(int id) {
-        final String SELECT_LOCATION_FOR_SIGHTING = "SELECT * FROM Location l"
+        final String SELECT_LOCATION_FOR_SIGHTING = "SELECT * FROM Location l "
                 + "JOIN Sighting s ON l.LocationId = s.LocationId "
                 + "WHERE SightingId = ?";
         return jdbc.queryForObject(SELECT_LOCATION_FOR_SIGHTING, new LocationMapper(), id);
@@ -131,7 +139,17 @@ public class SightingDaoDB implements SightingDao {
         final String SELECT_SUPERHERO_FOR_SIGHTING = "SELECT * FROM Superhero su "
                 + "JOIN Sighting si ON su.SuperheroId = si.SuperheroId "
                 + "WHERE SightingId = ?";
-        return jdbc.queryForObject(SELECT_SUPERHERO_FOR_SIGHTING, new SuperheroDaoDB.SuperheroMapper(), id);
+        Superhero superhero = jdbc.queryForObject(SELECT_SUPERHERO_FOR_SIGHTING, new SuperheroMapper(), id);
+
+        final String SELECT_POWER_FOR_SUPER = "SELECT p.PowerId, p.PowerName FROM Power p "
+                + "JOIN Superhero s ON s.PowerId = p.PowerId WHERE SuperheroId = ?";
+
+        Power power = jdbc.queryForObject(SELECT_POWER_FOR_SUPER, new PowerMapper(), superhero.getSuperheroId());
+
+        superhero.setPower(power);
+
+        return superhero;
+
     }
 
     private void associateLocationAndSuperhero(List<Sighting> sightings) {
