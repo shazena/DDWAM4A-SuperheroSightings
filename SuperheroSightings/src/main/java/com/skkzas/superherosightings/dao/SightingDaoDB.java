@@ -68,10 +68,8 @@ public class SightingDaoDB implements SightingDao {
         List<Sighting> sightings = jdbc.query(SELECT_ALL_SIGHTINGS, new SightingMapper());
         associateLocationAndSuperhero(sightings);
         sightings.sort(Comparator.comparing(Sighting::getDate));
-//        sightings = sightings.subList(0, min(sightings.size(), 11));
         Collections.reverse(sightings);
         List<Sighting> lastTenSightings = new ArrayList<>(sightings.subList(0, min(sightings.size(), 10)));
-//        Collections.reverse(lastTenSightings);
         return lastTenSightings;
     }
 
@@ -121,9 +119,9 @@ public class SightingDaoDB implements SightingDao {
     public List<Sighting> getAllSightingsForDate(LocalDate date) {
         final String GET_SIGHTINGS_FOR_DATE = "SELECT * FROM Sighting si "
                 + "INNER JOIN superhero su ON si.superheroId = su.superheroId "
-                + "WHERE date = ?";
+                + "WHERE si.date = ?";
 
-        List<Sighting> sightingsForDate = jdbc.query(GET_SIGHTINGS_FOR_DATE, new SightingMapper());
+        List<Sighting> sightingsForDate = jdbc.query(GET_SIGHTINGS_FOR_DATE, new SightingMapper(), date);
         associateLocationAndSuperhero(sightingsForDate);
         return sightingsForDate;
     }

@@ -102,7 +102,9 @@ public class SightingDaoDBTest {
         firstSighting.setDate(date);
         firstSighting.setLocation(superLocation);
         firstSighting.setSuperhero(mySuper);
-        Sighting fromDao = sightingDao.addSighting(firstSighting);
+        Sighting addedSighting = sightingDao.addSighting(firstSighting);
+
+        Sighting fromDao = sightingDao.getSightingById(addedSighting.getSightingId());
 
         assertEquals(firstSighting, fromDao);
 
@@ -140,7 +142,9 @@ public class SightingDaoDBTest {
         firstSighting.setDate(date);
         firstSighting.setLocation(superLocation);
         firstSighting.setSuperhero(mySuper);
-        Sighting fromDao = sightingDao.addSighting(firstSighting);
+        Sighting addedSighting = sightingDao.addSighting(firstSighting);
+
+        Sighting fromDao = sightingDao.getSightingById(addedSighting.getSightingId());
 
         Location superLocation2 = new Location();
         superLocation2.setLocationName("Super Location 2");
@@ -158,7 +162,9 @@ public class SightingDaoDBTest {
         secondSighting.setDate(date2);
         secondSighting.setLocation(superLocation2); //different location
         secondSighting.setSuperhero(mySuper); //same super
-        Sighting fromDao2 = sightingDao.addSighting(secondSighting);
+        Sighting addedSighting2 = sightingDao.addSighting(secondSighting);
+
+        Sighting fromDao2 = sightingDao.getSightingById(addedSighting2.getSightingId());
 
         List<Sighting> allSightings = sightingDao.getAllSightings();
 
@@ -211,7 +217,7 @@ public class SightingDaoDBTest {
         firstSighting.setDate(date);
         firstSighting.setLocation(superLocation);
         firstSighting.setSuperhero(mySuper);
-        sightingDao.addSighting(firstSighting);
+        firstSighting = sightingDao.addSighting(firstSighting);
 
         Sighting secondSighting = new Sighting();
         secondSighting.setDate(date2);
@@ -328,7 +334,9 @@ public class SightingDaoDBTest {
         firstSighting.setDate(date);
         firstSighting.setLocation(superLocation);
         firstSighting.setSuperhero(mySuper);
-        Sighting fromDao = sightingDao.addSighting(firstSighting);
+        Sighting addedSighting = sightingDao.addSighting(firstSighting);
+
+        Sighting fromDao = sightingDao.getSightingById(addedSighting.getSightingId());
 
         assertEquals(firstSighting, fromDao);
 
@@ -358,15 +366,15 @@ public class SightingDaoDBTest {
         firstSighting.setLocation(superLocation2);
         firstSighting.setSuperhero(mySuper2);
 
-//        assertNotEquals(firstSighting, fromDao);
+        assertNotEquals(firstSighting, fromDao);
 
         sightingDao.updateSighting(firstSighting);
 
         Sighting fromDao2 = sightingDao.getSightingById(firstSighting.getSightingId());
 
         assertEquals(firstSighting, fromDao2);
-        assertNotEquals(5, 4);
-//        assertNotEquals(firstSighting, fromDao);
+
+        assertNotEquals(firstSighting, fromDao);
 
     }
 
@@ -375,6 +383,69 @@ public class SightingDaoDBTest {
      */
     @Test
     public void testDeleteSightingById() {
+        Power power = new Power();
+        power.setPowerName("listening to people");
+        power = powerDao.addPower(power);
+
+        Superhero mySuper = new Superhero();
+        mySuper.setSuperheroName("Not Your Ordinary Guy");
+        mySuper.setSuperheroDescription("actually listens and tries to understand");
+        mySuper.setPower(power);
+        superheroDao.addSuperhero(mySuper);
+
+        Location superLocation = new Location();
+        superLocation.setLocationName("Super Location");
+        superLocation.setDescription("You can't beat it");
+        superLocation.setAddress("101 Bedford Ave");
+        superLocation.setCity("Brooklyn");
+        superLocation.setState("NY");
+        superLocation.setZip("11211");
+        superLocation.setLatitude("40.720239");
+        superLocation.setLongitude("-73.954620");
+        superLocation = locationDao.addLocation(superLocation);
+
+        Sighting firstSighting = new Sighting();
+        LocalDate date = LocalDate.parse("2020-01-08");
+        firstSighting.setDate(date);
+        firstSighting.setLocation(superLocation);
+        firstSighting.setSuperhero(mySuper);
+        Sighting addedSighting = sightingDao.addSighting(firstSighting);
+
+        Sighting fromDao = sightingDao.getSightingById(addedSighting.getSightingId());
+
+        Location superLocation2 = new Location();
+        superLocation2.setLocationName("Super Location 2");
+        superLocation2.setDescription("You can't beat it either");
+        superLocation2.setAddress("102 Bedford Ave");
+        superLocation2.setCity("Brooklyn");
+        superLocation2.setState("NY");
+        superLocation2.setZip("11211");
+        superLocation2.setLatitude("40.720440");
+        superLocation2.setLongitude("-73.955290");
+        superLocation2 = locationDao.addLocation(superLocation2);
+
+        Sighting secondSighting = new Sighting();
+        LocalDate date2 = LocalDate.parse("2020-01-09"); //not sure about the format yet
+        secondSighting.setDate(date2);
+        secondSighting.setLocation(superLocation2); //different location
+        secondSighting.setSuperhero(mySuper); //same super
+        Sighting addedSighting2 = sightingDao.addSighting(secondSighting);
+
+        Sighting fromDao2 = sightingDao.getSightingById(addedSighting2.getSightingId());
+
+        List<Sighting> allSightings = sightingDao.getAllSightings();
+
+        assertEquals(allSightings.size(), 2);
+        assertTrue(allSightings.contains(fromDao));
+        assertTrue(allSightings.contains(fromDao2));
+
+        sightingDao.deleteSightingById(fromDao.getSightingId());
+
+        allSightings = sightingDao.getAllSightings();
+        assertEquals(allSightings.size(), 1);
+        assertFalse(allSightings.contains(fromDao));
+        assertTrue(allSightings.contains(fromDao2));
+
     }
 
     /**
@@ -382,6 +453,63 @@ public class SightingDaoDBTest {
      */
     @Test
     public void testGetAllSightingsForDate() {
+
+        Power power = new Power();
+        power.setPowerName("listening to people");
+        power = powerDao.addPower(power);
+
+        Superhero mySuper = new Superhero();
+        mySuper.setSuperheroName("Not Your Ordinary Guy");
+        mySuper.setSuperheroDescription("actually listens and tries to understand");
+        mySuper.setPower(power);
+        superheroDao.addSuperhero(mySuper);
+
+        Location superLocation = new Location();
+        superLocation.setLocationName("Super Location");
+        superLocation.setDescription("You can't beat it");
+        superLocation.setAddress("101 Bedford Ave");
+        superLocation.setCity("Brooklyn");
+        superLocation.setState("NY");
+        superLocation.setZip("11211");
+        superLocation.setLatitude("40.720239");
+        superLocation.setLongitude("-73.954620");
+        superLocation = locationDao.addLocation(superLocation);
+
+        Sighting firstSighting = new Sighting();
+        LocalDate date = LocalDate.parse("2020-01-08");
+        firstSighting.setDate(date);
+        firstSighting.setLocation(superLocation);
+        firstSighting.setSuperhero(mySuper);
+        Sighting addedSighting = sightingDao.addSighting(firstSighting);
+
+        Sighting fromDao = sightingDao.getSightingById(addedSighting.getSightingId());
+
+        Location superLocation2 = new Location();
+        superLocation2.setLocationName("Super Location 2");
+        superLocation2.setDescription("You can't beat it either");
+        superLocation2.setAddress("102 Bedford Ave");
+        superLocation2.setCity("Brooklyn");
+        superLocation2.setState("NY");
+        superLocation2.setZip("11211");
+        superLocation2.setLatitude("40.720440");
+        superLocation2.setLongitude("-73.955290");
+        superLocation2 = locationDao.addLocation(superLocation2);
+
+        Sighting secondSighting = new Sighting();
+        LocalDate date2 = LocalDate.parse("2020-01-09");
+        secondSighting.setDate(date2);
+        secondSighting.setLocation(superLocation2);
+        secondSighting.setSuperhero(mySuper);
+        Sighting addedSighting2 = sightingDao.addSighting(secondSighting);
+
+        Sighting fromDao2 = sightingDao.getSightingById(addedSighting2.getSightingId());
+
+        List<Sighting> allSightings = sightingDao.getAllSightingsForDate(date);
+
+        assertEquals(allSightings.size(), 1);
+        assertTrue(allSightings.contains(fromDao));
+        assertFalse(allSightings.contains(fromDao2));
+
     }
 
 }
