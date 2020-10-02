@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class OrganizationDaoDBTest {
-    
+
     @Autowired
     PowerDao powerDao;
 
@@ -36,7 +36,7 @@ public class OrganizationDaoDBTest {
 
     @Autowired
     SightingDao sightingDao;
-    
+
     public OrganizationDaoDBTest() {
     }
 
@@ -343,5 +343,5 @@ public class OrganizationDaoDBTest {
         fromDao = organizationDao.getOrganizationById(superOrg.getOrgId());
         assertNull(fromDao);
     }
-    
+
 }

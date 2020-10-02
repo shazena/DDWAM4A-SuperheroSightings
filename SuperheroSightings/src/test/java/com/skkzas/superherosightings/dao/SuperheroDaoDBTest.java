@@ -174,7 +174,7 @@ public class SuperheroDaoDBTest {
         superLocation.setState("NY");
         superLocation.setZip("11211");
         superLocation.setLatitude("40.720239");
-        superLocation.setLongitude("-73.9546197");
+        superLocation.setLongitude("-73.954620");
         locationDao.addLocation(superLocation);
 
         Organization superOrg = new Organization();
@@ -255,7 +255,7 @@ public class SuperheroDaoDBTest {
         superLocation.setState("NY");
         superLocation.setZip("11211");
         superLocation.setLatitude("40.720239");
-        superLocation.setLongitude("-73.9546197");
+        superLocation.setLongitude("-73.954620");
         locationDao.addLocation(superLocation);
 
         //first sighting
@@ -356,7 +356,7 @@ public class SuperheroDaoDBTest {
         superLocation.setState("NY");
         superLocation.setZip("11211");
         superLocation.setLatitude("40.720239");
-        superLocation.setLongitude("-73.9546197");
+        superLocation.setLongitude("-73.954620");
         locationDao.addLocation(superLocation);
 
         Organization superOrg = new Organization();

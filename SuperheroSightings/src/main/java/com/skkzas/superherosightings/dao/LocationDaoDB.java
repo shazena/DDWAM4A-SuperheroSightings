@@ -94,33 +94,23 @@ public class LocationDaoDB implements LocationDao {
     @Override
     @Transactional
     public void deleteLocationById(int id) {
-        try {
-            final String DELETE_SIGHTING = "DELETE FROM Sighting "
-                    + "WHERE LocationId = ?";
-            jdbc.update(DELETE_SIGHTING, id);
-        } catch (DataAccessException e) {
+        final String DELETE_SIGHTING = "DELETE FROM Sighting "
+                + "WHERE LocationId = ?";
+        jdbc.update(DELETE_SIGHTING, id);
 
+        final String GET_ORGANIZATIONS_FOR_LOCATION = "SELECT * FROM Organization "
+                + "WHERE LocationId = ?";
+        List<Organization> listOfOrganizations = jdbc.query(GET_ORGANIZATIONS_FOR_LOCATION, new OrganizationMapper(), id);
+
+        for (Organization organization : listOfOrganizations) {
+            final String DELETE_SUPERHEROORGANIZATION = "DELETE FROM SuperheroOrganization "
+                    + "WHERE OrgId = ?";
+            jdbc.update(DELETE_SUPERHEROORGANIZATION, organization.getOrgId());
         }
 
-        try {
-
-            final String GET_ORGANIZATIONS_FOR_LOCATION = "SELECT * FROM Organization "
-                    + "WHERE LocationId = ?";
-            List<Organization> listOfOrganizations = jdbc.query(GET_ORGANIZATIONS_FOR_LOCATION, new OrganizationMapper(), id);
-
-            for (Organization organization : listOfOrganizations) {
-                final String DELETE_SUPERHEROORGANIZATION = "DELETE * FROM SuperheroOrganization "
-                        + "WHERE OrgId = ?";
-                jdbc.update(DELETE_SUPERHEROORGANIZATION, organization.getOrgId());
-            }
-
-            final String DELETE_ORGANIZATIONS = "DELETE FROM Organization "
-                    + "WHERE LocationId = ?";
-            jdbc.update(DELETE_ORGANIZATIONS, id);
-
-        } catch (DataAccessException e) {
-
-        }
+        final String DELETE_ORGANIZATIONS = "DELETE FROM Organization "
+                + "WHERE LocationId = ?";
+        jdbc.update(DELETE_ORGANIZATIONS, id);
 
         final String DELETE_LOCATION = "DELETE FROM Location "
                 + "WHERE LocationId = ?";
@@ -131,11 +121,11 @@ public class LocationDaoDB implements LocationDao {
     @Override
     public List<Location> getAllLocationsForSuperhero(Superhero superhero) {
 
-        final String GET_LOCATIONS_FOR_SUPERHERO = "SELECT * FROM  Location l"
-                + "INNER JOIN Sighting si ON si.locationid = l.locationId"
-                + "INNER JOIN Superhero su ON su.superheroId = si.superheroId"
+        final String GET_LOCATIONS_FOR_SUPERHERO = "SELECT * FROM  Location l "
+                + "INNER JOIN Sighting si ON si.locationid = l.locationId "
+                + "INNER JOIN Superhero su ON su.superheroId = si.superheroId "
                 + "WHERE su.superheroId = ?";
-        return jdbc.query(GET_LOCATIONS_FOR_SUPERHERO, new LocationMapper());
+        return jdbc.query(GET_LOCATIONS_FOR_SUPERHERO, new LocationMapper(), superhero.getSuperheroId());
 
     }
 
