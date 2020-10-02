@@ -180,8 +180,8 @@ public class OrganizationDaoDBTest {
         List<Organization> orgs = organizationDao.getAllOrganizations();
 
         assertEquals(2, orgs.size());
-//        assertTrue(orgs.contains(superOrg));
-//        assertTrue(orgs.contains(superOrg2));
+        assertTrue(orgs.contains(superOrg));
+        assertTrue(orgs.contains(superOrg2));
     }
 
     /**
