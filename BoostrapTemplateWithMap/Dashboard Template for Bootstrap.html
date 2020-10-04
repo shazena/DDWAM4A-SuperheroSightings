@@ -19,6 +19,26 @@
     crossorigin="" />
   <!-- Custom styles for this template -->
   <link href="Dashboard%20Template%20for%20Bootstrap_files/dashboard.css" rel="stylesheet">
+  <style>
+    .news {
+      width: 160px
+    }
+
+    .news-scroll a {
+      text-decoration: none
+    }
+
+    .dot {
+      height: 6px;
+      width: 6px;
+      margin-left: 3px;
+      margin-right: 3px;
+      margin-top: 2px !important;
+      background-color: rgb(207, 23, 23);
+      border-radius: 50%;
+      display: inline-block
+    }
+  </style>
 </head>
 
 <!-- <body class="vsc-initialized"> -->
@@ -30,60 +50,59 @@
 
   <div class="container-fluid">
     <div class="row">
-      <nav class="col-md-2 d-none d-md-block bg-light sidebar" >
+      <nav class="col-md-2 d-none d-md-block bg-light sidebar">
         <div class="sidebar-sticky">
           <ul class="nav flex-column">
             <li class="nav-item">
               <a class="nav-link active" href="#">
-                Dashboard <span class="sr-only">(current)</span>
+                Superheroes <span class="sr-only">(current)</span>
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
-                Orders
+                Powers
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
-                Products
+                Locations
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
-                Customers
+                Organizations
               </a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#">
-                Reports
-              </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">
-                Integrations
+                Sightings
               </a>
             </li>
           </ul>
         </div>
-      </nav>
+      </nav> <!-- end sidebar -->
 
       <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-        <div
-          style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"
-          class="chartjs-size-monitor">
-          <div class="chartjs-size-monitor-expand"
-            style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-            <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-          </div>
-          <div class="chartjs-size-monitor-shrink"
-            style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-            <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-          </div>
-        </div>
-        <div
+        <!-- <div
           class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">Dashboard</h1>
-        </div>
+        </div> -->
+        <div class="row my-3">
+          <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center breaking-news bg-white">
+              <div
+                class="d-flex flex-row flex-grow-1 flex-fill justify-content-center bg-primary py-2 text-white px-1 news" >
+                <span class="d-flex align-items-center">&nbsp;Latest Sightings</span></div>
+              <marquee class="news-scroll" behavior="scroll" direction="left" onmouseover="this.stop();"
+                onmouseout="this.start();"> <a href="#">On 3/20/2020, Superman was sighted at Labcorp! </a> <span
+                  class="dot"></span> <a href="#">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                  eiusmod tempor incididunt ut </a> <span class="dot"></span> <a href="#">Duis aute irure dolor in
+                  reprehenderit in voluptate velit esse </a> </marquee>
+            </div>
+          </div>
+        </div> 
+        <!-- end Sighting Ticker -->
+<div class="row border-bottom: 1px;"></div>
 
         <div id="map" style="height: 500px"></div>
 
