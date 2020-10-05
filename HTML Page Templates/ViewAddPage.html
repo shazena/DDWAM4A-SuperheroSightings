@@ -11,12 +11,11 @@
           integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin = "anonymous">
     <!-- Custom styles for this template -->
-    <link href = "../static/css/dashboard.css" th:href = "@{/css/dashboard.css}" rel = "stylesheet">
-    <link href = "../static/css/superheroSightingsStyles.css" th:href = "@{/css/superheroSightingsStyles.css}"
-          rel = "stylesheet">
+    <link href = "../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel = "stylesheet">
+    <link href = "../static/css/superheroSightingsStyles.css" th:href="@{/css/superheroSightingsStyles.css}" rel = "stylesheet">
 
 
-    <style th:inline = "text">
+    <style th:inline="text">
         .sidebar {
             /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
             background-image: url([[@{/images/AquamanBG.jpg}]]);
@@ -31,10 +30,9 @@
 <!--    INSTRUCTIONS:
     1. In the sidebar, change the span class to "currentPageLink" so that the current page is underlined.
     2. Don't forget to update the image in the CSS above to be for the correct page!
-    3. Add in the class "active" to the a tag, next to "nav-link". This changes the link to be blue.
-    4. For the table name, replace the contents of the specified h2.
-    5. For the form header, replace the contents of the specified h2 with class "formHeader".
-    6. The following is a template of one item in a form. col-sizes are already fixed.
+    3. For the table name, replace the contents of the specified h2.
+    4. For the form header, replace the contents of the specified h2 with class "formHeader".
+    5. The following is a template of one item in a form. col-sizes are already fixed.
     <div class="form-group row">
         <label for="name" class="col-3 col-form-label">Name</label>
         <div class="col-9">
@@ -65,7 +63,7 @@
                             </a>
                         </li>
                         <li class = "nav-item">
-                            <a class = "nav-link active" href = "locations">
+                            <a class = "nav-link" href = "locations">
                                 <span class = "currentPageLink">Locations</span>
                             </a>
                         </li>
@@ -116,8 +114,7 @@
                                 <td th:text = "${location.state}">State</td>
                                 <td th:text = "${location.zip}">Zip</td>
                                 <td><a href = "#" th:href = "@{/locationEdit(id=${location.locationId})}">Edit</a></td>
-                                <td><a href = "#" th:href = "@{/locationDelete(id=${location.locationId})}">Delete</a>
-                                </td>
+                                <td><a href = "#" th:href = "@{/locationDelete(id=${location.locationId})}">Delete</a></td>
                             </tr>
                             </tbody>
                         </table>
@@ -135,50 +132,46 @@
 
                         <!--BEGIN ADD FORM-->
 
-                        <form action = "addTeacher" method = "POST">
+                        <form action="addTeacher" method="POST">
 
-                            <div class = "form-group row">
-                                <label for = "name" class = "col-3 col-form-label">Name</label>
-                                <div class = "col-9">
-                                    <input type = "text" name = "name" id = "name" class = "form-control">
+                            <div class="form-group row">
+                                <label for="name" class="col-3 col-form-label">Name</label>
+                                <div class="col-9">
+                                    <input type="text" name="name" id="name" class="form-control">
                                 </div>
                             </div>
 
-                            <div class = "form-group row">
-                                <label for = "address" class = "col-3 col-form-label">
+                            <div class="form-group row">
+                                <label for="address" class="col-3 col-form-label">
                                     Address</label>
-                                <div class = "col-9">
-                                    <input type = "text" name = "lastName" id = "lastName" class = "form-control">
+                                <div class="col-9">
+                                    <input type="text" name="lastName" id="lastName" class="form-control">
                                 </div>
                             </div>
-                            <div class = "form-group row">
-                                <label for = "specialty" class = "col-3 col-form-label">
+                            <div class="form-group row">
+                                <label for="specialty" class="col-3 col-form-label">
                                     City</label>
-                                <div class = "col-9">
-                                    <input type = "text" name = "specialty" id = "specialty" class = "form-control">
+                                <div class="col-9">
+                                    <input type="text" name="specialty" id="specialty" class="form-control">
                                 </div>
                             </div>
 
-                            <div class = "form-group row">
-                                <label for = "specialty" class = "col-3 col-form-label">State</label>
-                                <div class = "col-9">
-                                    <input type = "text" name = "specialty" id = "specialty" class = "form-control">
+                            <div class="form-group row">
+                                <label for="specialty" class="col-3 col-form-label">State</label>
+                                <div class="col-9">
+                                    <input type="text" name="specialty" id="specialty" class="form-control">
                                 </div>
+                            </div><div class="form-group row">
+                            <label for="specialty" class="col-3 col-form-label">Zip</label>
+                            <div class="col-9">
+                                <input type="text" name="specialty" id="specialty" class="form-control">
                             </div>
-                            <div class = "form-group row">
-                                <label for = "specialty" class = "col-3 col-form-label">Zip</label>
-                                <div class = "col-9">
-                                    <input type = "text" name = "specialty" id = "specialty" class = "form-control">
-                                </div>
+                        </div><div class="form-group row">
+                            <label for="specialty" class="col-3 col-form-label">Description</label>
+                            <div class="col-9">
+                                <textarea name="specialty" id="specialty" class="form-control"></textarea>
                             </div>
-                            <div class = "form-group row">
-                                <label for = "specialty" class = "col-3 col-form-label">Description</label>
-                                <div class = "col-9">
-                                    <textarea name = "specialty" id = "specialty" class = "form-control"></textarea>
-                                </div>
-                            </div>
-                            <button type = "submit" class = "btn btn-primary">Add Location</button>
-                        </form>
+                        </div><button type="submit" class="btn btn-primary">Add Location</button></form>
 
                         <!-- END OF FORM -->
                     </div>
