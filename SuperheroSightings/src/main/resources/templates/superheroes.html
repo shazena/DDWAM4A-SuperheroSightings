@@ -104,9 +104,9 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each = "superheroes : ${allSuperheroes}">
+                        <tr th:each = "superhero : ${allSuperheroes}">
                             <td><a href ="#" th:href ="@{superheroDetails(id=${superhero.superheroId})}"><span th:text = "${superhero.superheroName}">Superhero Name</span></a></td>
-                            <td th:text = "${superhero.power}">Power</td>
+                            <td th:text = "${superhero.power.powerName}">Power</td>
                             <td><a href = "#" th:href = "@{/superheroEdit(id=${superhero.superheroId})}">Edit</a></td>
                             <td><a href = "#" th:href = "@{/superheroDelete(id=${superhero.superheroId})}">Delete</a></td></tr>
                         </tbody>
@@ -148,7 +148,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <button type="button" class="btn btn-secondary col-12">Click here to add a new Power instead</button>
+                            <button type="submit" class=" col-12 btn btn-outline-dark btn-sm my-2">Click here to add a new power instead</button>
                         </div>
 
 
