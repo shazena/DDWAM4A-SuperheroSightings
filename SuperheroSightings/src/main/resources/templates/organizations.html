@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang = "en" xmlns:th = "http://www.thymeleaf.org">
 
+<!--CHANGES IN ADD TABLE STYLING FOR ORGANIZATION!!!
+labels have class col-4 and the fields col-8
+-->
+
 <head>
     <meta http-equiv = "content-type" content = "text/html; charset=UTF-8">
     <meta charset = "utf-8">
@@ -127,46 +131,39 @@
 
                     <!--BEGIN ADD FORM-->
 
-                    <form action="addOrganization" method="POST">
-
+                    <form action="addTeacher" method="POST">
                         <div class="form-group row">
-                            <label for="name" class="col-3 col-form-label">Name</label>
-                            <div class="col-9">
-                                <input type="text" name="name" id="name" class="form-control">
-                            </div>
-                        </div>
-
-                        <div class="form-group row">
-                            <label for="address" class="col-3 col-form-label">
-                                Address</label>
-                            <div class="col-9">
-                                <input type="text" name="lastName" id="lastName" class="form-control">
+                            <label for="name" class="col-4 col-form-label">Name</label>
+                            <div class="col-8">
+                                <input type="text" name="name" id="name" class="form-control" placeholder="">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="specialty" class="col-3 col-form-label">
-                                City</label>
-                            <div class="col-9">
-                                <input type="text" name="specialty" id="specialty" class="form-control">
+                            <label for="name" class="col-4 col-form-label">Phone</label>
+                            <div class="col-8">
+                                <!--<input type="text" name="name" id="name" class="form-control" placeholder="">-->
+                                <input type="text" id="phoneNum" maxlength="14" class="form-control" />
+                                <input type="hidden" id="phoneNumDB" />
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <label for="name" class="col-4 col-form-label">Location</label>
+                            <div class="col-8">
+                                <select type="text" name="name" id="name" class="form-control" placeholder=""></select>
+                            </div>
+                        </div><button type="submit" class="btn btn-outline-dark btn-sm my-2">Click here to enter a new location instead</button>
 
                         <div class="form-group row">
-                            <label for="specialty" class="col-3 col-form-label">State</label>
-                            <div class="col-9">
-                                <input type="text" name="specialty" id="specialty" class="form-control">
+                            <label for="specialty" class="col-4 col-form-label">Organization Description</label>
+                            <div class="col-8">
+                                <textarea name="specialty" id="specialty" class="form-control" placeholder=""></textarea>
                             </div>
                         </div><div class="form-group row">
-                        <label for="specialty" class="col-3 col-form-label">Zip</label>
-                        <div class="col-9">
-                            <input type="text" name="specialty" id="specialty" class="form-control">
+                        <label for="name" class="col-4 col-form-label">Superheroes</label>
+                        <div class="col-8">
+                            <select type="text" name="name" id="name" class="form-control" placeholder=""></select>
                         </div>
-                    </div><div class="form-group row">
-                        <label for="specialty" class="col-3 col-form-label">Description</label>
-                        <div class="col-9">
-                            <textarea name="specialty" id="specialty" class="form-control"></textarea>
-                        </div>
-                    </div><button type="submit" class="btn btn-primary">Add Location</button></form>
+                    </div><button type="submit" class="btn btn-primary">Add Organization</button></form>
 
                     <!-- END OF FORM -->
                 </div>
@@ -186,6 +183,35 @@
 <script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity = "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin = "anonymous"></script>
+
+<script>
+
+//js for formatting the phone number as user types it
+
+    let telEl = document.querySelector('#phoneNum');
+
+    telEl.addEventListener('keyup', (e) => {
+  let val = e.target.value;
+  e.target.value = val
+    .replace(/\D/g, '')
+    .replace(/(\d{1,3})(\d{1,3})?(\d{1,4})?/g, function(txt, f, s, t) {
+      if (t) {
+        return `(${f}) ${s}-${t}`
+      } else if (s) {
+        return `(${f}) ${s}`
+      } else if (f) {
+        return `(${f})`
+      }
+    });
+})
+
+console.log(telEl.value);
+
+<!--//getting rid of extra characters for storing phone numbers in DB-->
+<!--let telDB = document.querySelector('#phoneNumDB');-->
+<!--telDB = telDB.replace(/[^0-9]/g, '');-->
+<!--console.log(telDB);-->
+</script>
 </body>
 
 </html>
