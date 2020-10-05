@@ -1,0 +1,20 @@
+{
+    "elements": {},
+    "attributes": {
+        "th:text": {
+            "context": "td"
+        },
+        "integrity": {
+            "context": "link"
+        },
+        "th:href": {
+            "context": "link"
+        },
+        "th:inline": {
+            "context": "style"
+        },
+        "th:each": {
+            "context": "tr"
+        }
+    }
+}
