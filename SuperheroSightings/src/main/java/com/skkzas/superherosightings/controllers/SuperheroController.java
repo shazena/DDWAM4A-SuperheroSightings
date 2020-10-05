@@ -40,4 +40,11 @@ public class SuperheroController {
 
         return "superheroes";
     }
+
+    @GetMapping("superheroDetails")
+    public String superheroDetails(Integer id, Model model) {
+        Superhero theSuperhero = superheroDao.getSuperheroById(id);
+        model.addAttribute("superhero", theSuperhero);
+        return "superheroDetails";
+    }
 }
