@@ -108,7 +108,7 @@
                             </thead>
                             <tbody>
                             <tr th:each = "location : ${allLocations}">
-                                <td th:text = "${location.locationName}">Location Name</td>
+                                <td><a href ="#" th:href ="@{locationDetails(id=${location.locationId})}"><span th:text = "${location.locationName}">Location Name</span></a></td>
                                 <td th:text = "${location.address}">Address</td>
                                 <td th:text = "${location.city}">City</td>
                                 <td th:text = "${location.state}">State</td>
