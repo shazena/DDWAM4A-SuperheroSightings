@@ -40,4 +40,11 @@ public class OrganizationController {
 
         return "organizations";
     }
+
+    @GetMapping("organizationDetails")
+    public String organizationDetails(Integer id, Model model) {
+        Organization theOrganization = organizationDao.getOrganizationById(id);
+        model.addAttribute("organization", theOrganization);
+        return "organizationDetails";
+    }
 }
