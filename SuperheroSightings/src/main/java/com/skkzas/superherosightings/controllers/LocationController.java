@@ -44,5 +44,12 @@ public class LocationController {
 
         return "locations";
     }
+    
+    @GetMapping("locationDetails")
+    public String locationDetails(Integer id, Model model) {
+        Location theLocation = locationDao.getLocationById(id);
+        model.addAttribute("location", theLocation);
+        return "locationDetails";
+    }
 
 }

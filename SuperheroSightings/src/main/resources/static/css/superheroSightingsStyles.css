@@ -5,3 +5,7 @@
 h2.formHeader{
     margin-bottom: 20px;
 }
+
+h2.detailsHeader{
+    border-bottom: 1px solid black;
+}
