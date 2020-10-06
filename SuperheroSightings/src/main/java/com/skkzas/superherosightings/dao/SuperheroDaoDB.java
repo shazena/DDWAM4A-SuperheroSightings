@@ -79,12 +79,14 @@ public class SuperheroDaoDB implements SuperheroDao {
     public void updateSuperhero(Superhero superhero) {
         final String UPDATE_Superhero = "UPDATE Superhero SET "
                 + "SuperheroName = ?, "
-                + "Description = ? "
+                + "Description = ?, "
+                + "PowerId = ? "
                 + "WHERE SuperheroId = ?";
 
         jdbc.update(UPDATE_Superhero,
                 superhero.getSuperheroName(),
                 superhero.getSuperheroDescription(),
+                superhero.getPower().getPowerId(),
                 superhero.getSuperheroId());
     }
 
