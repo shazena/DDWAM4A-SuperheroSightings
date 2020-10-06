@@ -1,6 +1,18 @@
 package com.skkzas.superherosightings.controllers;
 
+import com.skkzas.superherosightings.dao.*;
+import com.skkzas.superherosightings.dto.Location;
+import com.skkzas.superherosightings.dto.Organization;
+import com.skkzas.superherosightings.dto.Superhero;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -10,4 +22,87 @@ import org.springframework.stereotype.Controller;
  */
 @Controller
 public class OrganizationController {
+
+    @Autowired
+    PowerDao powerDao;
+
+    @Autowired
+    SuperheroDao superheroDao;
+
+    @Autowired
+    OrganizationDao organizationDao;
+
+    @Autowired
+    LocationDao locationDao;
+
+    @Autowired
+    SightingDao sightingDao;
+
+    @GetMapping("organizations")
+    public String displayAllOrganizations(Model model) {
+        List<Organization> allOrganizations = organizationDao.getAllOrganizations();
+        List<Location> locations = locationDao.getAllLocations();
+        List<Superhero> superheroes = superheroDao.getAllSuperheros();
+
+        for (Organization organization : allOrganizations) {
+
+            String unformattedPhoneNumber = organization.getPhoneNumber();
+            String formattedPhoneNumber = "("
+                    + unformattedPhoneNumber.substring(0, 3)
+                    + ") "
+                    + unformattedPhoneNumber.substring(3, 6)
+                    + " - "
+                    + unformattedPhoneNumber.substring(6, 10);
+            organization.setPhoneNumber(formattedPhoneNumber);
+        }
+
+        model.addAttribute("allOrganizations", allOrganizations);
+        model.addAttribute("locations", locations);
+        model.addAttribute("superheroes", superheroes);
+
+        return "organizations";
+    }
+
+    @PostMapping("addOrganization")
+    public String addOrganization(Organization organization, HttpServletRequest request) {
+        String name = request.getParameter("name");
+        //strip down the phone here (get rid of parenthesis and dashes)
+//        List<Organization> allOrganizations = orgDao.getAllOrgs();
+//        for each organization in allOrganizations{
+//            String unformattedPhoneNumber = organization.getPhoneNumber();
+//            String formattedPhoneNumber = "("+
+//                    unformattedPhoneNumber.substring(0,3)+
+//                    ") " +
+//                    unformattedPhoneNumber.substring(3,6)+
+//                    " - " +
+//                    unformattedPhoneNumber.substring(6,10);
+//            organization.setPhoneNumber(formattedPhoneNumber);
+//        }
+        String phone = request.getParameter("phoneNum");
+        String locationId = request.getParameter("locationId");
+        String description = request.getParameter("description");
+        String[] superheroIds = request.getParameterValues("superheroId");
+
+        organization.setOrgName(name);
+        organization.setPhoneNumber(phone);
+        organization.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
+        organization.setDescription(description);
+
+        List<Superhero> superheroes = new ArrayList<>();
+        for (String superheroId : superheroIds) {
+            superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+        }
+        organization.setListOfSuperheroes(superheroes);
+
+        organizationDao.addOrganization(organization);
+
+        return "redirect:/organizations";
+    }
+
+    @GetMapping("organizationDetails")
+    public String organizationDetails(Integer id, Model model) {
+        Organization theOrganization = organizationDao.getOrganizationById(id);
+        model.addAttribute("organization", theOrganization);
+        return "organizationDetails";
+    }
 }
