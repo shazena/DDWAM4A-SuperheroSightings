@@ -47,4 +47,6 @@ public class SuperheroController {
         model.addAttribute("superhero", theSuperhero);
         return "superheroDetails";
     }
+
+
 }
