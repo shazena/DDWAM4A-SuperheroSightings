@@ -95,14 +95,15 @@
 
                     <!--BEGIN ADD FORM-->
 
-                    <form action="editPower" method="POST">
+                    <form action="powerEdit" method="POST">
 
                         <div class="form-group row">
                             <label for="name" class="col-3 col-form-label">Name</label>
                             <div class="col-9">
-                                <input type="text" name="name" id="name" class="form-control">
+                                <input th:value="${power.powerName}" type="text" name="name" id="name" class="form-control">
                             </div>
                         </div>
+                        <input type="hidden" name="id" th:value="${power.powerId}"/>
                         <button type="submit" class="btn btn-primary">Update Power</button></form>
 
                     <!-- END OF FORM -->
