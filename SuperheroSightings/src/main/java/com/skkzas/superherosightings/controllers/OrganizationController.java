@@ -22,6 +22,7 @@ import java.util.List;
  */
 @Controller
 public class OrganizationController {
+
     @Autowired
     PowerDao powerDao;
 
@@ -43,21 +44,21 @@ public class OrganizationController {
         List<Location> locations = locationDao.getAllLocations();
         List<Superhero> superheroes = superheroDao.getAllSuperheros();
 
+        for (Organization organization : allOrganizations) {
+
+            String unformattedPhoneNumber = organization.getPhoneNumber();
+            String formattedPhoneNumber = "("
+                    + unformattedPhoneNumber.substring(0, 3)
+                    + ") "
+                    + unformattedPhoneNumber.substring(3, 6)
+                    + " - "
+                    + unformattedPhoneNumber.substring(6, 10);
+            organization.setPhoneNumber(formattedPhoneNumber);
+        }
+
         model.addAttribute("allOrganizations", allOrganizations);
         model.addAttribute("locations", locations);
         model.addAttribute("superheroes", superheroes);
-
-        //        List<Organization> allOrganizations = orgDao.getAllOrgs();
-//        for each organization in allOrganizations{
-//            String unformattedPhoneNumber = organization.getPhoneNumber();
-//            String formattedPhoneNumber = "("+
-//                    unformattedPhoneNumber.substring(0,3)+
-//                    ") " +
-//                    unformattedPhoneNumber.substring(3,6)+
-//                    " - " +
-//                    unformattedPhoneNumber.substring(6,10);
-//            organization.setPhoneNumber(formattedPhoneNumber);
-//        }
 
         return "organizations";
     }
@@ -88,7 +89,7 @@ public class OrganizationController {
         organization.setDescription(description);
 
         List<Superhero> superheroes = new ArrayList<>();
-        for(String superheroId : superheroIds) {
+        for (String superheroId : superheroIds) {
             superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
         }
         organization.setListOfSuperheroes(superheroes);
