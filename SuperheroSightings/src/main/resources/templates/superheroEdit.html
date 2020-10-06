@@ -95,7 +95,7 @@
 
                 <div class = "row m-4">
                     <div class = "col-9 text-right">
-                        <form action = "editSuperhero" method = "POST">
+                        <form action = "superheroEdit" method = "POST">
                             <div class = "form-group row">
                                 <label for = "name" class = "col-4 col-form-label">Name</label>
                                 <div class = "col-8">
@@ -109,8 +109,9 @@
                                 <div class="col-8">
                                     <select id="power" name="powerId" class="form-control" >
                                         <option th:each="power : ${powers}"
-                                                th:value="${power.id}"
-                                                th:text="${power.Name}">
+                                                th:value="${power.powerId}"
+                                                th:text="${power.powerName}"
+                                                th:selected="${superhero.power.powerId == power.powerId }">
                                             Power Name</option>
                                     </select>
                                 </div>
@@ -129,9 +130,10 @@
                             <div class = "form-group row">
                                 <label for = "description" class = "col-4 col-form-label">Description</label>
                                 <div class = "col-8">
-                                    <textarea name = "description" id = "description" class = "form-control" th:inline="text">[[${superhero.superheroName}]]</textarea>
+                                    <textarea name = "description" id = "description" class = "form-control" th:inline="text">[[${superhero.superheroDescription}]]</textarea>
                                 </div>
                             </div>
+                            <input type="hidden" name="id" th:value="${superhero.superheroId}"/>
                             <button type = "submit" class = "btn btn-primary mx-3">Cancel</button>
                             <button type = "submit" class = "btn btn-primary">Update Superhero</button>
                         </form>

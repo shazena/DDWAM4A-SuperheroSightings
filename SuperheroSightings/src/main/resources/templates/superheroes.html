@@ -140,8 +140,8 @@
                             <div class="col-9">
                                 <select id="power" name="powerId" class="form-control" >
                                     <option th:each="power : ${powers}"
-                                            th:value="${power.id}"
-                                            th:text="${power.Name}">
+                                            th:value="${power.powerId}"
+                                            th:text="${power.powerName}">
                                         Power Name</option>
                                 </select>
                             </div>
