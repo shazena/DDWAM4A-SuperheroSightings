@@ -44,12 +44,20 @@ public class LocationController {
 
         return "locations";
     }
-    
+
     @GetMapping("locationDetails")
     public String locationDetails(Integer id, Model model) {
         Location theLocation = locationDao.getLocationById(id);
         model.addAttribute("location", theLocation);
         return "locationDetails";
+    }
+
+    @GetMapping("locationEdit")
+    public String editLocation(Integer id, Model model) {
+        Location location = locationDao.getLocationById(id);
+        model.addAttribute("location", location);
+
+        return "locationEdit";
     }
 
 }
