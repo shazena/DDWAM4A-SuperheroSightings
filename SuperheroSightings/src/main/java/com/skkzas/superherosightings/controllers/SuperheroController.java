@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -68,6 +69,29 @@ public class SuperheroController {
         return "superheroDetails";
     }
 
+    @GetMapping("superheroDelete")
+    public String deleteSuperhero(HttpServletRequest request, Model model) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Superhero superhero = superheroDao.getSuperheroById(id);
+
+        model.addAttribute("superhero", superhero);
+        return "superheroDelete";
+    }
+
+    @GetMapping("superheroDeleteConfirm")
+    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/superheroes";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Superhero superhero = superheroDao.getSuperheroById(id);
+
+        superheroDao.deleteSuperheroById(superhero.getSuperheroId());
+
+        return "redirect:/superheroes";
+    }
+
     @GetMapping("superheroEdit")
     public String editSuperhero(Integer id, Model model) {
         Superhero superhero = superheroDao.getSuperheroById(id);
@@ -79,7 +103,11 @@ public class SuperheroController {
     }
 
     @PostMapping("superheroEdit")
-    public String performSuperheroEdit(HttpServletRequest request) {
+    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/superheroes";
+        }
+
         int id = Integer.parseInt(request.getParameter("id"));
         Superhero superhero = superheroDao.getSuperheroById(id);
 
@@ -95,13 +123,4 @@ public class SuperheroController {
 
         return "redirect:/superheroes";
     }
-
-//    int id = Integer.parseInt(request.getParameter("id"));
-//    Power power = powerDao.getPowerById(id);
-//
-//        power.setPowerName(request.getParameter("name"));
-//
-//        powerDao.updatePower(power);
-//
-//        return "redirect:/powers";
 }

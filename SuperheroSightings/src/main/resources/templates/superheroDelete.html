@@ -17,29 +17,22 @@
 
 
     <style th:inline = "text">
-            .sidebar {
-                /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
-                background-image: url([[@{/images/SuperheroesS.jpg}]]);
-                background-position: bottom;
-                background-repeat: no-repeat;
-                background-size: 50%;
-            }
-        </style>
+        .sidebar {
+            /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
+            background-image: url([[@{/SuperheroesS.jpg}]]);
+            background-position: bottom;
+            background-repeat: no-repeat;
+            background-size: 50%;
+        }
+    </style>
 
 </head>
 
 <!--    INSTRUCTIONS:
     1. In the sidebar, change the span class to "currentPageLink" so that the current page is underlined.
-    2. Don't forget to update the image in the CSS above to be for the correct page!
-    3. For the table name, replace the contents of the specified h2.
-    4. For the form header, replace the contents of the specified h2 with class "formHeader".
-    5. The following is a template of one item in a form. col-sizes are already fixed.
-    <div class="form-group row">
-        <label for="name" class="col-3 col-form-label">Name</label>
-        <div class="col-9">
-            <input type="text" name="name" id="name" class="form-control">
-        </div>
-    </div>
+    2. Change the picture above to match the page that you're working on.
+    3. Bring in all the lists to this page, update the thymeleaf pieces to create the p tags for each item in each list.
+    4. Don't forget to update the form action.
 -->
 
 
@@ -83,55 +76,28 @@
         </nav> <!-- end sidebar -->
 
         <main role = "main" class = "col-md-9 ml-sm-auto col-lg-10 px-4">
-            <div class = "content" style="margin: 30px;">
+            <div class = "content" style = "margin: 30px;">
 
-
-                <div class = "row">
-                    <div class = "col-3 text-center">
-                        <h2>Edit Superhero</h2>
+                <div class="row border border-dark">
+                    <div class="text-center container">
+                        <h3>Are you sure you want to delete Superhero "[[${superhero.superheroName}]]"?</h3>
+                        <p>It will also delete the following: <br>
+                            Sighting "[date here]" at Location "[location name here]"
+                        </p>
                     </div>
-                </div>
 
-
-                <div class = "row m-4">
-                    <div class = "col-9 text-right">
-                        <form action = "superheroEdit" method = "POST">
-                            <div class = "form-group row">
-                                <label for = "name" class = "col-4 col-form-label">Name</label>
-                                <div class = "col-8">
-                                    <input th:value="${superhero.superheroName}" type = "text" name = "name" id = "name" class = "form-control">
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="power" class="col-4 col-form-label">
-                                    Power</label>
-                                <div class="col-8">
-                                    <select id="power" name="powerId" class="form-control" >
-                                        <option th:each="power : ${powers}"
-                                                th:value="${power.powerId}"
-                                                th:text="${power.powerName}"
-                                                th:selected="${superhero.power.powerId == power.powerId }">
-                                            Power Name</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class = "form-group row">
-                                <label for = "description" class = "col-4 col-form-label">Description</label>
-                                <div class = "col-8">
-                                    <textarea name = "description" id = "description" class = "form-control" th:inline="text">[[${superhero.superheroDescription}]]</textarea>
-                                </div>
-                            </div>
-                            <input type="hidden" name="id" th:value="${superhero.superheroId}"/>
-                            <button type="submit" name="action" value="cancel" class = "btn btn-primary mx-3">Cancel</button>
-                            <button type="submit" name="action" value="update" class = "btn btn-primary">Update Superhero</button>
+                    <div class = "text-center container">
+                        <!--DON'T FORGET TO CHANGE ACTION BASED ON YOUR PAGE-->
+                        <form method = "GET" action = "superheroDeleteConfirm">
+                            <input type = "hidden" name = "id" th:value="${superhero.superheroId}">
+                            <button type="submit" name="action" value="cancel" class = "btn btn-primary text-center m-2">Cancel</button>
+                            <button type="submit" name="action" value="confirm" class = "btn btn-danger text-center m-2">Confirm</button>
                         </form>
                     </div>
+
                 </div>
 
-
-            </div>
+            </div> <!--end of main content div-->
         </main>
     </div>
 </div>

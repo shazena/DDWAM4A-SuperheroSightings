@@ -11,34 +11,28 @@
           integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin = "anonymous">
     <!-- Custom styles for this template -->
-    <link href = "../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel = "stylesheet">
-    <link href = "../static/css/superheroSightingsStyles.css" th:href="@{/css/superheroSightingsStyles.css}" rel = "stylesheet">
+    <link href = "../static/css/dashboard.css" th:href = "@{/css/dashboard.css}" rel = "stylesheet">
+    <link href = "../static/css/superheroSightingsStyles.css" th:href = "@{/css/superheroSightingsStyles.css}"
+          rel = "stylesheet">
 
 
-    <style th:inline="text">
-            .sidebar {
-                /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
-                background-image: url([[@{/images/PowersB.jpg}]]);
-                background-position: bottom;
-                background-repeat: no-repeat;
-                background-size: 50%;
-            }
-        </style>
+    <style th:inline = "text">
+        .sidebar {
+            /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
+            background-image: url([[@{/images/PowersB.jpg}]]);
+            background-position: bottom;
+            background-repeat: no-repeat;
+            background-size: 50%;
+        }
+    </style>
 
 </head>
 
 <!--    INSTRUCTIONS:
     1. In the sidebar, change the span class to "currentPageLink" so that the current page is underlined.
-    2. Don't forget to update the image in the CSS above to be for the correct page!
-    3. For the table name, replace the contents of the specified h2.
-    4. For the form header, replace the contents of the specified h2 with class "formHeader".
-    5. The following is a template of one item in a form. col-sizes are already fixed.
-    <div class="form-group row">
-        <label for="name" class="col-3 col-form-label">Name</label>
-        <div class="col-9">
-            <input type="text" name="name" id="name" class="form-control">
-        </div>
-    </div>
+    2. Change the picture above to match the page that you're working on.
+    3. Bring in all the lists to this page, update the thymeleaf pieces to create the p tags for each item in each list.
+    4. Don't forget to update the form action.
 -->
 
 
@@ -82,34 +76,27 @@
         </nav> <!-- end sidebar -->
 
         <main role = "main" class = "col-md-9 ml-sm-auto col-lg-10 px-4">
-            <div class = "content" style = "display: grid; grid-template-columns: 2fr 1fr;">
+            <div class = "content" style = "margin: 30px;">
 
-                <div class = "right text-center m-3">
+                <div class="row border border-dark">
+                    <div class="text-center container">
+                        <h3>Are you sure you want to delete Power "[[${power.powerName}]]"?</h3>
+                        <p>It will also delete the following: <br>
+                            Superhero " " <br>
+                            Sighting " " at Location " ".</p>
+                    </div>
 
-                    <!--FORM HEADER START-->
-
-                    <h2 class = "formHeader">Edit Power</h2>
-
-                    <!--FORM HEADER END-->
-
-
-                    <!--BEGIN ADD FORM-->
-
-                    <form action="powerEdit" method="POST">
-
-                        <div class="form-group row">
-                            <label for="name" class="col-3 col-form-label">Name</label>
-                            <div class="col-9">
-                                <input th:value="${power.powerName}" type="text" name="name" id="name" class="form-control">
-                            </div>
-                        </div>
-                        <input type="hidden" name="id" th:value="${power.powerId}"/>
-                        <button type="submit" name="action" value="cancel" class = "btn btn-primary mx-3">Cancel</button>
-                        <button type="submit" name="action" value="update" class = "btn btn-primary">Update Power</button></form>
-
-                    <!-- END OF FORM -->
+                    <div class = "text-center container">
+                        <!--DON'T FORGET TO CHANGE ACTION BASED ON YOUR PAGE-->
+                        <form method = "GET" action = "powerDeleteConfirm">
+                            <input type = "hidden" name = "id" th:value="${power.powerId}">
+                            <button type="submit" name="action" value="cancel" class = "btn btn-primary text-center m-2">Cancel</button>
+                            <button type="submit" name="action" value="confirm" class = "btn btn-danger text-center m-2">Confirm</button>
+                        </form>
+                    </div>
                 </div>
-            </div>
+
+            </div> <!--end of main content div-->
         </main>
     </div>
 </div>
