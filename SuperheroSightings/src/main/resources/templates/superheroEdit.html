@@ -117,16 +117,6 @@
                                 </div>
                             </div>
 
-                                    <!--COPIED FROM THE COURSE DETAILS - ADAPT AS NECESSARY-->
-                                    <!--<select id="teacher" name="teacherId" class="form-control" >
-                                           <option th:each="teacher : ${teachers}"
-                                                   th:value="${teacher.id}"
-                                                   th:text="${teacher.firstName + ' '
-                                                     + teacher.lastName}"
-                                                  th:selected="${course.teacher.id == teacher.id}">
-                                                 Teacher Name</option>
-                                          </select>-->
-
                             <div class = "form-group row">
                                 <label for = "description" class = "col-4 col-form-label">Description</label>
                                 <div class = "col-8">
@@ -134,8 +124,8 @@
                                 </div>
                             </div>
                             <input type="hidden" name="id" th:value="${superhero.superheroId}"/>
-                            <button type = "submit" class = "btn btn-primary mx-3">Cancel</button>
-                            <button type = "submit" class = "btn btn-primary">Update Superhero</button>
+                            <button type="submit" name="action" value="cancel" class = "btn btn-primary mx-3">Cancel</button>
+                            <button type="submit" name="action" value="update" class = "btn btn-primary">Update Superhero</button>
                         </form>
                     </div>
                 </div>

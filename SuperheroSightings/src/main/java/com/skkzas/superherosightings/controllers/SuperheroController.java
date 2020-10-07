@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -79,7 +80,11 @@ public class SuperheroController {
     }
 
     @PostMapping("superheroEdit")
-    public String performSuperheroEdit(HttpServletRequest request) {
+    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/superheroes";
+        }
+
         int id = Integer.parseInt(request.getParameter("id"));
         Superhero superhero = superheroDao.getSuperheroById(id);
 
