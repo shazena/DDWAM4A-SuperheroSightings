@@ -95,13 +95,4 @@ public class SuperheroController {
 
         return "redirect:/superheroes";
     }
-
-//    int id = Integer.parseInt(request.getParameter("id"));
-//    Power power = powerDao.getPowerById(id);
-//
-//        power.setPowerName(request.getParameter("name"));
-//
-//        powerDao.updatePower(power);
-//
-//        return "redirect:/powers";
 }
