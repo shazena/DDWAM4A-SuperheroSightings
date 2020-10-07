@@ -143,8 +143,8 @@
                                             class="form-control" >
                                         <option th:each="superhero : ${superheroes}"
                                                 th:value="${superhero.superheroId}"
-                                                th:text="${superhero.superheroName}">
-<!--                                                th:selected="${organization.superhero.superheroId == superhero.superheroId}">-->
+                                                th:text="${superhero.superheroName}"
+                                                th:selected="${organization.listOfSuperheroes.contains(superhero)}">
                                             Superhero Name</option>
                                     </select>
                                 </div>
