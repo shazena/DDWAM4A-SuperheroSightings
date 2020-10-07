@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -73,7 +74,11 @@ public class PowerController {
     }
 
     @PostMapping("powerEdit")
-    public String performEditPower(HttpServletRequest request) {
+    public String performEditPower(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/powers";
+        }
+
         int id = Integer.parseInt(request.getParameter("id"));
         Power power = powerDao.getPowerById(id);
 
