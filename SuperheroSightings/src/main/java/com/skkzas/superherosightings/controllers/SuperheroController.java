@@ -69,6 +69,29 @@ public class SuperheroController {
         return "superheroDetails";
     }
 
+    @GetMapping("superheroDelete")
+    public String deleteSuperhero(HttpServletRequest request, Model model) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Superhero superhero = superheroDao.getSuperheroById(id);
+
+        model.addAttribute("superhero", superhero);
+        return "superheroDelete";
+    }
+
+    @GetMapping("superheroDeleteConfirm")
+    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/superheroes";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Superhero superhero = superheroDao.getSuperheroById(id);
+
+        superheroDao.deleteSuperheroById(superhero.getSuperheroId());
+
+        return "redirect:/superheroes";
+    }
+
     @GetMapping("superheroEdit")
     public String editSuperhero(Integer id, Model model) {
         Superhero superhero = superheroDao.getSuperheroById(id);

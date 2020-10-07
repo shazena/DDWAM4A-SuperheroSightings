@@ -80,18 +80,18 @@
 
                 <div class="row border border-dark">
                     <div class="text-center container">
-                        <h3>Are you sure you want to delete Superhero "the Cool Guy"?</h3>
+                        <h3>Are you sure you want to delete Superhero "[[${superhero.superheroName}]]"?</h3>
                         <p>It will also delete the following: <br>
-                            Sighting "04/12/2020" at Location "the coolest Location"
+                            Sighting "[date here]" at Location "[location name here]"
                         </p>
                     </div>
 
                     <div class = "text-center container">
                         <!--DON'T FORGET TO CHANGE ACTION BASED ON YOUR PAGE-->
-                        <form method = "get" action = "THINGYdelete">
-                            <input type = "hidden" name = "MORESTUFF" id = "SOMEMORESTUFF">
-                            <button class = "btn btn-primary text-center m-2">Cancel</button>
-                            <button class = "btn btn-danger text-center m-2">Confirm</button>
+                        <form method = "GET" action = "superheroDeleteConfirm">
+                            <input type = "hidden" name = "id" th:value="${superhero.superheroId}">
+                            <button type="submit" name="action" value="cancel" class = "btn btn-primary text-center m-2">Cancel</button>
+                            <button type="submit" name="action" value="confirm" class = "btn btn-danger text-center m-2">Confirm</button>
                         </form>
                     </div>
 
