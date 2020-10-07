@@ -64,6 +64,29 @@ public class PowerController {
 //        return "redirect:/powers";
 //    }
 
+    @GetMapping("powerDelete")
+    public String deletePower(HttpServletRequest request, Model model) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Power power = powerDao.getPowerById(id);
+
+        model.addAttribute("power", power);
+        return "powerDelete";
+    }
+
+    @GetMapping("powerDeleteConfirm")
+    public String performDeletePower(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/powers";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Power power = powerDao.getPowerById(id);
+
+        powerDao.deletePowerById(power.getPowerId());
+
+        return "redirect:/powers";
+    }
+
     @GetMapping("powerEdit")
     public String editPower(HttpServletRequest request, Model model) {
         int id = Integer.parseInt(request.getParameter("id"));
