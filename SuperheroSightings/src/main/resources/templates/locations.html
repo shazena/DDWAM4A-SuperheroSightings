@@ -10,6 +10,9 @@
         <link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
               crossorigin = "anonymous">
+        <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+              integrity = "sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+              crossorigin = ""/>
         <!-- Custom styles for this template -->
         <link href = "../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel = "stylesheet">
         <link href = "../static/css/superheroSightingsStyles.css" th:href="@{/css/superheroSightingsStyles.css}" rel = "stylesheet">
@@ -170,7 +173,51 @@
                                     <div class="col-9">
                                         <textarea name="description" id="description" class="form-control" required></textarea>
                                     </div>
-                                </div><button type="submit" class="btn btn-primary">Add Location</button></form>
+                                </div>
+                                <!--END OF MAIN FORM INPUTS-->
+                                <!--BEGIN MODAL-->
+
+                                <div class = "modal fade" id = "locationConfirmationModal" tabindex = "-1" role = "dialog"
+                                     aria-labelledby = "locationConfirmationModalLabel" aria-hidden = "true">
+                                    <div class = "modal-dialog modal-lg" role = "document">
+                                        <div class = "modal-content">
+                                            <div class = "modal-header">
+                                                <h5 class = "modal-title" id = "locationConfirmationModalLabel">
+                                                    Confirmation</h5>
+                                                <button type = "button" class = "close" data-dismiss = "modal"
+                                                        aria-label = "Close">
+                                                    <span aria-hidden = "true">&times;</span>
+                                                </button>
+                                            </div> <!--end of modal header-->
+                                            <div class = "modal-body">
+                                                <div class = "row">
+                                                    <!--<input name = "delete-dvd-id" id = "delete-dvd-id" type = "hidden">-->
+                                                    <p>Please confirm the location on the map</p>
+                                                </div>
+                                                <div class = "row" id = "map" style = "height: 400px;"></div>
+
+                                                <div class = "row" style = "justify-content: center;">
+                                                    <button type = "button" class = "btn btn-secondary"
+                                                            data-dismiss = "modal">Cancel
+                                                    </button>
+                                                    <button type = "submit" class = "btn btn-primary mx-2"
+                                                            id = "submitButton"
+                                                            data-toggle = "modal">Confirm
+                                                    </button>
+                                                </div>
+                                            </div> <!--end of modal body-->
+                                        </div> <!-- end of modal content-->
+                                    </div> <!--end of modal dialogue-->
+                                </div>
+
+
+                                <!--END MODAL-->
+                                <!--BEGIN SUBMIT BUTTON FOR FORM-->
+                                <!--<button type = "submit" class = "btn btn-primary">Add Location</button>-->
+                                <button type = "button" class = "btn btn-primary" onclick = "showConfirmationModal()">
+                                    Confirm Location
+                                </button>
+                            </form>
 
                             <!-- END OF FORM -->
                         </div>
@@ -190,6 +237,84 @@
         <script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 integrity = "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin = "anonymous"></script>
+        <!-- Leaflet JS -->
+        <script src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+                integrity = "sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin = ""></script>
+        <script>
+
+                                    function makeCallGetLatitudeandLongitude() {
+                                        var locationName = document.getElementById("locationName").value;
+                                        var address = document.getElementById("address").value;
+                                        var city = document.getElementById("city").value;
+                                        var state = document.getElementById("state").value;
+                                        var zip = document.getElementById("zip").value;
+                                        var country = "USA";
+
+                                        var urlForApi = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + address + " " + city + " " + state + " " + zip + " " + country + ".json?access_token=pk.eyJ1Ijoic2hhemVuYSIsImEiOiJja2ZpeGhicnowNXBkMzVtcWo1bnBsNzdwIn0.0PQfe_ZktBVA1Vr6jUqt-w&cachebuster=1602054407321&autocomplete=false&country=us&limit=1";
+
+                                        $.ajax({
+                                            method: 'GET',
+                                            url: urlForApi,
+                                            success: function (location, status) {
+                                                //getLatitude
+                                                //getLongitude
+                                                //set at center, zoom to 12 or something
+                                                //use latitude and longitude for marker. Add LocationName that they enter to be on the marker.
+                                                // alert(status);
+                                                var coordinateHolder = location.features[0].geometry.coordinates;
+
+                                                var longitude = coordinateHolder[0];
+                                                var latitude = coordinateHolder[1];
+
+                                                var mymap = L.map('map').setView([latitude, longitude], 18);
+
+                                                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hhemVuYSIsImEiOiJja2ZpeGhicnowNXBkMzVtcWo1bnBsNzdwIn0.0PQfe_ZktBVA1Vr6jUqt-w', {
+                                                    maxZoom: 18,
+                                                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                                                            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                                                            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                                                    id: 'mapbox/streets-v11',
+                                                    // tileSize: 512,
+                                                    // zoomOffset: -1
+                                                }).addTo(mymap);
+
+
+                                                L.marker([latitude, longitude]).addTo(mymap).bindPopup(locationName).openPopup();
+                                                $('#locationConfirmationModal').modal('show');
+                                                $('#locationConfirmationModal').on('shown.bs.modal', function () {
+                                                    mymap.invalidateSize();
+                                                });
+
+                                            },
+                                            error: function () {
+                                                alert("something went wrong...");
+
+                                            }
+                                        });
+                                    }
+
+
+                                    function showConfirmationModal() {
+                                        makeCallGetLatitudeandLongitude();
+                                        $('#locationConfirmationModal').modal('show');
+                                    }
+
+
+                                    // var mymap = L.map('map').setView([40.683173, -98.071907], 4);
+                                    //
+                                    // L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hhemVuYSIsImEiOiJja2ZpeGhicnowNXBkMzVtcWo1bnBsNzdwIn0.0PQfe_ZktBVA1Vr6jUqt-w', {
+                                    //     maxZoom: 18,
+                                    //     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                                    //             '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                                    //             'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                                    //     id: 'mapbox/streets-v11',
+                                    //     // tileSize: 512,
+                                    //     // zoomOffset: -1
+                                    // }).addTo(mymap);
+                                    //
+                                    // L.marker([40.700273, -73.902810]).addTo(mymap);
+        </script>
     </body>
 
 </html>
