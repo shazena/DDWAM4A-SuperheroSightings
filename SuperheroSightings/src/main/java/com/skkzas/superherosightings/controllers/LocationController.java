@@ -60,4 +60,13 @@ public class LocationController {
         return "locationEdit";
     }
 
+    @GetMapping("locationDelete")
+    public String deleteLocation(Integer id, Model model) {
+        //use the delete Dao function to determine which other tables are affected
+        //for each table, get all items based on this location id.
+        //send each list to the page
+
+        return "locationDelete";
+    }
+
 }
