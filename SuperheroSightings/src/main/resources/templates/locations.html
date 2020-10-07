@@ -131,12 +131,12 @@
 
                             <!--BEGIN ADD FORM-->
 
-                            <form action="addTeacher" method="POST">
+                            <form action="addLocation" method="POST">
 
                                 <div class="form-group row">
-                                    <label for="name" class="col-3 col-form-label">Name</label>
+                                    <label for="locationName" class="col-3 col-form-label">Name</label>
                                     <div class="col-9">
-                                        <input type="text" name="name" id="name" class="form-control">
+                                        <input type="text" name="locationName" id="locationName" class="form-control" required>
                                     </div>
                                 </div>
 
@@ -144,31 +144,31 @@
                                     <label for="address" class="col-3 col-form-label">
                                         Address</label>
                                     <div class="col-9">
-                                        <input type="text" name="lastName" id="lastName" class="form-control">
+                                        <input type="text" name="address" id="address" class="form-control" required>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">
+                                    <label for="city" class="col-3 col-form-label">
                                         City</label>
                                     <div class="col-9">
-                                        <input type="text" name="specialty" id="specialty" class="form-control">
+                                        <input type="text" name="city" id="city" class="form-control" required>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">State</label>
+                                    <label for="state" class="col-3 col-form-label">State Abbr.</label>
                                     <div class="col-9">
-                                        <input type="text" name="specialty" id="specialty" class="form-control">
+                                        <input type="text" name="state" id="state" class="form-control" maxlength="2" minlength="2" required>
                                     </div>
                                 </div><div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">Zip</label>
+                                    <label for="zip" class="col-3 col-form-label">Zip</label>
                                     <div class="col-9">
-                                        <input type="text" name="specialty" id="specialty" class="form-control">
+                                        <input ] name="zip" type = "number" min = "0" max = "99999"id="zip" class="form-control" required>
                                     </div>
                                 </div><div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">Description</label>
+                                    <label for="description" class="col-3 col-form-label">Description</label>
                                     <div class="col-9">
-                                        <textarea name="specialty" id="specialty" class="form-control"></textarea>
+                                        <textarea name="description" id="description" class="form-control" required></textarea>
                                     </div>
                                 </div><button type="submit" class="btn btn-primary">Add Location</button></form>
 
