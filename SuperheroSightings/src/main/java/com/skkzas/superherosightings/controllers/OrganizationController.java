@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -121,7 +122,11 @@ public class OrganizationController {
     }
 
     @PostMapping("organizationEdit")
-    public String performSuperheroEdit(HttpServletRequest request) {
+    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/organizations";
+        }
+
         int id = Integer.parseInt(request.getParameter("id"));
         Organization organization = organizationDao.getOrganizationById(id);
         String name = request.getParameter("name");
