@@ -98,6 +98,29 @@ public class OrganizationController {
         return "organizationDetails";
     }
 
+    @GetMapping("organizationDelete")
+    public String deleteOrganization(HttpServletRequest request, Model model) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Organization organization = organizationDao.getOrganizationById(id);
+
+        model.addAttribute("organization", organization);
+        return "organizationDelete";
+    }
+
+    @GetMapping("organizationDeleteConfirm")
+    public String performDeletePower(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/organizations";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Organization organization = organizationDao.getOrganizationById(id);
+
+        organizationDao.deleteOrganizationById(organization.getOrgId());
+
+        return "redirect:/organizations";
+    }
+
     @GetMapping("organizationEdit")
     public String editOrganization(Integer id, Model model) {
         Organization organization = organizationDao.getOrganizationById(id);

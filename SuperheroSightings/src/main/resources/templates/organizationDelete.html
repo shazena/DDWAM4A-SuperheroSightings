@@ -80,15 +80,15 @@
 
                 <div class="row border border-dark">
                     <div class="text-center container">
-                        <h3>Are you sure you want to delete Organization "the Super Organization"?</h3>
+                        <h3>Are you sure you want to delete Organization "[[${organization.orgName}]]"?</h3>
                     </div>
 
                     <div class = "text-center container">
                         <!--DON'T FORGET TO CHANGE ACTION BASED ON YOUR PAGE-->
-                        <form method = "get" action = "THINGYdelete">
-                            <input type = "hidden" name = "MORESTUFF" id = "SOMEMORESTUFF">
-                            <button class = "btn btn-primary text-center m-2">Cancel</button>
-                            <button class = "btn btn-danger text-center m-2">Confirm</button>
+                        <form method = "GET" action = "organizationDeleteConfirm">
+                            <input type = "hidden" name = "id" th:value="${organization.orgId}">
+                            <button type="submit" name="action" value="cancel" class = "btn btn-primary text-center m-2">Cancel</button>
+                            <button type="submit" name="action" value="confirm" class = "btn btn-danger text-center m-2">Confirm</button>
                         </form>
                     </div>
 
