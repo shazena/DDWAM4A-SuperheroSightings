@@ -19,7 +19,7 @@
     <style th:inline = "text">
         .sidebar {
             /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
-            background-image: url([[@{/images/PowersB.jpg}]]);
+            background-image: url([[@{/SuperheroesS.jpg}]]);
             background-position: bottom;
             background-repeat: no-repeat;
             background-size: 50%;
@@ -48,12 +48,12 @@
                 <ul class = "nav flex-column">
                     <li class = "nav-item">
                         <a class = "nav-link" href = "superheroes">
-                            <span class = "">Superheroes</span>
+                            <span class = "currentPageLink">Superheroes</span>
                         </a>
                     </li>
                     <li class = "nav-item">
                         <a class = "nav-link" href = "powers">
-                            <span class = "currentPageLink">Powers</span>
+                            <span class = "">Powers</span>
                         </a>
                     </li>
                     <li class = "nav-item">
@@ -80,10 +80,10 @@
 
                 <div class="row border border-dark">
                     <div class="text-center container">
-                        <h3>Are you sure you want to delete Power "flying"?</h3>
+                        <h3>Are you sure you want to delete Superhero "the Cool Guy"?</h3>
                         <p>It will also delete the following: <br>
-                            Superhero "the Cool Guy" <br>
-                            Sighting "04/12/2020" at Location "The coolest location".</p>
+                            Sighting "04/12/2020" at Location "the coolest Location"
+                        </p>
                     </div>
 
                     <div class = "text-center container">
