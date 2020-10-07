@@ -96,4 +96,55 @@ public class OrganizationController {
         model.addAttribute("organization", theOrganization);
         return "organizationDetails";
     }
+
+    @GetMapping("organizationEdit")
+    public String editOrganization(Integer id, Model model) {
+        Organization organization = organizationDao.getOrganizationById(id);
+        List<Location> locations = locationDao.getAllLocations();
+        List<Superhero> superheroes = superheroDao.getAllSuperheros();
+
+        String unformattedPhoneNumber = organization.getPhoneNumber();
+        String formattedPhoneNumber = "("
+                + unformattedPhoneNumber.substring(0, 3)
+                + ") "
+                + unformattedPhoneNumber.substring(3, 6)
+                + " - "
+                + unformattedPhoneNumber.substring(6, 10);
+        organization.setPhoneNumber(formattedPhoneNumber);
+
+        model.addAttribute("organization", organization);
+        model.addAttribute("locations", locations);
+        model.addAttribute("superheroes", superheroes);
+        model.addAttribute("formattedPhoneNumber", formattedPhoneNumber);
+
+        return "organizationEdit";
+    }
+
+    @PostMapping("organizationEdit")
+    public String performSuperheroEdit(HttpServletRequest request) {
+        int id = Integer.parseInt(request.getParameter("id"));
+        Organization organization = organizationDao.getOrganizationById(id);
+        String name = request.getParameter("name");
+        String phoneFormatted = request.getParameter("phoneNum");
+        String phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
+
+        String locationId = request.getParameter("locationId");
+        String description = request.getParameter("description");
+        String[] superheroIds = request.getParameterValues("superheroId");
+
+        organization.setOrgName(name);
+        organization.setPhoneNumber(phoneUnformatted);
+        organization.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
+        organization.setDescription(description);
+
+        List<Superhero> superheroes = new ArrayList<>();
+        for (String superheroId : superheroIds) {
+            superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+        }
+        organization.setListOfSuperheroes(superheroes);
+
+        organizationDao.updateOrganization(organization);
+
+        return "redirect:/organizations";
+    }
 }
