@@ -56,6 +56,8 @@ public class LocationController {
         String state = request.getParameter("state");
         String zip = request.getParameter("zip");
         String description = request.getParameter("description");
+        String longitude = request.getParameter("longitude");
+        String latitude = request.getParameter("latitude");
 
         Location location = new Location();
         location.setLocationName(locationName);
@@ -64,10 +66,10 @@ public class LocationController {
         location.setState(state);
         location.setZip(zip);
         location.setDescription(description);
-        location.setLatitude("4.3");
-        location.setLongitude("4.3");
+        location.setLongitude(longitude);
+        location.setLatitude(latitude);
 
-        //need to figure out how to call the API and get the coordinates!!!
+        //FIXME: User can try to get the map even though all fields are not filled out!
         locationDao.addLocation(location);
         return "redirect:/locations";
     }

@@ -214,6 +214,10 @@
                                 <!--END MODAL-->
                                 <!--BEGIN SUBMIT BUTTON FOR FORM-->
                                 <!--<button type = "submit" class = "btn btn-primary">Add Location</button>-->
+
+                                <input type = "hidden" id = "latitude" name = "latitude">
+                                <input type = "hidden" id = "longitude" name = "longitude">
+
                                 <button type = "button" class = "btn btn-primary" onclick = "showConfirmationModal()">
                                     Confirm Location
                                 </button>
@@ -266,6 +270,9 @@
 
                                                 var longitude = coordinateHolder[0];
                                                 var latitude = coordinateHolder[1];
+
+                                                document.getElementById("longitude").value = longitude;
+                                                document.getElementById("latitude").value = latitude;
 
                                                 var mymap = L.map('map').setView([latitude, longitude], 18);
 
