@@ -66,25 +66,16 @@ public class OrganizationController {
     @PostMapping("addOrganization")
     public String addOrganization(Organization organization, HttpServletRequest request) {
         String name = request.getParameter("name");
-        //strip down the phone here (get rid of parenthesis and dashes)
-//        List<Organization> allOrganizations = orgDao.getAllOrgs();
-//        for each organization in allOrganizations{
-//            String unformattedPhoneNumber = organization.getPhoneNumber();
-//            String formattedPhoneNumber = "("+
-//                    unformattedPhoneNumber.substring(0,3)+
-//                    ") " +
-//                    unformattedPhoneNumber.substring(3,6)+
-//                    " - " +
-//                    unformattedPhoneNumber.substring(6,10);
-//            organization.setPhoneNumber(formattedPhoneNumber);
-//        }
-        String phone = request.getParameter("phoneNum");
+
+        String phoneFormatted = request.getParameter("phoneNum");
+        String phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
+
         String locationId = request.getParameter("locationId");
         String description = request.getParameter("description");
         String[] superheroIds = request.getParameterValues("superheroId");
 
         organization.setOrgName(name);
-        organization.setPhoneNumber(phone);
+        organization.setPhoneNumber(phoneUnformatted);
         organization.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
         organization.setDescription(description);
 
