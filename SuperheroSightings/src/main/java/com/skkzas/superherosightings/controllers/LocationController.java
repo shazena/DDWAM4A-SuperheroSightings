@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -88,6 +89,40 @@ public class LocationController {
         model.addAttribute("location", location);
 
         return "locationEdit";
+    }
+
+    @PostMapping("locationEdit")
+    public String performLocationEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/locations";
+        }
+
+        int locationId = Integer.parseInt(request.getParameter("locationId"));
+
+        Location location = locationDao.getLocationById(locationId);
+
+        String locationName = request.getParameter("locationName");
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String state = request.getParameter("state");
+        String zip = request.getParameter("zip");
+        String description = request.getParameter("description");
+        String longitude = request.getParameter("longitude");
+        String latitude = request.getParameter("latitude");
+
+        //TODO need to add in map confirmation here too!!!!
+        location.setLocationName(locationName);
+        location.setAddress(address);
+        location.setCity(city);
+        location.setState(state);
+        location.setZip(zip);
+        location.setDescription(description);
+        location.setLongitude(longitude);
+        location.setLatitude(latitude);
+
+        locationDao.updateLocation(location);
+
+        return "redirect:/locations";
     }
 
     @GetMapping("locationDelete")
