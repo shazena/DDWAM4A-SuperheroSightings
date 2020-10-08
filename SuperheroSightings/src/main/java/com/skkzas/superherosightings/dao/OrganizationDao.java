@@ -1,5 +1,6 @@
 package com.skkzas.superherosightings.dao;
 
+import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Superhero;
 import java.util.List;
@@ -24,4 +25,5 @@ public interface OrganizationDao {
 
     public List<Organization> getOrganizationsForSuperhero(Superhero superhero);
 
+    List<Organization> getOrganizationsForLocation(Location location);
 }
