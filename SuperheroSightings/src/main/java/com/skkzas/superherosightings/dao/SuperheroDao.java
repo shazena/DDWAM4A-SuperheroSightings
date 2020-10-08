@@ -32,4 +32,6 @@ public interface SuperheroDao {
 
     public List<Superhero> getAllSuperherosForOrganization(Organization organization);
 
+    public List<Superhero> getAllSuperheroesWithThatPower(int powerId);
+
 }

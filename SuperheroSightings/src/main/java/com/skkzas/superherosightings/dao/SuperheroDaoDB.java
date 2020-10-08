@@ -148,6 +148,19 @@ public class SuperheroDaoDB implements SuperheroDao {
         return powerForSuperhero;
     }
 
+    //Method to get all supers with that power
+    @Override
+    public List<Superhero> getAllSuperheroesWithThatPower (int powerId) {
+        final String SELECT_SUPERHEROES_WITH_POWER = "SELECT * FROM Superhero WHERE PowerId = ?";
+
+        List<Superhero> superheroesWithThatPower = jdbc.query(SELECT_SUPERHEROES_WITH_POWER, new SuperheroMapper(), powerId);
+        for (Superhero superhero : superheroesWithThatPower) {
+            superhero.setPower(getPowerForSuperhero(superhero.getSuperheroId()));
+        }
+
+        return superheroesWithThatPower;
+    }
+
     public static final class SuperheroMapper implements RowMapper<Superhero> {
 
         @Override
