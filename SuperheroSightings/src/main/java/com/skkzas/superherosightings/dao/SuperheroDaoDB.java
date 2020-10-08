@@ -135,16 +135,6 @@ public class SuperheroDaoDB implements SuperheroDao {
         return superheroesForOrganization;
     }
 
-    //helper method
-    private Power getPowerForSuperhero(int superheroId) {
-        final String SELECT_POWER_FOR_SUPER = "SELECT p.PowerId, p.PowerName FROM Power p "
-                + "JOIN Superhero s ON s.PowerId = p.PowerId WHERE SuperheroId = ?";
-
-        Power powerForSuperhero = jdbc.queryForObject(SELECT_POWER_FOR_SUPER, new PowerDaoDB.PowerMapper(), superheroId);
-
-        return powerForSuperhero;
-    }
-
     //Method to get all supers with that power
     @Override
     public List<Superhero> getAllSuperheroesWithThatPower(int powerId) {
@@ -172,6 +162,16 @@ public class SuperheroDaoDB implements SuperheroDao {
         } catch (DataAccessException e) {
             return null;
         }
+    }
+
+    //helper method
+    private Power getPowerForSuperhero(int superheroId) {
+        final String SELECT_POWER_FOR_SUPER = "SELECT p.PowerId, p.PowerName FROM Power p "
+                + "JOIN Superhero s ON s.PowerId = p.PowerId WHERE SuperheroId = ?";
+
+        Power powerForSuperhero = jdbc.queryForObject(SELECT_POWER_FOR_SUPER, new PowerDaoDB.PowerMapper(), superheroId);
+
+        return powerForSuperhero;
     }
 
     public static final class SuperheroMapper implements RowMapper<Superhero> {
