@@ -109,7 +109,6 @@
                                     <tr th:each = "sighting, stat : ${allSightings}">
                                         <td><a href ="#" th:href ="@{sightingDetails(id=${sighting.sightingId})}"><span th:text = "${stat.index}">#</span></a></td>	
                                         <td th:text = "${#temporals.format(sighting.date, 'MM/dd/yyyy')}">Date</td>
-                                        <!--<td th:text = "${#calendars.format(sighting.date, 'MM/dd/yyyy')}">Date</td>-->
                                         <td th:text = "${sighting.superhero.superheroName}">Superhero Name</td>
                                         <td th:text = "${sighting.location.locationName}">Location Name</td>
                                         <td><a href = "#" th:href = "@{/sightingEdit(id=${sighting.sightingId})}">Edit</a></td>
@@ -134,12 +133,42 @@
                             <form action="addSighting" method="POST">
 
                                 <div class="form-group row">
-                                    <label for="name" class="col-3 col-form-label">Name</label>
+                                    <label for="date" class="col-3 col-form-label">Date</label>
+                                    <div class="col-9">
+                                        <input type="date" name="date" id="date" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="superheroName" class="col-3 col-form-label">Superhero Name</label>
+                                    <div class="col-9">
+                                        <input type="text" name="superheroName" id="superheroName" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                POWER SELECTOR
+                               
+                                <button type="button" class="btn btn-outline-dark btn-sm my-2 col-12">Click here to select a superhero instead</button>
+                                
+                                <div class="form-group row">
+                                    <label for="address" class="col-3 col-form-label">Power</label>
+                                    <div class="col-9">
+                                        <input type="text" name="lastName" id="lastName" class="form-control" placeholder="">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-outline-dark btn-sm my-2">Click here to select a power instead</button>
+
+                                <div class="form-group row">
+                                    <label for="specialty" class="col-3 col-form-label">Superhero Description</label>
+                                    <div class="col-9">
+                                        <textarea name="specialty" id="specialty" class="form-control" placeholder=""></textarea></div></div>
+
+
+                                <div class="form-group row">
+                                    <label for="name" class="col-3 col-form-label">Location Name</label>
                                     <div class="col-9">
                                         <input type="text" name="name" id="name" class="form-control">
                                     </div>
                                 </div>
-
                                 <div class="form-group row">
                                     <label for="address" class="col-3 col-form-label">
                                         Address</label>
@@ -166,11 +195,20 @@
                                         <input type="text" name="specialty" id="specialty" class="form-control">
                                     </div>
                                 </div><div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">Description</label>
+                                    <label for="specialty" class="col-3 col-form-label">Location Description</label>
                                     <div class="col-9">
                                         <textarea name="specialty" id="specialty" class="form-control"></textarea>
                                     </div>
-                                </div><button type="submit" class="btn btn-primary">Add Location</button></form>
+                                </div>
+                                <button type="submit" class="btn btn-outline-dark btn-sm my-2">Click here to select a location instead</button>
+
+                                <div class="form-group row">
+                                    <label for="specialty" class="col-3 col-form-label">Organization Description</label>
+                                    <div class="col-9">
+                                        <textarea name="specialty" id="specialty" class="form-control" placeholder=""></textarea>
+                                    </div>
+                                </div><button type="submit" class="btn btn-primary">Add Sighting</button>
+                            </form>
 
                             <!-- END OF FORM -->
                         </div>
