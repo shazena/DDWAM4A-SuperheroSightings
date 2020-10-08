@@ -133,6 +133,7 @@ public class LocationController {
         Location location = locationDao.getLocationById(id);
         List<Organization> organizations = organizationDao.getOrganizationsForLocation(location);
         List<Sighting> sightings = sightingDao.getAllSightingsForLocation(location);
+        //Superhero superhero =
 
         model.addAttribute("location", location);
         model.addAttribute("organizations", organizations);

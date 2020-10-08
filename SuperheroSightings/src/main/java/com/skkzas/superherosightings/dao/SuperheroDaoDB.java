@@ -1,9 +1,6 @@
 package com.skkzas.superherosightings.dao;
 
-import com.skkzas.superherosightings.dto.Location;
-import com.skkzas.superherosightings.dto.Organization;
-import com.skkzas.superherosightings.dto.Power;
-import com.skkzas.superherosightings.dto.Superhero;
+import com.skkzas.superherosightings.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -159,6 +156,22 @@ public class SuperheroDaoDB implements SuperheroDao {
         }
 
         return superheroesWithThatPower;
+    }
+
+    @Override
+    public Superhero getSuperheroForSighting(int sightingId) {
+        try {
+            final String GET_SUPERHERO_FOR_SIGHTING = "SELECT * FROM Superhero s " +
+                    "JOIN Sighting si ON s.SuperheroId = si.SuperheroId " +
+                    "WHERE s.SuperheroId = ?";
+            Superhero superheroForSighting = jdbc.queryForObject(GET_SUPERHERO_FOR_SIGHTING, new SuperheroMapper(), sightingId);
+
+            superheroForSighting.setPower(getPowerForSuperhero(superheroForSighting.getSuperheroId()));
+
+            return superheroForSighting;
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     public static final class SuperheroMapper implements RowMapper<Superhero> {
