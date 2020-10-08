@@ -147,7 +147,7 @@ public class SuperheroDaoDB implements SuperheroDao {
 
     //Method to get all supers with that power
     @Override
-    public List<Superhero> getAllSuperheroesWithThatPower (int powerId) {
+    public List<Superhero> getAllSuperheroesWithThatPower(int powerId) {
         final String SELECT_SUPERHEROES_WITH_POWER = "SELECT * FROM Superhero WHERE PowerId = ?";
 
         List<Superhero> superheroesWithThatPower = jdbc.query(SELECT_SUPERHEROES_WITH_POWER, new SuperheroMapper(), powerId);
@@ -161,9 +161,9 @@ public class SuperheroDaoDB implements SuperheroDao {
     @Override
     public Superhero getSuperheroForSighting(int sightingId) {
         try {
-            final String GET_SUPERHERO_FOR_SIGHTING = "SELECT * FROM Superhero s " +
-                    "JOIN Sighting si ON s.SuperheroId = si.SuperheroId " +
-                    "WHERE s.SuperheroId = ?";
+            final String GET_SUPERHERO_FOR_SIGHTING = "SELECT * FROM Superhero s "
+                    + "JOIN Sighting si ON s.SuperheroId = si.SuperheroId "
+                    + "WHERE si.SightingId = ?";
             Superhero superheroForSighting = jdbc.queryForObject(GET_SUPERHERO_FOR_SIGHTING, new SuperheroMapper(), sightingId);
 
             superheroForSighting.setPower(getPowerForSuperhero(superheroForSighting.getSuperheroId()));
