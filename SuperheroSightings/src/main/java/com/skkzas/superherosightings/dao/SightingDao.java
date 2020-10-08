@@ -1,5 +1,6 @@
 package com.skkzas.superherosightings.dao;
 
+import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
 
@@ -29,4 +30,6 @@ public interface SightingDao {
     public List<Sighting> getAllSightingsForDate(LocalDate date);
 
     public List<Sighting> getAllSightingsForListOfSuperheros(List<Superhero> listOfSuperheroes);
+
+    List<Sighting> getAllSightingsForLocation(Location location);
 }

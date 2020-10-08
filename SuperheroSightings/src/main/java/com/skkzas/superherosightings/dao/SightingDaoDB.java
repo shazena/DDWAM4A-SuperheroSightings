@@ -141,6 +141,15 @@ public class SightingDaoDB implements SightingDao {
         return allSightingsForSuperheroes;
     }
 
+    @Override
+    public List<Sighting> getAllSightingsForLocation(Location location) {
+        final String GET_SIGHTINGS_FOR_LOCATION = "SELECT * FROM Sighting WHERE LocationId = ?";
+
+        List<Sighting> sightingsForLocation = jdbc.query(GET_SIGHTINGS_FOR_LOCATION, new SightingMapper(), location.getLocationId());
+        associateLocationAndSuperhero(sightingsForLocation);
+        return sightingsForLocation;
+    }
+
     private Location getLocationForSighting(int id) {
         final String SELECT_LOCATION_FOR_SIGHTING = "SELECT * FROM Location l "
                 + "JOIN Sighting s ON l.LocationId = s.LocationId "

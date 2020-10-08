@@ -603,4 +603,92 @@ public class SightingDaoDBTest {
         assertTrue(listOfSightingsForSuperheroes.contains(addedSighting2));
         assertFalse(listOfSightingsForSuperheroes.contains(addedSighting3));
     }
+
+    /**
+     * Test of getAllSightingsForLocation method, of class SightingDaoDB.
+     */
+    @Test
+    public void TestGetAllSightingsForLocations() {
+        //create 3 sightings, 2 for the same location
+        //create 3 supers
+        Power power = new Power();
+        power.setPowerName("flying");
+        power = powerDao.addPower(power);
+
+        Power power2 = new Power();
+        power2.setPowerName("listening to people");
+        power2 = powerDao.addPower(power2);
+
+        Superhero mySuper = new Superhero();
+        mySuper.setSuperheroName("Not Your Ordinary Guy");
+        mySuper.setSuperheroDescription("actually listens and tries to understand");
+        mySuper.setPower(power);
+        superheroDao.addSuperhero(mySuper);
+
+        Superhero mySuper2 = new Superhero();
+        mySuper2.setSuperheroName("Another great superhero");
+        mySuper2.setSuperheroDescription("doesn't judge");
+        mySuper2.setPower(power);
+        superheroDao.addSuperhero(mySuper2);
+
+        Superhero mySuper3 = new Superhero();
+        mySuper3.setSuperheroName("Third superhero guy");
+        mySuper3.setSuperheroDescription("sometimes disappears");
+        mySuper3.setPower(power2);
+        superheroDao.addSuperhero(mySuper3);
+
+        //create 3 sightings
+        //first for mySuper
+        Location superLocation = new Location();
+        superLocation.setLocationName("Super Location");
+        superLocation.setDescription("You can't beat it");
+        superLocation.setAddress("101 Bedford Ave");
+        superLocation.setCity("Brooklyn");
+        superLocation.setState("NY");
+        superLocation.setZip("11211");
+        superLocation.setLatitude("40.720239");
+        superLocation.setLongitude("-73.954620");
+        superLocation = locationDao.addLocation(superLocation);
+
+        Sighting firstSighting = new Sighting();
+        LocalDate date = LocalDate.parse("2020-01-08");
+        firstSighting.setDate(date);
+        firstSighting.setLocation(superLocation);
+        firstSighting.setSuperhero(mySuper);
+        Sighting addedSighting = sightingDao.addSighting(firstSighting);
+
+        //second - for mySuper2
+        Location superLocation2 = new Location();
+        superLocation2.setLocationName("Super Location 2");
+        superLocation2.setDescription("You can't beat it either");
+        superLocation2.setAddress("102 Bedford Ave");
+        superLocation2.setCity("Brooklyn");
+        superLocation2.setState("NY");
+        superLocation2.setZip("11211");
+        superLocation2.setLatitude("40.720440");
+        superLocation2.setLongitude("-73.955290");
+        superLocation2 = locationDao.addLocation(superLocation2);
+
+        Sighting secondSighting = new Sighting();
+        LocalDate date2 = LocalDate.parse("2020-01-09");
+        secondSighting.setDate(date2);
+        secondSighting.setLocation(superLocation2);
+        secondSighting.setSuperhero(mySuper2);
+        Sighting addedSighting2 = sightingDao.addSighting(secondSighting);
+
+        //third for mySuper3 (same location as first one)
+        Sighting thirdSighting = new Sighting();
+        LocalDate date3 = LocalDate.parse("2020-01-09");
+        thirdSighting.setDate(date3);
+        thirdSighting.setLocation(superLocation);
+        thirdSighting.setSuperhero(mySuper3);
+        Sighting addedSighting3 = sightingDao.addSighting(thirdSighting);
+
+        //check if the list of sightings for the same location contains 2
+        List<Sighting> sightingsForLocation = sightingDao.getAllSightingsForLocation(superLocation);
+        assertEquals(sightingsForLocation.size(), 2);
+        assertTrue(sightingsForLocation.contains(addedSighting));
+        assertTrue(sightingsForLocation.contains(addedSighting3));
+        assertFalse(sightingsForLocation.contains(addedSighting2));
+    }
 }
