@@ -55,7 +55,7 @@ public class LocationDaoDB implements LocationDao {
                 location.getDescription(),
                 location.getAddress(),
                 location.getCity(),
-                location.getState(),
+                location.getState().toUpperCase(),
                 location.getZip(),
                 location.getLatitude(),
                 location.getLongitude());
