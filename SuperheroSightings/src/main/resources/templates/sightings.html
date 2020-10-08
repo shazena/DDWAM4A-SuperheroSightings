@@ -10,6 +10,9 @@
         <link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
               crossorigin = "anonymous">
+        <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+              integrity = "sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+              crossorigin = ""/>
         <!-- Custom styles for this template -->
         <link href = "../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel = "stylesheet">
         <link href = "../static/css/superheroSightingsStyles.css" th:href="@{/css/superheroSightingsStyles.css}" rel = "stylesheet">
@@ -42,7 +45,7 @@
     -->
 
 
-    <body>
+    <body onload = "hideExtraFields()">
         <nav class = "navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
             <a class = "navbar-brand col-sm-3 col-md-2 mr-0" href = "/">Superhero Tracker</a>
         </nav>
@@ -109,7 +112,6 @@
                                     <tr th:each = "sighting, stat : ${allSightings}">
                                         <td><a href ="#" th:href ="@{sightingDetails(id=${sighting.sightingId})}"><span th:text = "${stat.index}">#</span></a></td>	
                                         <td th:text = "${#temporals.format(sighting.date, 'MM/dd/yyyy')}">Date</td>
-                                        <!--<td th:text = "${#calendars.format(sighting.date, 'MM/dd/yyyy')}">Date</td>-->
                                         <td th:text = "${sighting.superhero.superheroName}">Superhero Name</td>
                                         <td th:text = "${sighting.location.locationName}">Location Name</td>
                                         <td><a href = "#" th:href = "@{/sightingEdit(id=${sighting.sightingId})}">Edit</a></td>
@@ -131,46 +133,243 @@
 
                             <!--BEGIN ADD FORM-->
 
-                            <form action="addSighting" method="POST">
+                            <form action = "addSighting" method = "POST">
 
-                                <div class="form-group row">
-                                    <label for="name" class="col-3 col-form-label">Name</label>
-                                    <div class="col-9">
-                                        <input type="text" name="name" id="name" class="form-control">
+                                <div class = "form-group row">
+                                    <label for = "date" class = "col-3 col-form-label">Date</label>
+                                    <div class = "col-9">
+                                        <input type = "date" name = "date" id = "date" class = "form-control"
+                                               placeholder = "">
+                                        <!--TODO: Idea: SET PLACEHOLDER TO TODAY-->
+                                    </div>
+
+                                </div>
+
+                                <!--SELECTOR FOR THE SUPERHERO-->
+
+                                <div class = "form-group row" id = "superheroExistingDiv">
+                                    <label for = "superheroExisting" class = "col-3 col-form-label">
+                                        Superhero</label>
+                                    <div class = "col-9">
+                                        <select id = "superheroExisting" name = "superheroExisting" class = "form-control">
+                                            <option disabled selected>Select Superhero</option>
+                                            <option th:each = "superhero : ${superheroes}"
+                                                    th:value = "${superhero.superheroId}"
+                                                    th:text = "${superhero.superheroName+' - '+superhero.power.powerName}">
+                                                Superhero Name - Power Name
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="address" class="col-3 col-form-label">
-                                        Address</label>
-                                    <div class="col-9">
-                                        <input type="text" name="lastName" id="lastName" class="form-control">
+                                <!--END SUPERHERO SELECTOR-->
+
+                                <button id = "superheroChangeToNewSuper" type = "button"
+                                        onclick = "changeToNewSuperheroInput()"
+                                        class = "btn btn-outline-dark btn-sm my-2 col-12">
+                                    Click here to enter a new superhero instead
+                                </button>
+
+                                <button id = "superheroChangeToSelectSuper" type = "button"
+                                        onclick = "changeToSelectSuperheroInput()"
+                                        class = "btn btn-outline-dark btn-sm my-2 col-12">
+                                    Click here to select a superhero instead
+                                </button>
+
+                                <!--START SUPERHERO NAME ENTRY-->
+                                <div class = "form-group row" id = "superheroNameDiv">
+                                    <label for = "superheroName" id = "superheroNameLabel" class = "col-3 col-form-label">
+                                        Superhero Name</label>
+                                    <div class = "col-9">
+                                        <input type = "text" name = "superheroName" id = "superheroName"
+                                               class = "form-control" placeholder = "">
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">
-                                        City</label>
-                                    <div class="col-9">
-                                        <input type="text" name="specialty" id="specialty" class="form-control">
+                                <!--END SUPERHERO NAME ENTRY-->
+
+                                <!--START POWER NAME SELECT-->
+
+                                <div class = "form-group row" id = "powerExistingDiv">
+                                    <label for = "powerExisting" class = "col-3 col-form-label">
+                                        Power</label>
+                                    <div class = "col-9">
+                                        <select id = "powerExisting" name = "powerExisting" class = "form-control">
+                                            <option disabled selected>Select Power</option>
+                                            <option th:each = "superhero : ${superheroes}"
+                                                    th:value = "${superhero.superheroId}"
+                                                    th:text = "${superhero.superheroName+' - '+superhero.power.powerName}">
+                                                Power
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--END POWER NAME SELECT-->
+
+                                <button id = "powerSelectChanger" type = "button" onclick = "changeToNewPowerInput()"
+                                        class = "btn btn-outline-dark btn-sm my-2 col-12">
+                                    Click here to enter a new power instead
+                                </button>
+
+                                <!--START POWER NAME ENTRY-->
+                                <div class = "form-group row" id = "powerNameDiv">
+                                    <label for = "powerName" id = "powerNameLabel"
+                                           class = "col-3 col-form-label">Power</label>
+                                    <div class = "col-9">
+                                        <input type = "text" name = "powerName" id = "powerName" class = "form-control">
+                                    </div>
+                                </div>
+                                <!--END POWER NAME ENTRY-->
+
+                                <!--START SUPERHERO DESCRIPTION TEXTAREA-->
+                                <div class = "form-group row" id = "superheroDescriptionDiv">
+                                    <label for = "superheroDescription" id = "superheroDescriptionLabel"
+                                           class = "col-3 col-form-label">Superhero Description</label>
+                                    <div class = "col-9">
+                                        <textarea name = "superheroDescription" id = "superheroDescription"
+                                                  class = "form-control"
+                                                  placeholder = ""></textarea></div>
+                                </div>
+                                <!--END SUPERHERO DESCRIPTION TEXTAREA-->
+
+
+                                <!--START SELECT LOCATION-->
+
+                                <div class = "form-group row" id = "locationExistingDiv">
+                                    <label for = "locationExisting" class = "col-3 col-form-label">
+                                        Location</label>
+                                    <div class = "col-9">
+                                        <select id = "locationExisting" name = "locationExisting" class = "form-control">
+                                            <option disabled selected>Select Location</option>
+                                            <option th:each = "location : ${locations}"
+                                                    th:value = "${location.locationId}"
+                                                    th:text = "${location.locationName}">
+                                                Location Name
+                                            </option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">State</label>
-                                    <div class="col-9">
-                                        <input type="text" name="specialty" id="specialty" class="form-control">
+                                <!--END SELECT LOCATION-->
+
+                                <button id = "locationSelectChanger" type = "button"
+                                        class = "btn btn-outline-dark btn-sm my-2 col-12">
+                                    Click here to enter a new location instead
+                                </button>
+
+
+                                <!--START NEW LOCATION ENTRY-->
+                                <div id = "locationNewDiv">
+                                    <div class = "form-group row">
+                                        <label for = "locationName" class = "col-3 col-form-label">Location Name</label>
+                                        <div class = "col-9">
+                                            <input type = "text" name = "locationName" id = "locationName"
+                                                   class = "form-control">
+                                        </div>
                                     </div>
-                                </div><div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">Zip</label>
-                                    <div class="col-9">
-                                        <input type="text" name="specialty" id="specialty" class="form-control">
+
+                                    <div class = "form-group row">
+                                        <label for = "address" class = "col-3 col-form-label">Address</label>
+                                        <div class = "col-9">
+                                            <input type = "text" name = "address" id = "address" class = "form-control">
+                                        </div>
                                     </div>
-                                </div><div class="form-group row">
-                                    <label for="specialty" class="col-3 col-form-label">Description</label>
-                                    <div class="col-9">
-                                        <textarea name="specialty" id="specialty" class="form-control"></textarea>
+                                    <div class = "form-group row">
+                                        <label for = "city" class = "col-3 col-form-label">
+                                            City</label>
+                                        <div class = "col-9">
+                                            <input type = "text" name = "city" id = "city" class = "form-control">
+                                        </div>
                                     </div>
-                                </div><button type="submit" class="btn btn-primary">Add Location</button></form>
+
+                                    <div class = "form-group row">
+                                        <label for = "state" class = "col-3 col-form-label">State Abbr.</label>
+                                        <div class = "col-9">
+                                            <input type = "text" name = "state" id = "state" class = "form-control"
+                                                   maxlength = "2" minlength = "2" required>
+                                        </div>
+                                    </div>
+                                    <div class = "form-group row">
+                                        <label for = "zip" class = "col-3 col-form-label">Zip</label>
+                                        <div class = "col-9">
+                                            <input name = "zip" type = "number" min = "0" max = "99999" id = "zip"
+                                                   class = "form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class = "form-group row">
+                                        <label for = "locationDescription" class = "col-3 col-form-label">Location
+                                            Description</label>
+                                        <div class = "col-9">
+                                            <textarea name = "locationDescription" id = "locationDescription"
+                                                      class = "form-control"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--END NEW LOCATION ENTRY-->
+
+
+                                <!--START SIGHTING DESCRIPTION-->
+                                <div class = "form-group row">
+                                    <label for = "sightingDescription" class = "col-3 col-form-label">Sighting
+                                        Description</label>
+                                    <div class = "col-9">
+                                        <textarea name = "sightingDescription" id = "sightingDescription"
+                                                  class = "form-control"></textarea>
+                                    </div>
+                                </div>
+                                <!--END SIGHTING DESCRIPTION-->
+
+
+                                <!--BEGIN BUTTON AND HIDDEN INPUTS-->
+                                <input type = "hidden" id = "latitude" name = "latitude">
+                                <input type = "hidden" id = "longitude" name = "longitude">
+
+                                <button type = "button" id = "submitOrConfirmButton" class = "btn btn-primary"
+                                        onclick = "showConfirmationModal()">
+                                    Add Sighting
+                                </button>
+                                <!--END BUTTON AND HIDDEN INPUTS-->
+
+
+                                <!--BEGIN MODAL-->
+
+                                <div class = "modal fade" id = "locationConfirmationModal" tabindex = "-1" role = "dialog"
+                                     aria-labelledby = "locationConfirmationModalLabel" aria-hidden = "true">
+                                    <div class = "modal-dialog modal-lg" role = "document">
+                                        <div class = "modal-content">
+                                            <div class = "modal-header">
+                                                <h5 class = "modal-title" id = "locationConfirmationModalLabel">
+                                                    Confirmation</h5>
+                                                <button type = "button" class = "close" data-dismiss = "modal"
+                                                        aria-label = "Close">
+                                                    <span aria-hidden = "true">&times;</span>
+                                                </button>
+                                            </div> <!--end of modal header-->
+                                            <div class = "modal-body">
+                                                <div class = "row">
+                                                    <!--<input name = "delete-dvd-id" id = "delete-dvd-id" type = "hidden">-->
+                                                    <p>Please confirm the location on the map</p>
+                                                </div>
+                                                <div class = "row" id = "map" style = "height: 400px;"></div>
+
+                                                <div class = "row" style = "justify-content: center;">
+                                                    <button type = "button" class = "btn btn-secondary"
+                                                            data-dismiss = "modal">Cancel
+                                                    </button>
+                                                    <button type = "submit" class = "btn btn-primary mx-2"
+                                                            id = "submitButton"
+                                                            data-toggle = "modal">Confirm Location and Add Sighting
+                                                    </button>
+                                                </div>
+                                            </div> <!--end of modal body-->
+                                        </div> <!-- end of modal content-->
+                                    </div> <!--end of modal dialogue-->
+                                </div>
+
+
+                                <!--END MODAL-->
+
+
+                            </form>
 
                             <!-- END OF FORM -->
                         </div>
@@ -190,6 +389,138 @@
         <script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 integrity = "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin = "anonymous"></script>
+        <!-- Leaflet JS -->
+        <script src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+                integrity = "sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin = ""></script>
+        <script>
+                                            //Sets the date to have a max of today, prevents sightings in the future
+
+                                            var today = new Date();
+                                            var dd = today.getDate();
+                                            var mm = today.getMonth() + 1; //January is 0!
+                                            var yyyy = today.getFullYear();
+                                            if (dd < 10) {
+                                                dd = '0' + dd
+                                            }
+                                            if (mm < 10) {
+                                                mm = '0' + mm
+                                            }
+
+                                            today = yyyy + '-' + mm + '-' + dd;
+                                            document.getElementById("date").setAttribute("max", today);
+        </script>
+
+        <script>
+            //makes Location API Calls
+            function makeCallGetLatitudeandLongitude() {
+                var locationName = document.getElementById("locationName").value;
+                var address = document.getElementById("address").value;
+                var city = document.getElementById("city").value;
+                var state = document.getElementById("state").value;
+                var zip = document.getElementById("zip").value;
+                var country = "USA";
+
+                var urlForApi = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + address + " " + city + " " + state + " " + zip + " " + country + ".json?access_token=pk.eyJ1Ijoic2hhemVuYSIsImEiOiJja2ZpeGhicnowNXBkMzVtcWo1bnBsNzdwIn0.0PQfe_ZktBVA1Vr6jUqt-w&cachebuster=1602054407321&autocomplete=false&country=us&limit=1";
+
+                $.ajax({
+                    method: 'GET',
+                    url: urlForApi,
+                    success: function (location, status) {
+                        //getLatitude
+                        //getLongitude
+                        //set at center, zoom to 12 or something
+                        //use latitude and longitude for marker. Add LocationName that they enter to be on the marker.
+                        // alert(status);
+                        var coordinateHolder = location.features[0].geometry.coordinates;
+
+                        var longitude = coordinateHolder[0];
+                        var latitude = coordinateHolder[1];
+
+                        document.getElementById("longitude").value = longitude;
+                        document.getElementById("latitude").value = latitude;
+
+                        var mymap = L.map('map').setView([latitude, longitude], 18);
+
+                        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hhemVuYSIsImEiOiJja2ZpeGhicnowNXBkMzVtcWo1bnBsNzdwIn0.0PQfe_ZktBVA1Vr6jUqt-w', {
+                            maxZoom: 18,
+                            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                                    '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                                    'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                            id: 'mapbox/streets-v11',
+                            // tileSize: 512,
+                            // zoomOffset: -1
+                        }).addTo(mymap);
+
+
+                        L.marker([latitude, longitude]).addTo(mymap).bindPopup(locationName).openPopup();
+                        $('#locationConfirmationModal').modal('show');
+                        $('#locationConfirmationModal').on('shown.bs.modal', function () {
+                            mymap.invalidateSize();
+                        });
+
+                    },
+                    error: function () {
+                        alert("something went wrong...");
+
+                    }
+                });
+            }
+
+
+            function showConfirmationModal() {
+                makeCallGetLatitudeandLongitude();
+                $('#locationConfirmationModal').modal('show');
+            }
+        </script>
+        <script>
+            //For Hiding and Showing various form inputs
+
+            //TODO: Also handle the required fields!!!!!!
+            var superheroExistingDiv = document.getElementById('superheroExistingDiv');
+            //2 superhero buttons
+
+            var superheroNameDiv = document.getElementById('superheroNameDiv');
+            var powerExistingDiv = document.getElementById('powerExistingDiv');
+            var powerNameDiv = document.getElementById('powerNameDiv');
+            //2 power buttons
+
+            var superheroDescription = document.getElementById('superheroDescriptionDiv');
+            var locationExistingDiv = document.getElementById('locationExistingDiv');
+            //2 location buttons
+            var locationNewDiv = document.getElementById('locationNewDiv');
+            var submitOrConfirmButton = document.getElementById('submitOrConfirmButton');
+
+            function hideExtraFields() {
+                //TODO set requirements on fields!!!
+                superheroNameDiv.style.display = 'none';
+                powerExistingDiv.style.display = 'none';
+                powerNameDiv.style.display = 'none';
+                superheroDescription.style.display = 'none';
+                locationNewDiv.style.display = 'none';
+            }
+
+            function changeToNewSuperheroInput() {
+                //TODO remember to change required fields
+                superheroExistingDiv.style.display = 'none';
+                superheroNameDiv.style.display = 'flex';
+                superheroDescription.style.display = 'flex';
+                powerExistingDiv.style.display = 'flex';
+            }
+
+            function changeToSelectSuperheroInput() {
+
+            }
+
+            function changeToNewPowerInput() {
+                powerExistingDiv.style.display = 'none';
+                powerNameDiv.style.display = 'flex';
+                powerSelectChangerButton.innerText = 'Click here to select a Power instead';
+            }
+
+        </script>
+
+
     </body>
 
 </html>
