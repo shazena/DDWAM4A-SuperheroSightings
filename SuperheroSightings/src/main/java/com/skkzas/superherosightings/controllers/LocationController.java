@@ -1,19 +1,17 @@
 package com.skkzas.superherosightings.controllers;
 
-import com.skkzas.superherosightings.dao.LocationDao;
-import com.skkzas.superherosightings.dao.OrganizationDao;
-import com.skkzas.superherosightings.dao.PowerDao;
-import com.skkzas.superherosightings.dao.SightingDao;
-import com.skkzas.superherosightings.dao.SuperheroDao;
+import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.Location;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import com.skkzas.superherosightings.dto.Organization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  *
@@ -126,12 +124,32 @@ public class LocationController {
     }
 
     @GetMapping("locationDelete")
-    public String deleteLocation(Integer id, Model model) {
+    public String deleteLocation(HttpServletRequest request, Model model) {
         //use the delete Dao function to determine which other tables are affected
         //for each table, get all items based on this location id.
         //send each list to the page
+        int id = Integer.parseInt(request.getParameter("id"));
+        Location location = locationDao.getLocationById(id);
+        List<Organization> organizations = organizationDao.getOrganizationsForLocation(location);
+
+        model.addAttribute("location", location);
+        model.addAttribute("organizations", organizations);
 
         return "locationDelete";
+    }
+
+    @GetMapping("locationDeleteConfirm")
+    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/locations";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Location location = locationDao.getLocationById(id);
+
+        locationDao.deleteLocationById(location.getLocationId());
+
+        return "redirect:/locations";
     }
 
 }
