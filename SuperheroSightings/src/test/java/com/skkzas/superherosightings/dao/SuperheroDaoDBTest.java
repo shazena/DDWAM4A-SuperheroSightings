@@ -378,7 +378,7 @@ public class SuperheroDaoDBTest {
     }
 
     /**
-     * Test of getAllSuperherosForOrganization method, of class SuperheroDaoDB.
+     * Test of getAllSuperheroesWithThatPower method, of class SuperheroDaoDB.
      */
     @Test
     public void testGetAllSuperheroesWithThatPower () {
