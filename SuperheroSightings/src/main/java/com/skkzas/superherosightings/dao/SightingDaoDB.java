@@ -16,13 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import static java.lang.Integer.min;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  *
@@ -124,6 +124,21 @@ public class SightingDaoDB implements SightingDao {
         List<Sighting> sightingsForDate = jdbc.query(GET_SIGHTINGS_FOR_DATE, new SightingMapper(), date);
         associateLocationAndSuperhero(sightingsForDate);
         return sightingsForDate;
+    }
+    
+    @Override
+    public List<Sighting> getAllSightingsForListOfSuperheros(List<Superhero> listOfSuperheroes) {
+        List <Sighting> allSightingsForSuperheroes = new ArrayList<>();
+        final String GET_SIGHTINGS_FOR_SUPERHERO = "SELECT * FROM Sighting WHERE SuperheroId = ?";
+
+        for (Superhero superhero : listOfSuperheroes) {
+           List<Sighting> sightingsForSuperhero = jdbc.query(GET_SIGHTINGS_FOR_SUPERHERO, new SightingMapper(), superhero.getSuperheroId());
+            for (Sighting sighting : sightingsForSuperhero) {
+                allSightingsForSuperheroes.add(sighting);
+            }
+        }
+        associateLocationAndSuperhero(allSightingsForSuperheroes);
+        return allSightingsForSuperheroes;
     }
 
     private Location getLocationForSighting(int id) {
