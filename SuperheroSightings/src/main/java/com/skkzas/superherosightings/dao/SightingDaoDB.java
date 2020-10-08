@@ -125,7 +125,7 @@ public class SightingDaoDB implements SightingDao {
         associateLocationAndSuperhero(sightingsForDate);
         return sightingsForDate;
     }
-    
+
     @Override
     public List<Sighting> getAllSightingsForListOfSuperheros(List<Superhero> listOfSuperheroes) {
         List <Sighting> allSightingsForSuperheroes = new ArrayList<>();
