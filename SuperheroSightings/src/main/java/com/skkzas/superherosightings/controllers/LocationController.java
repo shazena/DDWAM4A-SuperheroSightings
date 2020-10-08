@@ -3,6 +3,7 @@ package com.skkzas.superherosightings.controllers;
 import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
+import com.skkzas.superherosightings.dto.Sighting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -131,9 +132,11 @@ public class LocationController {
         int id = Integer.parseInt(request.getParameter("id"));
         Location location = locationDao.getLocationById(id);
         List<Organization> organizations = organizationDao.getOrganizationsForLocation(location);
+        List<Sighting> sightings = sightingDao.getAllSightingsForLocation(location);
 
         model.addAttribute("location", location);
         model.addAttribute("organizations", organizations);
+        model.addAttribute("sightings", sightings);
 
         return "locationDelete";
     }
