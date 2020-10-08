@@ -82,7 +82,10 @@
                     <div class="text-center container">
                         <h3>Are you sure you want to delete Power "[[${power.powerName}]]"?</h3>
                         <p>It will also delete the following: <br>
-                            Superhero " " <br>
+                            Superhero(es): 
+                            <span th:each="superhero : ${superheroes}">
+                            <span th:text="${superhero.superheroName}" style="display:block;"></span>
+                        </span>
                             Sighting " " at Location " ".</p>
                     </div>
 

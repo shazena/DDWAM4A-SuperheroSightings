@@ -2,6 +2,7 @@ package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.Power;
+import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -68,8 +69,11 @@ public class PowerController {
     public String deletePower(HttpServletRequest request, Model model) {
         int id = Integer.parseInt(request.getParameter("id"));
         Power power = powerDao.getPowerById(id);
+        List<Superhero> superheroes = superheroDao.getAllSuperheroesWithThatPower(id);
 
         model.addAttribute("power", power);
+        model.addAttribute("superheroes", superheroes);
+
         return "powerDelete";
     }
 
