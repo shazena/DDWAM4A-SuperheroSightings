@@ -70,6 +70,7 @@ public class PowerController {
 
     @GetMapping("powerDelete")
     public String deletePower(HttpServletRequest request, Model model) {
+        String deleteText = "It will also delete the following: ";
         int id = Integer.parseInt(request.getParameter("id"));
         Power power = powerDao.getPowerById(id);
         List<Superhero> superheroes = superheroDao.getAllSuperheroesWithThatPower(id);
@@ -80,7 +81,8 @@ public class PowerController {
             Location locationForSighting = sighting.getLocation();
             locations.add(locationForSighting);
         }
-
+        
+        model.addAttribute("deleteText", deleteText);
         model.addAttribute("power", power);
         model.addAttribute("superheroes", superheroes);
         model.addAttribute("sightings", sightings);

@@ -81,19 +81,17 @@
                 <div class="row border border-dark">
                     <div class="text-center container">
                         <h3>Are you sure you want to delete Power "[[${power.powerName}]]"?</h3>
-                        <p>It will also delete the following: <br>
-                            Superhero(es):
-                            <span th:each="superhero : ${superheroes}">
-                            <span th:text="${superhero.superheroName}" style="display:block;"></span>
+                        <span th:if="${superheroes != null}" th:text="${deleteText}" style="display: block; font-weight:bold; "> </span>
+                        <p>
+                            <span th:if="${superheroes != null}" th:each="superhero : ${superheroes}">Superhero:
+                            <span th:text="${superhero.superheroName}" style=""></span><br>
                         </span>
-                            Sighting(s):
-                            <span th:each="sighting : ${sightings}">
-                            <span th:text="${sighting.date}" style="display:block;"></span>
+                            <span th:if="${sightings != null}" th:each="sighting : ${sightings}">Sighting:
+                            <span th:text="${sighting.date}" style=""></span><br>
                         </span>
-                            at Location(s):
-                            <span th:each="location : ${locations}">
-                            <span th:text="${location.locationName}" style="display:block;"></span>
-                        </span>.</p>
+                            <span th:if="${locations != null}" th:each="location : ${locations}">at Location:
+                            <span th:text="${location.locationName}" style=""></span><br>
+                        </span></p>
                     </div>
 
                     <div class = "text-center container">
