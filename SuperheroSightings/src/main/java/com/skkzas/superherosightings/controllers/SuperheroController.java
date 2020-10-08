@@ -1,7 +1,9 @@
 package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
+import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Power;
+import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -73,8 +76,19 @@ public class SuperheroController {
     public String deleteSuperhero(HttpServletRequest request, Model model) {
         int id = Integer.parseInt(request.getParameter("id"));
         Superhero superhero = superheroDao.getSuperheroById(id);
+        List<Superhero> superheroes = new ArrayList<>();
+        superheroes.add(superhero);
+        List<Sighting> sightings = sightingDao.getAllSightingsForListOfSuperheros(superheroes);
+        List<Location> locations = new ArrayList<>();
+
+        for (Sighting sighting : sightings) {
+            Location locationForSighting = sighting.getLocation();
+            locations.add(locationForSighting);
+        }
 
         model.addAttribute("superhero", superhero);
+        model.addAttribute("sightings", sightings);
+        model.addAttribute("locations", locations);
         return "superheroDelete";
     }
 

@@ -82,7 +82,14 @@
                     <div class="text-center container">
                         <h3>Are you sure you want to delete Superhero "[[${superhero.superheroName}]]"?</h3>
                         <p>It will also delete the following: <br>
-                            Sighting "[date here]" at Location "[location name here]"
+                            Sighting(s):
+                            <span th:each="sighting : ${sightings}">
+                            <span th:text="${sighting.date}" style="display:block;"></span>
+                        </span>
+                            at Location(s):
+                            <span th:each="location : ${locations}">
+                            <span th:text="${location.locationName}" style="display:block;"></span>
+                        </span>.
                         </p>
                     </div>
 
