@@ -90,7 +90,10 @@
                             <span th:each="sighting : ${sightings}">
                             <span th:text="${sighting.date}" style="display:block;"></span>
                         </span>
-                            at Location " ".</p>
+                            at Location(s):
+                            <span th:each="location : ${locations}">
+                            <span th:text="${location.locationName}" style="display:block;"></span>
+                        </span>.</p>
                     </div>
 
                     <div class = "text-center container">

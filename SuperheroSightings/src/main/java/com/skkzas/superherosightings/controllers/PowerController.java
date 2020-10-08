@@ -1,6 +1,7 @@
 package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
+import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,10 +74,17 @@ public class PowerController {
         Power power = powerDao.getPowerById(id);
         List<Superhero> superheroes = superheroDao.getAllSuperheroesWithThatPower(id);
         List<Sighting> sightings = sightingDao.getAllSightingsForListOfSuperheros(superheroes);
+        List<Location> locations = new ArrayList<>();
+
+        for (Sighting sighting : sightings) {
+            Location locationForSighting = sighting.getLocation();
+            locations.add(locationForSighting);
+        }
 
         model.addAttribute("power", power);
         model.addAttribute("superheroes", superheroes);
         model.addAttribute("sightings", sightings);
+        model.addAttribute("locations", locations);
 
         return "powerDelete";
     }
