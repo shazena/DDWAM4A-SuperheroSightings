@@ -61,13 +61,6 @@ public class PowerController {
         return "redirect:/powers";
     }
 
-//    @GetMapping("deletePower")
-//    public String deletePower(HttpServletRequest request) {
-//        int id = Integer.parseInt(request.getParameter("id"));
-//        powerDao.deletePowerById(id);
-//
-//        return "redirect:/powers";
-//    }
     @GetMapping("powerDelete")
     public String deletePower(HttpServletRequest request, Model model) {
         int id = Integer.parseInt(request.getParameter("id"));
