@@ -24,6 +24,7 @@ import java.util.List;
  */
 @Controller
 public class SuperheroController {
+
     @Autowired
     PowerDao powerDao;
 
@@ -53,11 +54,20 @@ public class SuperheroController {
     @PostMapping("addSuperhero")
     public String addSuperhero(Superhero superhero, HttpServletRequest request) {
         String name = request.getParameter("name");
-        String powerId = request.getParameter("powerId");
         String description = request.getParameter("superheroDescription");
 
+        Power power = new Power();
+        String powerId = request.getParameter("powerExisting");
+        if (powerId != null) {
+            power = powerDao.getPowerById(Integer.parseInt(powerId));
+        } else {
+            String powerName = request.getParameter("powerName");
+            power.setPowerName(powerName);
+            power = powerDao.addPower(power);
+        }
+
         superhero.setSuperheroName(name);
-        superhero.setPower(powerDao.getPowerById(Integer.parseInt(powerId)));
+        superhero.setPower(power);
         superhero.setSuperheroDescription(description);
 
         superheroDao.addSuperhero(superhero);
@@ -93,7 +103,7 @@ public class SuperheroController {
     }
 
     @GetMapping("superheroDeleteConfirm")
-    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/superheroes";
         }
@@ -117,7 +127,7 @@ public class SuperheroController {
     }
 
     @PostMapping("superheroEdit")
-    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/superheroes";
         }
