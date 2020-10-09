@@ -1,10 +1,7 @@
 package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
-import com.skkzas.superherosightings.dto.Location;
-import com.skkzas.superherosightings.dto.Power;
-import com.skkzas.superherosightings.dto.Sighting;
-import com.skkzas.superherosightings.dto.Superhero;
+import com.skkzas.superherosightings.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -136,6 +133,33 @@ public class SightingController {
 
         //TODO get the map to show up on this page too!!!
         return "sightingDetails";
+    }
+
+    @GetMapping("sightingDelete")
+    public String deleteSighting(HttpServletRequest request, Model model) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Sighting sighting = sightingDao.getSightingById(id);
+        Superhero superhero = superheroDao.getSuperheroForSighting(sighting.getSightingId());
+
+        model.addAttribute("sighting", sighting);
+        model.addAttribute("superhero", superhero);
+
+        return "sightingDelete";
+    }
+
+    @GetMapping("sightingDeleteConfirm")
+    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/sightings";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Sighting sighting = sightingDao.getSightingById(id);
+
+        sightingDao.deleteSightingById(sighting.getSightingId());
+
+        return "redirect:/sightings";
     }
 
     @GetMapping("sightingEdit")
