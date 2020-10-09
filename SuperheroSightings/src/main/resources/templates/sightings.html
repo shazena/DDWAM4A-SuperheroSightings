@@ -111,7 +111,7 @@
                                 <tbody>
                                     <tr th:each = "sighting, stat : ${allSightings}">
                                         <td><a href = "#" th:href = "@{sightingDetails(id=${sighting.sightingId})}"><span
-                                                    th:text = "${stat.index}">#</span></a></td>
+                                                    th:text = "${stat.index+1}">#</span></a></td>
                                         <td th:text = "${#temporals.format(sighting.date, 'MM/dd/yyyy')}">Date</td>
                                         <td th:text = "${sighting.superhero.superheroName}">Superhero Name</td>
                                         <td th:text = "${sighting.location.locationName}">Location Name</td>
