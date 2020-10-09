@@ -1,7 +1,10 @@
 package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
+import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Power;
+import com.skkzas.superherosightings.dto.Sighting;
+import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +24,7 @@ import java.util.List;
  */
 @Controller
 public class PowerController {
+
     @Autowired
     PowerDao powerDao;
 
@@ -56,25 +61,29 @@ public class PowerController {
         return "redirect:/powers";
     }
 
-//    @GetMapping("deletePower")
-//    public String deletePower(HttpServletRequest request) {
-//        int id = Integer.parseInt(request.getParameter("id"));
-//        powerDao.deletePowerById(id);
-//
-//        return "redirect:/powers";
-//    }
-
     @GetMapping("powerDelete")
     public String deletePower(HttpServletRequest request, Model model) {
         int id = Integer.parseInt(request.getParameter("id"));
         Power power = powerDao.getPowerById(id);
+        List<Superhero> superheroes = superheroDao.getAllSuperheroesWithThatPower(id);
+        List<Sighting> sightings = sightingDao.getAllSightingsForListOfSuperheros(superheroes);
+        List<Location> locations = new ArrayList<>();
+
+        for (Sighting sighting : sightings) {
+            Location locationForSighting = sighting.getLocation();
+            locations.add(locationForSighting);
+        }
 
         model.addAttribute("power", power);
+        model.addAttribute("superheroes", superheroes);
+        model.addAttribute("sightings", sightings);
+        model.addAttribute("locations", locations);
+
         return "powerDelete";
     }
 
     @GetMapping("powerDeleteConfirm")
-    public String performDeletePower(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performDeletePower(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/powers";
         }
@@ -97,7 +106,7 @@ public class PowerController {
     }
 
     @PostMapping("powerEdit")
-    public String performEditPower(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performEditPower(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/powers";
         }

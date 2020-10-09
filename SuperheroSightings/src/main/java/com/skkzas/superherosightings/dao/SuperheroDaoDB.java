@@ -1,9 +1,6 @@
 package com.skkzas.superherosightings.dao;
 
-import com.skkzas.superherosightings.dto.Location;
-import com.skkzas.superherosightings.dto.Organization;
-import com.skkzas.superherosightings.dto.Power;
-import com.skkzas.superherosightings.dto.Superhero;
+import com.skkzas.superherosightings.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -136,6 +133,35 @@ public class SuperheroDaoDB implements SuperheroDao {
             superhero.setPower(getPowerForSuperhero(superhero.getSuperheroId()));
         }
         return superheroesForOrganization;
+    }
+
+    //Method to get all supers with that power
+    @Override
+    public List<Superhero> getAllSuperheroesWithThatPower(int powerId) {
+        final String SELECT_SUPERHEROES_WITH_POWER = "SELECT * FROM Superhero WHERE PowerId = ?";
+
+        List<Superhero> superheroesWithThatPower = jdbc.query(SELECT_SUPERHEROES_WITH_POWER, new SuperheroMapper(), powerId);
+        for (Superhero superhero : superheroesWithThatPower) {
+            superhero.setPower(getPowerForSuperhero(superhero.getSuperheroId()));
+        }
+
+        return superheroesWithThatPower;
+    }
+
+    @Override
+    public Superhero getSuperheroForSighting(int sightingId) {
+        try {
+            final String GET_SUPERHERO_FOR_SIGHTING = "SELECT * FROM Superhero s "
+                    + "JOIN Sighting si ON s.SuperheroId = si.SuperheroId "
+                    + "WHERE si.SightingId = ?";
+            Superhero superheroForSighting = jdbc.queryForObject(GET_SUPERHERO_FOR_SIGHTING, new SuperheroMapper(), sightingId);
+
+            superheroForSighting.setPower(getPowerForSuperhero(superheroForSighting.getSuperheroId()));
+
+            return superheroForSighting;
+        } catch (DataAccessException e) {
+            return null;
+        }
     }
 
     //helper method

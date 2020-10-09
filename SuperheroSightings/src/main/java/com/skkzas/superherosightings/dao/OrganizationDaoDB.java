@@ -6,15 +6,16 @@ import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Superhero;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 /**
  *
@@ -119,6 +120,19 @@ public class OrganizationDaoDB implements OrganizationDao {
         associateLocationAndSuperheroes(organizationsForSuperhero);
 
         return organizationsForSuperhero;
+    }
+
+    @Override
+    public List<Organization> getOrganizationsForLocation(Location location) {
+        final String GET_ORGANIZATIONS_FOR_LOCATION = "SELECT * FROM Organization o " +
+                "JOIN Location l ON o.LocationId = l.LocationId " +
+                "WHERE l.LocationId = ?";
+
+        List<Organization> organizationsForLocation = jdbc.query(GET_ORGANIZATIONS_FOR_LOCATION, new OrganizationMapper(), location.getLocationId());
+
+        associateLocationAndSuperheroes(organizationsForLocation);
+
+        return organizationsForLocation;
     }
 
     private Location getLocationForOrganization(int orgId) {

@@ -344,4 +344,101 @@ public class OrganizationDaoDBTest {
         assertNull(fromDao);
     }
 
+    //List<Organization> getOrganizationsForLocation(Location location);
+    /**
+     * Test of getOrganizationsForLocation method, of class OrganizationDaoDB.
+     */
+    @Test
+    public void testGetOrganizationsForLocation() {
+        //create 3 organizations (2 for the same location)
+        //Org1
+        Power power = new Power();
+        power.setPowerName("listening to people");
+        power = powerDao.addPower(power);
+
+        Superhero mySuper = new Superhero();
+        mySuper.setSuperheroName("Not Your Ordinary Guy");
+        mySuper.setSuperheroDescription("actually listens and tries to understand");
+        mySuper.setPower(power);
+        superheroDao.addSuperhero(mySuper);
+
+        Location superLocation = new Location();
+        superLocation.setLocationName("Super Location");
+        superLocation.setDescription("You can't beat it");
+        superLocation.setAddress("101 Bedford Ave");
+        superLocation.setCity("Brooklyn");
+        superLocation.setState("NY");
+        superLocation.setZip("11211");
+        superLocation.setLatitude("40.720239");
+        superLocation.setLongitude("-73.954620");
+        locationDao.addLocation(superLocation);
+
+        Organization superOrg = new Organization();
+        superOrg.setOrgName("True superheroes");
+        superOrg.setDescription("True superheroes are among us");
+        superOrg.setPhoneNumber("3475937574");
+        superOrg.setLocation(superLocation);
+        ArrayList<Superhero> supers = new ArrayList<>();
+        supers.add(mySuper);
+        superOrg.setListOfSuperheroes(supers);
+        organizationDao.addOrganization(superOrg);
+
+        //Org2
+        Power power2 = new Power();
+        power2.setPowerName("listening to people");
+        power2 = powerDao.addPower(power2);
+
+        Superhero mySuper2 = new Superhero();
+        mySuper2.setSuperheroName("Another great superhero");
+        mySuper2.setSuperheroDescription("doesn't judge");
+        mySuper2.setPower(power2);
+        superheroDao.addSuperhero(mySuper2);
+
+        Organization superOrg2 = new Organization();
+        superOrg2.setOrgName("True superheroes 2");
+        superOrg2.setDescription("True superheroes are among us 2");
+        superOrg2.setPhoneNumber("3475937511");
+        superOrg2.setLocation(superLocation);
+        ArrayList<Superhero> supers2 = new ArrayList<>();
+        supers2.add(mySuper2);
+        superOrg2.setListOfSuperheroes(supers2);
+        organizationDao.addOrganization(superOrg2);
+
+        //org3
+        Superhero mySuper3 = new Superhero();
+        mySuper3.setSuperheroName("Third superhero guy");
+        mySuper3.setSuperheroDescription("sometimes disappears");
+        mySuper3.setPower(power2);
+        superheroDao.addSuperhero(mySuper3);
+
+        Location superLocation2 = new Location();
+        superLocation2.setLocationName("Super Location 2");
+        superLocation2.setDescription("You can't beat it either");
+        superLocation2.setAddress("102 Bedford Ave");
+        superLocation2.setCity("Brooklyn");
+        superLocation2.setState("NY");
+        superLocation2.setZip("11211");
+        superLocation2.setLatitude("40.720440");
+        superLocation2.setLongitude("-73.955290");
+        locationDao.addLocation(superLocation2);
+
+        Organization superOrg3 = new Organization();
+        superOrg3.setOrgName("True superheroes 3");
+        superOrg3.setDescription("True superheroes are among us 3");
+        superOrg3.setPhoneNumber("3475937516");
+        superOrg3.setLocation(superLocation2);
+        ArrayList<Superhero> supers3 = new ArrayList<>();
+        supers3.add(mySuper3);
+        superOrg3.setListOfSuperheroes(supers3);
+        organizationDao.addOrganization(superOrg3);
+
+        //make sure the list of Organizations has 2 items
+        List<Organization> orgsForLocation = organizationDao.getOrganizationsForLocation(superLocation);
+
+        assertEquals(2, orgsForLocation.size());
+        assertTrue(orgsForLocation.contains(superOrg));
+        assertTrue(orgsForLocation.contains(superOrg2));
+        assertFalse(orgsForLocation.contains(superOrg3));
+    }
+
 }

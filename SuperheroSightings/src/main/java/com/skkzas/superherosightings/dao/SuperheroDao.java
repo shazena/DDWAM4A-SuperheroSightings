@@ -8,6 +8,7 @@ package com.skkzas.superherosightings.dao;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Superhero;
+
 import java.util.List;
 
 /**
@@ -32,4 +33,7 @@ public interface SuperheroDao {
 
     public List<Superhero> getAllSuperherosForOrganization(Organization organization);
 
+    public List<Superhero> getAllSuperheroesWithThatPower(int powerId);
+
+    public Superhero getSuperheroForSighting(int sightingId);
 }

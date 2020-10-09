@@ -19,7 +19,7 @@
     <style th:inline = "text">
         .sidebar {
             /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
-            background-image: url([[@{/SuperheroesS.jpg}]]);
+            background-image: url([[@{/LocationsA.jpg}]]);
             background-position: bottom;
             background-repeat: no-repeat;
             background-size: 50%;
@@ -48,7 +48,7 @@
                 <ul class = "nav flex-column">
                     <li class = "nav-item">
                         <a class = "nav-link" href = "superheroes">
-                            <span class = "currentPageLink">Superheroes</span>
+                            <span class = "">Superheroes</span>
                         </a>
                     </li>
                     <li class = "nav-item">
@@ -58,7 +58,7 @@
                     </li>
                     <li class = "nav-item">
                         <a class = "nav-link" href = "locations">
-                            <span class = "">Locations</span>
+                            <span class = "currentPageLink">Locations</span>
                         </a>
                     </li>
                     <li class = "nav-item">
@@ -80,22 +80,26 @@
 
                 <div class="row border border-dark">
                     <div class="text-center container">
-                        <h3>Are you sure you want to delete Superhero "[[${superhero.superheroName}]]"?</h3>
-                        <span th:if="${not #lists.isEmpty(sightings)} OR ${not #lists.isEmpty(locations)}" style="display: block; font-weight:bold; ">It will also delete the following: </span>
+                        <h3>Are you sure you want to delete Location "[[${location.locationName}]]"?</h3>
+                        <span th:if="${not #lists.isEmpty(superheroes)} OR ${not #lists.isEmpty(sightings)} OR ${not #lists.isEmpty(organizations)}" style="display: block; font-weight:bold; ">It will also delete the following: </span>
                         <p>
+                           <span th:if="${organizations != null}" th:each="organization : ${organizations}">Organization:
+                                        <span th:text="${organization.orgName}" style=""></span><br>
+                                    </span>
                             <span th:if="${sightings != null}" th:each="sighting : ${sightings}">Sighting:
                                         <span th:text="${sighting.date}" style=""></span><br>
                                     </span>
-                            <span th:if="${locations != null}" th:each="location : ${locations}">at Location:
-                                        <span th:text="${location.locationName}" style=""></span><br>
+                            <span th:if="${superheroes != null}" th:each="superhero : ${superheroes}"> for Superhero:
+                                        <span th:text="${superhero.superheroName}" style=""></span><br>
                                     </span>
+                        </span>
                         </p>
                     </div>
 
                     <div class = "text-center container">
                         <!--DON'T FORGET TO CHANGE ACTION BASED ON YOUR PAGE-->
-                        <form method = "GET" action = "superheroDeleteConfirm">
-                            <input type = "hidden" name = "id" th:value="${superhero.superheroId}">
+                        <form method = "GET" action = "locationDeleteConfirm">
+                            <input type = "hidden" name = "id" th:value="${location.locationId}">
                             <button type="submit" name="action" value="cancel" class = "btn btn-primary text-center m-2">Cancel</button>
                             <button type="submit" name="action" value="confirm" class = "btn btn-danger text-center m-2">Confirm</button>
                         </form>

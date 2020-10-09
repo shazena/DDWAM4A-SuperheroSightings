@@ -376,4 +376,107 @@ public class SuperheroDaoDBTest {
         assertTrue(supersForOrganization.contains(mySuper2));
         assertFalse(supersForOrganization.contains(mySuper3));
     }
+
+    /**
+     * Test of getAllSuperheroesWithThatPower method, of class SuperheroDaoDB.
+     */
+    @Test
+    public void testGetAllSuperheroesWithThatPower() {
+        //create 2 powers
+        Power power = new Power();
+        power.setPowerName("flying");
+        power = powerDao.addPower(power);
+
+        Power power2 = new Power();
+        power2.setPowerName("listening to people");
+        power2 = powerDao.addPower(power2);
+
+        //create 3 superheroes
+        //assign the first power to 2 supers
+        //assign the second power to the third one
+        Superhero mySuper = new Superhero();
+        mySuper.setSuperheroName("Not Your Ordinary Guy");
+        mySuper.setSuperheroDescription("actually listens and tries to understand");
+        mySuper.setPower(power);
+        superheroDao.addSuperhero(mySuper);
+
+        Superhero mySuper2 = new Superhero();
+        mySuper2.setSuperheroName("Another great superhero");
+        mySuper2.setSuperheroDescription("doesn't judge");
+        mySuper2.setPower(power);
+        superheroDao.addSuperhero(mySuper2);
+
+        Superhero mySuper3 = new Superhero();
+        mySuper3.setSuperheroName("Third superhero guy");
+        mySuper3.setSuperheroDescription("sometimes disappears");
+        mySuper3.setPower(power2);
+        superheroDao.addSuperhero(mySuper3);
+
+        //act
+        List<Superhero> supersWithThatPower = superheroDao.getAllSuperheroesWithThatPower(power.getPowerId());
+
+        //check if the method gets 2 supers with the same power and not the third one
+        assertEquals(2, supersWithThatPower.size());
+        assertTrue(supersWithThatPower.contains(mySuper));
+        assertTrue(supersWithThatPower.contains(mySuper2));
+        assertFalse(supersWithThatPower.contains(mySuper3));
+
+    }
+
+    /**
+     * Test of getSuperheroForSighting method, of class SuperheroDaoDB.
+     */
+    @Test
+    public void testGetSuperheroForSighting() {
+        //create 2 supers
+        Power power = new Power();
+        power.setPowerName("flying");
+        power = powerDao.addPower(power);
+
+        Power power2 = new Power();
+        power2.setPowerName("listening to people");
+        power2 = powerDao.addPower(power2);
+
+        Superhero mySuper = new Superhero();
+        mySuper.setSuperheroName("Not Your Ordinary Guy");
+        mySuper.setSuperheroDescription("actually listens and tries to understand");
+        mySuper.setPower(power);
+        superheroDao.addSuperhero(mySuper);
+
+        Superhero mySuper2 = new Superhero();
+        mySuper2.setSuperheroName("Another great superhero");
+        mySuper2.setSuperheroDescription("doesn't judge");
+        mySuper2.setPower(power);
+        superheroDao.addSuperhero(mySuper2);
+
+        //create 1 sighting
+        //for mySuper
+        Location superLocation = new Location();
+        superLocation.setLocationName("Super Location");
+        superLocation.setDescription("You can't beat it");
+        superLocation.setAddress("101 Bedford Ave");
+        superLocation.setCity("Brooklyn");
+        superLocation.setState("NY");
+        superLocation.setZip("11211");
+        superLocation.setLatitude("40.720239");
+        superLocation.setLongitude("-73.954620");
+        superLocation = locationDao.addLocation(superLocation);
+
+        Sighting firstSighting = new Sighting();
+        LocalDate date = LocalDate.parse("2020-01-08");
+        firstSighting.setDate(date);
+        firstSighting.setLocation(superLocation);
+        firstSighting.setSuperhero(mySuper);
+        Sighting addedSighting = sightingDao.addSighting(firstSighting);
+
+        assertEquals(addedSighting, firstSighting);
+
+        //get super for a sighting
+        Superhero superForSighting = superheroDao.getSuperheroForSighting(addedSighting.getSightingId());
+
+        //assert
+        assertEquals(mySuper, superForSighting);
+
+    }
+
 }
