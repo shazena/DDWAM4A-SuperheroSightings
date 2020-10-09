@@ -81,19 +81,18 @@
                 <div class="row border border-dark">
                     <div class="text-center container">
                         <h3>Are you sure you want to delete Location "[[${location.locationName}]]"?</h3>
-                        <p>It will also delete the following: <br>
-                            Organization(s):
-                            <span th:each="organization : ${organizations}">
-                            <span th:text="${organization.orgName}" style="display:block;"></span>
+                        <span th:if="${not #lists.isEmpty(superheroes)} OR ${not #lists.isEmpty(sightings)} OR ${not #lists.isEmpty(organizations)}" style="display: block; font-weight:bold; ">It will also delete the following: </span>
+                        <p>
+                           <span th:if="${organizations != null}" th:each="organization : ${organizations}">Organization:
+                                        <span th:text="${organization.orgName}" style=""></span><br>
+                                    </span>
+                            <span th:if="${sightings != null}" th:each="sighting : ${sightings}">Sighting:
+                                        <span th:text="${sighting.date}" style=""></span><br>
+                                    </span>
+                            <span th:if="${superheroes != null}" th:each="superhero : ${superheroes}"> for Superhero:
+                                        <span th:text="${superhero.superheroName}" style=""></span><br>
+                                    </span>
                         </span>
-                            Sighting(s):
-                            <span th:each="sighting : ${sightings}">
-                            <span th:text="${sighting.date}" style="display:block;"></span>
-                        </span>
-                            for Superhero(es):
-                            <span th:each="superhero : ${superheroes}">
-                            <span th:text="${superhero.superheroName}" style="display:block;"></span>
-                        </span>.
                         </p>
                     </div>
 
