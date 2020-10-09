@@ -4,6 +4,7 @@ import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Sighting;
+import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -133,11 +135,17 @@ public class LocationController {
         Location location = locationDao.getLocationById(id);
         List<Organization> organizations = organizationDao.getOrganizationsForLocation(location);
         List<Sighting> sightings = sightingDao.getAllSightingsForLocation(location);
-        //Superhero superhero =
+        List<Superhero> superheroes = new ArrayList<>();
+
+        for (Sighting sighting : sightings) {
+            Superhero superhero = superheroDao.getSuperheroForSighting(sighting.getSightingId());
+            superheroes.add(superhero);
+        }
 
         model.addAttribute("location", location);
         model.addAttribute("organizations", organizations);
         model.addAttribute("sightings", sightings);
+        model.addAttribute("superheroes", superheroes);
 
         return "locationDelete";
     }
