@@ -106,31 +106,29 @@
                             </div>
 
                             <div class = "form-group row" id = "superheroExistingDiv">
-                                <label for = "superheroExisting" class = "col-3 col-form-label">
+                                <label for = "superhero" class = "col-3 col-form-label">
                                     Superhero</label>
                                 <div class = "col-9">
-                                    <select id = "superheroExisting" name = "superheroExisting" class = "form-control">
-                                        <option disabled selected value = "?!?">Select Superhero</option>
+                                    <select id = "superhero" name = "superheroId" class = "form-control">
                                         <option th:each = "superhero : ${allSuperheroes}"
                                                 th:value = "${superhero.superheroId}"
                                                 th:text = "${superhero.superheroName+' - '+superhero.power.powerName}"
-                                            th:selected="${sighting.superhero.superheroId}">
+                                            th:selected="${sighting.superhero.superheroId == superhero.superheroId}">
                                             Superhero Name - Power Name
                                         </option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div class = "form-group row" id = "locationExistingDiv">
-                                <label for = "locationExisting" class = "col-3 col-form-label">
+                            <div class = "form-group row">
+                                <label for = "location" class = "col-3 col-form-label">
                                     Location</label>
                                 <div class = "col-9">
-                                    <select id = "locationExisting" name = "locationExisting" class = "form-control">
-                                        <option disabled selected value = "?!?">Select Location</option>
+                                    <select id = "location" name = "locationId" class = "form-control">
                                         <option th:each = "location : ${allLocations}"
                                                 th:value = "${location.locationId}"
                                                 th:text = "${location.locationName}"
-                                                th:selected = "${sighting.location.locationId}">
+                                                th:selected = "${sighting.location.locationId == location.locationId }">
                                             Location Name
                                         </option>
                                     </select>

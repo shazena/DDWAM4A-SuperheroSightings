@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
@@ -148,6 +149,29 @@ public class SightingController {
         model.addAttribute("allLocations", allLocations);
 
         return "sightingEdit";
+    }
+
+    @PostMapping("sightingEdit")
+    public String performSightingEdit(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/sightings";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Sighting sighting = sightingDao.getSightingById(id);
+
+        String date = request.getParameter("date");
+        LocalDate dateOfSighting = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String superheroId = request.getParameter("superheroId");
+        String locationId = request.getParameter("locationId");
+
+        sighting.setDate(dateOfSighting);
+        sighting.setSuperhero(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+        sighting.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
+
+        sightingDao.updateSighting(sighting);
+
+        return "redirect:/sightings";
     }
 
 }
