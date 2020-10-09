@@ -139,6 +139,7 @@
                                 Power</label>
                             <div class="col-9">
                                 <select id="power" name="powerId" class="form-control" >
+                                    <option disabled selected value = "?!?">Select Power</option>
                                     <option th:each="power : ${powers}"
                                             th:value="${power.powerId}"
                                             th:text="${power.powerName}">
