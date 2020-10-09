@@ -71,19 +71,48 @@ public class OrganizationController {
         String phoneFormatted = request.getParameter("phoneNum");
         String phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
 
-        String locationId = request.getParameter("locationId");
         String description = request.getParameter("description");
-        String[] superheroIds = request.getParameterValues("superheroId");
 
-        organization.setOrgName(name);
-        organization.setPhoneNumber(phoneUnformatted);
-        organization.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
-        organization.setDescription(description);
+        String[] superheroIds = request.getParameterValues("superheroId");
 
         List<Superhero> superheroes = new ArrayList<>();
         for (String superheroId : superheroIds) {
             superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
         }
+
+        //get the location
+        Location location = new Location();
+
+        String locationId = request.getParameter("locationExisting");
+        if (locationId != null) {
+            location = locationDao.getLocationById(Integer.parseInt(locationId));
+        } else {
+
+            String locationName = request.getParameter("locationName");
+            String address = request.getParameter("address");
+            String city = request.getParameter("city");
+            String state = request.getParameter("state");
+            String zip = request.getParameter("zip");
+            String locationDescription = request.getParameter("locationDescription");
+            String longitude = request.getParameter("longitude");
+            String latitude = request.getParameter("latitude");
+
+            location.setLocationName(locationName);
+            location.setAddress(address);
+            location.setCity(city);
+            location.setState(state);
+            location.setZip(zip);
+            location.setDescription(locationDescription);
+            location.setLongitude(longitude);
+            location.setLatitude(latitude);
+
+            locationDao.addLocation(location);
+        }
+
+        organization.setOrgName(name);
+        organization.setPhoneNumber(phoneUnformatted);
+        organization.setLocation(location);
+        organization.setDescription(description);
         organization.setListOfSuperheroes(superheroes);
 
         organizationDao.addOrganization(organization);
@@ -108,7 +137,7 @@ public class OrganizationController {
     }
 
     @GetMapping("organizationDeleteConfirm")
-    public String performDeletePower(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performDeletePower(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/organizations";
         }
@@ -145,7 +174,7 @@ public class OrganizationController {
     }
 
     @PostMapping("organizationEdit")
-    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/organizations";
         }
