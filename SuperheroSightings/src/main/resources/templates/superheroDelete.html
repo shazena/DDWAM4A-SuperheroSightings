@@ -81,15 +81,14 @@
                 <div class="row border border-dark">
                     <div class="text-center container">
                         <h3>Are you sure you want to delete Superhero "[[${superhero.superheroName}]]"?</h3>
-                        <p>It will also delete the following: <br>
-                            Sighting(s):
-                            <span th:each="sighting : ${sightings}">
-                            <span th:text="${sighting.date}" style="display:block;"></span>
-                        </span>
-                            at Location(s):
-                            <span th:each="location : ${locations}">
-                            <span th:text="${location.locationName}" style="display:block;"></span>
-                        </span>.
+                        <span th:if="${not #lists.isEmpty(sightings)} OR ${not #lists.isEmpty(locations)}" style="display: block; font-weight:bold; ">It will also delete the following: </span>
+                        <p>
+                            <span th:if="${sightings != null}" th:each="sighting : ${sightings}">Sighting:
+                                        <span th:text="${sighting.date}" style=""></span><br>
+                                    </span>
+                            <span th:if="${locations != null}" th:each="location : ${locations}">at Location:
+                                        <span th:text="${location.locationName}" style=""></span><br>
+                                    </span>
                         </p>
                     </div>
 
