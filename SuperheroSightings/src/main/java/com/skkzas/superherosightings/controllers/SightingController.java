@@ -130,4 +130,14 @@ public class SightingController {
         return "redirect:/sightings";
     }
 
+    @GetMapping("sightingDetails")
+    public String sightingDetails(Integer id, Model model) {
+        Sighting sighting = sightingDao.getSightingById(id);
+
+        model.addAttribute(sighting);
+
+        //TODO get the map to show up on this page too!!!
+        return "sightingDetails";
+    }
+
 }
