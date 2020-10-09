@@ -106,9 +106,7 @@
                             <div class="form-group row">
                                 <label for="phoneNum" class="col-4 col-form-label">Phone</label>
                                 <div class="col-8">
-                                    <!--<input type="text" name="name" id="name" class="form-control" placeholder="">-->
                                     <input th:value="${organization.phoneNumber}" type="text" name="phoneNum" id="phoneNum" maxlength="14" class="form-control" />
-                                    <!--                                <input type="hidden" id="phoneNumDB" />-->
                                 </div>
                             </div>
 
@@ -125,8 +123,6 @@
                                     </select>
                                 </div>
                             </div>
-
-                            <button type="submit" class="col-12 btn btn-outline-dark btn-sm my-2">Click here to enter a new location instead</button>
 
                             <div class="form-group row">
                                 <label for="description" class="col-4 col-form-label">Organization Description</label>
