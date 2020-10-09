@@ -1,23 +1,18 @@
 package com.skkzas.superherosightings.controllers;
 
-import com.skkzas.superherosightings.dao.LocationDao;
-import com.skkzas.superherosightings.dao.OrganizationDao;
-import com.skkzas.superherosightings.dao.PowerDao;
-import com.skkzas.superherosightings.dao.SightingDao;
-import com.skkzas.superherosightings.dao.SuperheroDao;
-import com.skkzas.superherosightings.dto.Location;
-import com.skkzas.superherosightings.dto.Power;
-import com.skkzas.superherosightings.dto.Sighting;
-import com.skkzas.superherosightings.dto.Superhero;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import com.skkzas.superherosightings.dao.*;
+import com.skkzas.superherosightings.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  *
@@ -138,6 +133,69 @@ public class SightingController {
 
         //TODO get the map to show up on this page too!!!
         return "sightingDetails";
+    }
+
+    @GetMapping("sightingDelete")
+    public String deleteSighting(HttpServletRequest request, Model model) {
+        int id = Integer.parseInt(request.getParameter("id"));
+
+        Sighting sighting = sightingDao.getSightingById(id);
+        Superhero superhero = superheroDao.getSuperheroForSighting(sighting.getSightingId());
+
+        model.addAttribute("sighting", sighting);
+        model.addAttribute("superhero", superhero);
+
+        return "sightingDelete";
+    }
+
+    @GetMapping("sightingDeleteConfirm")
+    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/sightings";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Sighting sighting = sightingDao.getSightingById(id);
+
+        sightingDao.deleteSightingById(sighting.getSightingId());
+
+        return "redirect:/sightings";
+    }
+
+    @GetMapping("sightingEdit")
+    public String editSighting(Integer id, Model model) {
+        Sighting sighting = sightingDao.getSightingById(id);
+        List<Superhero> allSuperheroes = superheroDao.getAllSuperheros();
+        List<Location> allLocations = locationDao.getAllLocations();
+
+        model.addAttribute("sighting", sighting);
+        model.addAttribute("allSuperheroes", allSuperheroes);
+        model.addAttribute("allLocations", allLocations);
+
+        return "sightingEdit";
+    }
+
+    @PostMapping("sightingEdit")
+    public String performSightingEdit(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+        if (action.equals("cancel")) {
+            return "redirect:/sightings";
+        }
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        Sighting sighting = sightingDao.getSightingById(id);
+
+        String date = request.getParameter("date");
+        LocalDate dateOfSighting = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String superheroId = request.getParameter("superheroId");
+        String locationId = request.getParameter("locationId");
+
+        sighting.setDate(dateOfSighting);
+        sighting.setSuperhero(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+        sighting.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
+
+        sightingDao.updateSighting(sighting);
+
+        return "redirect:/sightings";
     }
 
 }

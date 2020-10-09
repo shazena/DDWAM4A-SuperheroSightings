@@ -19,7 +19,7 @@
     <style th:inline = "text">
             .sidebar {
                 /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
-                background-image: url([[@{/images/OrganizationsGL.jpg}]]);
+                background-image: url([[@{/images/SSightingsF.jpg}]]);
                 background-position: bottom;
                 background-repeat: no-repeat;
                 background-size: 50%;
@@ -70,12 +70,12 @@
                     </li>
                     <li class = "nav-item">
                         <a class = "nav-link" href = "organizations">
-                            <span class = "currentPageLink">Organizations</span>
+                            <span class = "">Organizations</span>
                         </a>
                     </li>
                     <li class = "nav-item">
                         <a class = "nav-link" href = "sightings">
-                            <span class = "">Sightings</span>
+                            <span class = "currentPageLink">Sightings</span>
                         </a>
                     </li>
                 </ul>
@@ -88,75 +88,60 @@
 
                 <div class = "row">
                     <div class = "col-3 text-center">
-                        <h2>Edit Organization</h2>
+                        <h2>Edit Sighting</h2>
                     </div>
                 </div>
 
 
                 <div class = "row m-4">
                     <div class = "col-9 text-right">
-                        <form action = "organizationEdit" method = "POST">
+                        <form action = "sightingEdit" method = "POST">
                             <div class = "form-group row">
-                                <label for = "name" class = "col-4 col-form-label">Name</label>
-                                <div class = "col-8">
-                                    <input th:value="${organization.orgName}" type = "text" name = "name" id = "name" class = "form-control">
+                                <label for = "date" class = "col-3 col-form-label">Date</label>
+                                <div class = "col-9">
+                                    <input th:value="${sighting.date}" type = "date" name = "date" id = "date" class = "form-control"
+                                           required>
+                                </div>
+
+                            </div>
+
+                            <div class = "form-group row" id = "superheroExistingDiv">
+                                <label for = "superhero" class = "col-3 col-form-label">
+                                    Superhero</label>
+                                <div class = "col-9">
+                                    <select id = "superhero" name = "superheroId" class = "form-control">
+                                        <option th:each = "superhero : ${allSuperheroes}"
+                                                th:value = "${superhero.superheroId}"
+                                                th:text = "${superhero.superheroName+' - '+superhero.power.powerName}"
+                                            th:selected="${sighting.superhero.superheroId == superhero.superheroId}">
+                                            Superhero Name - Power Name
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="phoneNum" class="col-4 col-form-label">Phone</label>
-                                <div class="col-8">
-                                    <input th:value="${organization.phoneNumber}" type="text" name="phoneNum" id="phoneNum" maxlength="14" class="form-control" />
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="location" class="col-4 col-form-label">
+                            <div class = "form-group row">
+                                <label for = "location" class = "col-3 col-form-label">
                                     Location</label>
-                                <div class="col-8">
-                                    <select id="location" name="locationId" class="form-control" >
-                                        <option th:each="location : ${locations}"
-                                                th:value="${location.locationId}"
-                                                th:text="${location.locationName}"
-                                                th:selected="${organization.location.locationId == location.locationId}">
-                                            Location Name</option>
+                                <div class = "col-9">
+                                    <select id = "location" name = "locationId" class = "form-control">
+                                        <option th:each = "location : ${allLocations}"
+                                                th:value = "${location.locationId}"
+                                                th:text = "${location.locationName}"
+                                                th:selected = "${sighting.location.locationId == location.locationId }">
+                                            Location Name
+                                        </option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <label for="description" class="col-4 col-form-label">Organization Description</label>
-                                <div class="col-8">
-                                    <textarea name="description" id="description" class="form-control" placeholder="">[[${organization.description}]]</textarea>
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="superheroes" class="col-4 col-form-label">
-                                    Superheroes</label>
-                                <div class="col-8">
-                                    <select multiple id="superheroes" name="superheroId"
-                                            class="form-control" >
-                                        <option th:each="superhero : ${superheroes}"
-                                                th:value="${superhero.superheroId}"
-                                                th:text="${superhero.superheroName}"
-                                                th:selected="${organization.listOfSuperheroes.contains(superhero)}">
-                                            Superhero Name</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <input type="hidden" name="id" th:value="${organization.orgId}"/>
+                            <input type="hidden" name="id" th:value="${sighting.sightingId}"/>
                             <button type="submit" name="action" value="cancel" class = "btn btn-primary mx-3">Cancel</button>
-                            <button type="submit" name="action" value="update" class = "btn btn-primary">Update Organization</button>
+                            <button type="submit" name="action" value="update" class = "btn btn-primary">Update Sighting</button>
                         </form>
                     </div>
-                    <p class="mx-2" style="margin-top: 50px;">Don't see the Location or Superhero you're looking for? Click <a href="#" th:href = "@{/locations}">here</a> to add a location or <a href="#" th:href = "@{/superheroes}">here</a> to add a superhero first.</p>
-                    <p class="mx-2">Hint: Hold down the Ctrl (windows) or Command (Mac) button to select multiple options.</p>
-                    </div>
+                    <p style="margin-top: 50px;">Don't see the Location or Superhero you're looking for? Click <a href="" th:href = "@{/locations}">here</a> to add a location or <a href="" th:href = "@{/superheroes}">here</a> to add a superhero first.</p>
                 </div>
-
-
             </div>
         </main>
     </div>
@@ -171,26 +156,6 @@
 <script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity = "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin = "anonymous"></script>
-<script>
-//js for formatting the phone number as user types it
-
-    let telEl = document.querySelector('#phoneNum');
-
-    telEl.addEventListener('keyup', (e) => {
-  let val = e.target.value;
-  e.target.value = val
-    .replace(/\D/g, '')
-    .replace(/(\d{1,3})(\d{1,3})?(\d{1,4})?/g, function(txt, f, s, t) {
-      if (t) {
-        return `(${f}) ${s}-${t}`
-      } else if (s) {
-        return `(${f}) ${s}`
-      } else if (f) {
-        return `(${f})`
-      }
-    });
-})
-</script>
 </body>
 
 </html>

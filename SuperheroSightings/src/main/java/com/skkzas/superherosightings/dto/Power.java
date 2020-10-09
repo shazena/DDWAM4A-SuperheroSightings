@@ -1,5 +1,7 @@
 package com.skkzas.superherosightings.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
@@ -11,6 +13,8 @@ import java.util.Objects;
 public class Power {
 
     private int powerId;
+    @NotBlank(message = "Power name must not be empty.")
+    @Size(max = 50, message = "Power name must be less than 50 characters.")
     private String powerName;
 
     public int getPowerId() {
