@@ -13,8 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -40,11 +45,14 @@ public class PowerController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Power>> violations = new HashSet<>();
+
     @GetMapping("powers")
     public String displayAllPowers(Model model) {
         List<Power> allPowers = powerDao.getAllPowers();
 
         model.addAttribute("allPowers", allPowers);
+        model.addAttribute("errors", violations);
 
         return "powers";
     }
@@ -56,7 +64,13 @@ public class PowerController {
         Power power = new Power();
         power.setPowerName(name);
 
-        powerDao.addPower(power);
+//        powerDao.addPower(power);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(power);
+
+        if(violations.isEmpty()) {
+            powerDao.addPower(power);
+        }
 
         return "redirect:/powers";
     }

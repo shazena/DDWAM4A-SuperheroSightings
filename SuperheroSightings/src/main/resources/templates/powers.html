@@ -130,6 +130,11 @@
                             <div class="col-9">
                                 <input type="text" name="name" id="name" class="form-control" required maxlength="50">
                             </div>
+                            <div
+                                 th:if="${!errors.isEmpty()}">
+                                <p class="alert alert-danger" th:each="error : ${errors}"
+                                   th:text="${error.message}">Error message</p>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Add Power</button></form>
 
