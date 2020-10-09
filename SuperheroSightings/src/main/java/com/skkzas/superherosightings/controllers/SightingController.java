@@ -1,23 +1,20 @@
 package com.skkzas.superherosightings.controllers;
 
-import com.skkzas.superherosightings.dao.LocationDao;
-import com.skkzas.superherosightings.dao.OrganizationDao;
-import com.skkzas.superherosightings.dao.PowerDao;
-import com.skkzas.superherosightings.dao.SightingDao;
-import com.skkzas.superherosightings.dao.SuperheroDao;
+import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 /**
  *
@@ -138,6 +135,19 @@ public class SightingController {
 
         //TODO get the map to show up on this page too!!!
         return "sightingDetails";
+    }
+
+    @GetMapping("sightingEdit")
+    public String editSighting(Integer id, Model model) {
+        Sighting sighting = sightingDao.getSightingById(id);
+        List<Superhero> allSuperheroes = superheroDao.getAllSuperheros();
+        List<Location> allLocations = locationDao.getAllLocations();
+
+        model.addAttribute("sighting", sighting);
+        model.addAttribute("allSuperheroes", allSuperheroes);
+        model.addAttribute("allLocations", allLocations);
+
+        return "sightingEdit";
     }
 
 }
