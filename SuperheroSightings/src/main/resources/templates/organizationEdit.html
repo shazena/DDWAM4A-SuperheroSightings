@@ -137,7 +137,6 @@
                                         <div class="col-8">
                                             <select multiple id="superheroes" name="superheroId"
                                                     class="form-control" required>
-                                                <option disabled selected>Select Superhero</option>
                                                 <option th:each="superhero : ${superheroes}"
                                                         th:value="${superhero.superheroId}"
                                                         th:text="${superhero.superheroName}"
