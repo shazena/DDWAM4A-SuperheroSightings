@@ -44,15 +44,6 @@ public class MainController {
 
         List<Sighting> lastTenSightings = sightingDao.getLastTenSightings();
 
-        List<String> formattedSightings = new ArrayList<String>();
-
-        for (Sighting sighting : lastTenSightings) {
-            String sightingFormatted = "On " + sighting.getDate().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"))
-                    + " " + sighting.getSuperhero().getSuperheroName() + " was sighted at " + sighting.getLocation().getLocationName();
-            formattedSightings.add(sightingFormatted);
-        }
-
-        model.addAttribute("formattedSightings", formattedSightings);
         model.addAttribute("lastTenSightings", lastTenSightings);
         return "index";
     }
