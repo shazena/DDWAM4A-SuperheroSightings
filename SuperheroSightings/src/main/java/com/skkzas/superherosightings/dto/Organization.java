@@ -16,13 +16,13 @@ public class Organization {
 
     private int orgId;
     @NotBlank(message = "Organization name must not be empty.")
-    @Size(max = 50, message = "Organization name must be less than 50 characters.")
+    @Size(max = 50, message = "Organization name must be at most 50 characters.")
     private String orgName;
     @NotBlank(message = "Organization description must not be empty.")
-    @Size(max = 255, message = "Organization description must be less than 255 characters.")
+    @Size(max = 255, message = "Organization description must be at most 255 characters.")
     private String description;
     @NotBlank(message = "Organization phone number must not be empty.")
-    @Size(min = 10, max = 10, message = "Organization phone number must contain 10 characters.")
+    @Size(min = 10, max = 10, message = "Organization phone number must contain 10 digits.")
     private String phoneNumber;
     private Location location;
     private List<Superhero> listOfSuperheroes = new ArrayList<>();
