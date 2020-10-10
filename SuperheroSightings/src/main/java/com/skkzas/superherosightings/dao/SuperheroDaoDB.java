@@ -51,13 +51,14 @@ public class SuperheroDaoDB implements SuperheroDao {
     @Override
     public Superhero addSuperhero(Superhero superhero) {
         final String INSERT_SUPERHERO = "INSERT INTO Superhero"
-                + "(SuperheroName, Description, PowerId) "
-                + "VALUES(?,?,?)";
+                + "(SuperheroName, Description, PowerId, PhotoFileName) "
+                + "VALUES(?,?,?,?)";
 
         jdbc.update(INSERT_SUPERHERO,
                 superhero.getSuperheroName(),
                 superhero.getSuperheroDescription(),
-                superhero.getPower().getPowerId());
+                superhero.getPower().getPowerId(),
+                superhero.getPhotoFileName());
 
         int newId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         superhero.setSuperheroId(newId);
@@ -77,13 +78,15 @@ public class SuperheroDaoDB implements SuperheroDao {
         final String UPDATE_Superhero = "UPDATE Superhero SET "
                 + "SuperheroName = ?, "
                 + "Description = ?, "
-                + "PowerId = ? "
+                + "PowerId = ? ,"
+                + "PhotoFileName = ? "
                 + "WHERE SuperheroId = ?";
 
         jdbc.update(UPDATE_Superhero,
                 superhero.getSuperheroName(),
                 superhero.getSuperheroDescription(),
                 superhero.getPower().getPowerId(),
+                superhero.getPhotoFileName(),
                 superhero.getSuperheroId());
     }
 
@@ -182,6 +185,7 @@ public class SuperheroDaoDB implements SuperheroDao {
             superhero.setSuperheroId(rs.getInt("SuperheroId"));
             superhero.setSuperheroName(rs.getString("SuperheroName"));
             superhero.setSuperheroDescription(rs.getString("Description"));
+            superhero.setPhotoFileName(rs.getString("photoFileName"));
 
             return superhero;
         }

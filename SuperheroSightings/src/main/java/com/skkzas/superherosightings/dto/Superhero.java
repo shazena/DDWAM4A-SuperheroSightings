@@ -14,6 +14,8 @@ public class Superhero {
     private String superheroName;
     private String superheroDescription;
     private Power power;
+    
+    private String photoFileName;
 
     public int getSuperheroId() {
         return superheroId;
@@ -87,6 +89,14 @@ public class Superhero {
     @Override
     public String toString() {
         return "Superhero{" + "superheroId=" + superheroId + ", superheroName=" + superheroName + ", superheroDescription=" + superheroDescription + ", power=" + power + '}';
+    }
+
+    public String getPhotoFileName() {
+        return photoFileName;
+    }
+
+    public void setPhotoFileName(String photoFileName) {
+        this.photoFileName = photoFileName;
     }
 
 }
