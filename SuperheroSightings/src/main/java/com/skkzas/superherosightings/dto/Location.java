@@ -1,5 +1,7 @@
 package com.skkzas.superherosightings.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
@@ -11,11 +13,23 @@ import java.util.Objects;
 public class Location {
 
     private int locationId;
+    @NotBlank(message = "Location name must not be empty.")
+    @Size(max = 50, message = "Location name must be less than 50 characters.")
     private String locationName;
+    @NotBlank(message = "Location description must not be empty.")
+    @Size(max = 255, message = "Location description must be less than 255 characters.")
     private String description;
+    @NotBlank(message = "Location address must not be empty.")
+    @Size(max = 50, message = "Location address must be less than 50 characters.")
     private String address;
+    @NotBlank(message = "City must not be empty.")
+    @Size(max = 50, message = "City must be less than 50 characters.")
     private String city;
+    @NotBlank(message = "State must not be empty.")
+    @Size(min = 2, max = 2, message = "State must contain 2 characters.")
     private String state;
+    @NotBlank(message = "Zip must not be empty.")
+    @Size(min = 5, max = 5, message = "Zip must contain 5 characters.")
     private String zip;
     private String latitude;
     private String longitude;
