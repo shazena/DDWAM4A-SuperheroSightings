@@ -133,9 +133,11 @@
                                 <marquee class = "news-scroll" behavior = "scroll" direction = "left"
                                          onmouseover = "this.stop();"
                                          onmouseout = "this.start();">
-                                    <span th:each="sighting, stat : ${formattedSightings}">
-                                        <span th:text="${sighting}">On 3/20/2020, Superman was sighted at Labcorp!</span>
-                                        <span th:if="${stat.index+1} !=  ${#lists.size(formattedSightings)}" class = "dot"></span> 
+                                    <span th:each="sighting, stat : ${lastTenSightings}">
+                                        <a href = "#" th:href = "@{sightingDetails(id=${sighting.sightingId})}">
+                                            <span th:text="${'On '+ #temporals.format(sighting.date, 'MM/dd/yyyy')+ ', '+ sighting.superhero.superheroName+ ' was sighted at '+ sighting.location.locationName}">On 3/20/2020, Superman was sighted at Labcorp!</span>
+                                        </a>
+                                        <span th:if="${stat.index+1} !=  ${#lists.size(lastTenSightings)}" class = "dot"></span> 
                                     </span>
                                 </marquee>
                             </div>
