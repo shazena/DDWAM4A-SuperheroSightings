@@ -1,5 +1,7 @@
 package com.skkzas.superherosightings.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -13,8 +15,14 @@ import java.util.Objects;
 public class Organization {
 
     private int orgId;
+    @NotBlank(message = "Organization name must not be empty.")
+    @Size(max = 50, message = "Organization name must be less than 50 characters.")
     private String orgName;
+    @NotBlank(message = "Organization description must not be empty.")
+    @Size(max = 255, message = "Organization description must be less than 255 characters.")
     private String description;
+    @NotBlank(message = "Organization phone number must not be empty.")
+    @Size(min = 10, max = 10, message = "Organization phone number must contain 10 characters.")
     private String phoneNumber;
     private Location location;
     private List<Superhero> listOfSuperheroes = new ArrayList<>();
