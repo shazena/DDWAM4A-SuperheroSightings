@@ -14,16 +14,16 @@ public class Location {
 
     private int locationId;
     @NotBlank(message = "Location name must not be empty.")
-    @Size(max = 50, message = "Location name must be less than 50 characters.")
+    @Size(max = 50, message = "Location name must be at most 50 characters.")
     private String locationName;
     @NotBlank(message = "Location description must not be empty.")
-    @Size(max = 255, message = "Location description must be less than 255 characters.")
+    @Size(max = 255, message = "Location description must be at most 255 characters.")
     private String description;
     @NotBlank(message = "Location address must not be empty.")
-    @Size(max = 50, message = "Location address must be less than 50 characters.")
+    @Size(max = 50, message = "Location address must be at most 50 characters.")
     private String address;
     @NotBlank(message = "City must not be empty.")
-    @Size(max = 50, message = "City must be less than 50 characters.")
+    @Size(max = 50, message = "City must be at most 50 characters.")
     private String city;
     @NotBlank(message = "State must not be empty.")
     @Size(min = 2, max = 2, message = "State must contain 2 characters.")
