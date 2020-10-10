@@ -85,6 +85,11 @@
                         <!--DETAIL PAGE HEADER START-->
 
                         <h2 class = "detailsHeader">Sighting Details</h2>
+                        <h6 class="text-right">
+                            <a href = "#" th:href = "@{/sightingEdit(id=${sighting.sightingId})}">Edit</a> | 
+                            <a href = "#" th:href = "@{/sightingDelete(id=${sighting.sightingId})}">Delete
+                            </a>
+                        </h6>
 
                         <!--END DETAIL PAGE HEADER-->
 
