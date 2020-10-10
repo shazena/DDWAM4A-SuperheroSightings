@@ -1,5 +1,7 @@
 package com.skkzas.superherosightings.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
@@ -11,7 +13,11 @@ import java.util.Objects;
 public class Superhero {
 
     private int superheroId;
+    @NotBlank(message = "Superhero name must not be empty.")
+    @Size(max = 50, message = "Superhero name must be less than 50 characters.")
     private String superheroName;
+    @NotBlank(message = "Superhero description must not be empty.")
+    @Size(max = 255, message = "Superhero description must be less than 255 characters.")
     private String superheroDescription;
     private Power power;
 
