@@ -138,6 +138,6 @@ public class SuperheroController {
 
         superheroDao.updateSuperhero(superhero);
 
-        return "redirect:/superheroes";
+        return "redirect:/superheroDetails?id=" + superhero.getSuperheroId();
     }
 }

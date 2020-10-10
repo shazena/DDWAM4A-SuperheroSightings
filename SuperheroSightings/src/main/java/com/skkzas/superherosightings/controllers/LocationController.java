@@ -123,7 +123,7 @@ public class LocationController {
 
         locationDao.updateLocation(location);
 
-        return "redirect:/locations";
+        return "redirect:/locationDetails?id=" + location.getLocationId();
     }
 
     @GetMapping("locationDelete")
@@ -145,7 +145,7 @@ public class LocationController {
     }
 
     @GetMapping("locationDeleteConfirm")
-    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/locations";
         }

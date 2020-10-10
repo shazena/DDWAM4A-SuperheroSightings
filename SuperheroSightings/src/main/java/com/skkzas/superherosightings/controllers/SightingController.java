@@ -149,7 +149,7 @@ public class SightingController {
     }
 
     @GetMapping("sightingDeleteConfirm")
-    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performDeleteSuperhero(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/sightings";
         }
@@ -176,7 +176,7 @@ public class SightingController {
     }
 
     @PostMapping("sightingEdit")
-    public String performSightingEdit(HttpServletRequest request, @RequestParam(value="action", required=true) String action) {
+    public String performSightingEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/sightings";
         }
@@ -195,7 +195,7 @@ public class SightingController {
 
         sightingDao.updateSighting(sighting);
 
-        return "redirect:/sightings";
+        return "redirect:/sightingDetails?id=" + sighting.getSightingId();
     }
 
 }

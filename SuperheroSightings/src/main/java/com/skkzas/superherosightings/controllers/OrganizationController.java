@@ -202,6 +202,6 @@ public class OrganizationController {
 
         organizationDao.updateOrganization(organization);
 
-        return "redirect:/organizations";
+        return "redirect:/organizationDetails?id=" + organization.getOrgId();
     }
 }
