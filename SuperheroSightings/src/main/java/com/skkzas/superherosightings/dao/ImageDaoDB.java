@@ -1,5 +1,6 @@
 package com.skkzas.superherosightings.dao;
 
+import com.skkzas.superherosightings.dto.ImageFolder;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,7 +21,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Repository
 public class ImageDaoDB implements ImageDao {
 
-    private final String RESOURCE_ROOT = "C:/Users/Shazena/Documents/GITHUB/DDWAM4A-SuperheroSightings/SuperheroSightings/src/main/resources/static/";
+    ImageFolder imageFolder = new ImageFolder();
+
+    private final String RESOURCE_ROOT = imageFolder.getRESOURCE_ROOT();
+//    private final String RESOURCE_ROOT = "C:/Users/Shazena/Documents/GITHUB/DDWAM4A-SuperheroSightings/SuperheroSightings/src/main/resources/static/";
 
     private final String UPLOAD_DIRECTORY = "images/uploads/";
 

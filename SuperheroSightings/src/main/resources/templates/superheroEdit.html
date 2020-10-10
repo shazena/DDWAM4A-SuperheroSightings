@@ -123,13 +123,14 @@
                                             <textarea name = "description" id = "description" class = "form-control" th:inline="text" maxlength = "255" required>[[${superhero.superheroDescription}]]</textarea>
                                         </div>
                                     </div>
-                                    <img th:src="${sighting.superhero.photoFileName}" style="height: 250px;" />
+                                    <img th:src="${superhero.photoFileName}" style="height: 250px;" />
                                     <div class="form-group row">
                                         <label for="file" class="col-3 col-form-label">
                                             Profile Picture
                                         </label>
                                         <input type="file" name='file' class="form-control-file" />
                                     </div>
+                                    <input type ="hidden" name ="originalFileName" th:value="superhero.photoFileName" id="originalFileName">
                                     <input type="hidden" name="id" th:value="${superhero.superheroId}"/>
                                     <button type="submit" name="action" value="cancel" class = "btn btn-primary mx-3">Cancel</button>
                                     <button type="submit" name="action" value="update" class = "btn btn-primary">Update Superhero</button>
