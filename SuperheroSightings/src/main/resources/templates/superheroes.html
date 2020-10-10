@@ -134,7 +134,7 @@
                                 <div class = "form-group row">
                                     <label for = "name" class = "col-3 col-form-label">Name</label>
                                     <div class = "col-9">
-                                        <input type = "text" name = "name" id = "name" class = "form-control">
+                                        <input type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
                                     </div>
                                 </div>
 
@@ -171,7 +171,7 @@
                                     <label for = "powerName" id = "powerNameLabel"
                                            class = "col-3 col-form-label">Power</label>
                                     <div class = "col-9">
-                                        <input type = "text" name = "powerName" id = "powerName" class = "form-control">
+                                        <input type = "text" name = "powerName" id = "powerName" class = "form-control" maxlength = "50">
                                     </div>
                                 </div>
                                 <!--END POWER NAME ENTRY-->
@@ -181,7 +181,7 @@
                                     <label for = "superheroDescription" class = "col-3 col-form-label">Description</label>
                                     <div class = "col-9">
                                         <textarea name = "superheroDescription" id = "superheroDescription"
-                                                  class = "form-control"></textarea>
+                                                  class = "form-control" maxlength = "255" required></textarea>
                                     </div>
                                 </div>
                                 <button type = "submit" class = "btn btn-primary">Add Superhero</button>
