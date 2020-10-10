@@ -85,6 +85,11 @@
                         <!--DETAIL PAGE HEADER START-->
 
                         <h2 class = "detailsHeader">Location Details</h2>
+                        <h6 class="text-right">
+                            <a href = "#" th:href = "@{/locationEdit(id=${location.locationId})}">Edit</a> | 
+                            <a href = "#" th:href = "@{/locationDelete(id=${location.locationId})}">Delete</a>
+                        </h6>
+
 
                         <!--END DETAIL PAGE HEADER-->
 
