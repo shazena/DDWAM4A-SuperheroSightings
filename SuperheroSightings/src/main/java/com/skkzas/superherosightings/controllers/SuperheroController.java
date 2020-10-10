@@ -150,7 +150,11 @@ public class SuperheroController {
         superhero.setPower(powerDao.getPowerById(Integer.parseInt(powerId)));
         superhero.setSuperheroDescription(description);
 
-        superhero.setPhotoFileName(imageDao.updateImage(file, superhero.getPhotoFileName(), SUPERHERO_UPLOAD_DIRECTORY));
+        boolean fileIsEmpty = file.isEmpty();
+
+        if (!fileIsEmpty) {
+            superhero.setPhotoFileName(imageDao.updateImage(file, superhero.getPhotoFileName(), SUPERHERO_UPLOAD_DIRECTORY));
+        }
 
         superheroDao.updateSuperhero(superhero);
 
