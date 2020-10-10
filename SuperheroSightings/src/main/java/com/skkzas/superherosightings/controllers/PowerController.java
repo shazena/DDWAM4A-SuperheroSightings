@@ -68,7 +68,7 @@ public class PowerController {
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
         violations = validate.validate(power);
 
-        if(violations.isEmpty()) {
+        if (violations.isEmpty()) {
             powerDao.addPower(power);
         }
 
@@ -81,17 +81,10 @@ public class PowerController {
         Power power = powerDao.getPowerById(id);
         List<Superhero> superheroes = superheroDao.getAllSuperheroesWithThatPower(id);
         List<Sighting> sightings = sightingDao.getAllSightingsForListOfSuperheros(superheroes);
-        List<Location> locations = new ArrayList<>();
-
-        for (Sighting sighting : sightings) {
-            Location locationForSighting = sighting.getLocation();
-            locations.add(locationForSighting);
-        }
 
         model.addAttribute("power", power);
         model.addAttribute("superheroes", superheroes);
         model.addAttribute("sightings", sightings);
-        model.addAttribute("locations", locations);
 
         return "powerDelete";
     }

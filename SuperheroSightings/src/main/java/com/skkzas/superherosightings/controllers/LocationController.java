@@ -137,15 +137,9 @@ public class LocationController {
         List<Sighting> sightings = sightingDao.getAllSightingsForLocation(location);
         List<Superhero> superheroes = new ArrayList<>();
 
-        for (Sighting sighting : sightings) {
-            Superhero superhero = superheroDao.getSuperheroForSighting(sighting.getSightingId());
-            superheroes.add(superhero);
-        }
-
         model.addAttribute("location", location);
         model.addAttribute("organizations", organizations);
         model.addAttribute("sightings", sightings);
-        model.addAttribute("superheroes", superheroes);
 
         return "locationDelete";
     }

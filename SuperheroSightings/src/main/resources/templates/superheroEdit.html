@@ -99,7 +99,7 @@
                                     <div class = "form-group row">
                                         <label for = "name" class = "col-4 col-form-label">Name</label>
                                         <div class = "col-8">
-                                            <input th:value="${superhero.superheroName}" type = "text" name = "name" id = "name" class = "form-control">
+                                            <input th:value="${superhero.superheroName}" type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
                                         </div>
                                     </div>
 
@@ -107,7 +107,7 @@
                                         <label for="power" class="col-4 col-form-label">
                                             Power</label>
                                         <div class="col-8">
-                                            <select id="power" name="powerId" class="form-control" >
+                                            <select id="power" name="powerId" class="form-control" required>
                                                 <option th:each="power : ${powers}"
                                                         th:value="${power.powerId}"
                                                         th:text="${power.powerName}"
@@ -120,15 +120,17 @@
                                     <div class = "form-group row">
                                         <label for = "description" class = "col-4 col-form-label">Description</label>
                                         <div class = "col-8">
-                                            <textarea name = "description" id = "description" class = "form-control" th:inline="text">[[${superhero.superheroDescription}]]</textarea>
+                                            <textarea name = "description" id = "description" class = "form-control" th:inline="text" maxlength = "255" required>[[${superhero.superheroDescription}]]</textarea>
                                         </div>
                                     </div>
                                     <input type="hidden" name="id" th:value="${superhero.superheroId}"/>
                                     <button type="submit" name="action" value="cancel" class = "btn btn-primary mx-3">Cancel</button>
                                     <button type="submit" name="action" value="update" class = "btn btn-primary">Update Superhero</button>
                                 </form>
-                                <p style="margin-top: 50px;">Don't see the power you're looking for? Click <a href="" th:href = "@{/powers}">here</a> to add a power first.</p>
                             </div>
+                        </div>
+                        <div class="row" style="justify-content: center;">
+                            <p class="my-4">Don't see the power you're looking for? Click <a href="" th:href = "@{/powers}">here</a> to add a power first.</p>
                         </div>
                     </div>
                 </main>

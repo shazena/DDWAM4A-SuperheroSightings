@@ -80,18 +80,14 @@
 
                         <div class="row border border-dark">
                             <div class="text-center container">
-                                <h3>Are you sure you want to delete Power "[[${power.powerName}]]"?</h3>
-                                <span th:if="${not #lists.isEmpty(superheroes)} OR ${not #lists.isEmpty(sightings)} OR ${not #lists.isEmpty(locations)}" style="display: block; font-weight:bold; ">It will also delete the following: </span>
-                                <p>
-                                    <span th:if="${superheroes != null}" th:each="superhero : ${superheroes}">Superhero:
-                                        <span th:text="${superhero.superheroName}" style=""></span><br>
-                                    </span>
-                                    <span th:if="${sightings != null}" th:each="sighting : ${sightings}">Sighting:
-                                        <span th:text="${sighting.date}" style=""></span><br>
-                                    </span>
-                                    <span th:if="${locations != null}" th:each="location : ${locations}">at Location:
-                                        <span th:text="${location.locationName}" style=""></span><br>
-                                    </span></p>
+                                <h3>Are you sure you want to delete the Power "[[${power.powerName}]]"?</h3><br/>
+                                <span th:if="${not #lists.isEmpty(superheroes)} OR ${not #lists.isEmpty(sightings)} OR ${not #lists.isEmpty(locations)}" style="display: block; font-weight:bold; ">It will also delete the following: </span><br/>
+                                <p th:if="${sightings != null}" th:each="sighting : ${sightings}"><span style="font-weight:bold;">Sighting:</span>
+                                    <span th:text="${#temporals.format(sighting.date, 'MM/dd/yyyy') + ', '+ sighting.superhero.superheroName+' at ' + sighting.location.locationName}" style=""></span><br>
+                                </p>
+                                <p th:if="${superheroes != null}" th:each="superhero : ${superheroes}"><span style="font-weight:bold;">Superhero:</span>
+                                    <span th:text="${superhero.superheroName + ' - ' + superhero.power.powerName}" style=""></span><br>
+                                </p>
                             </div>
 
                             <div class = "text-center container">
