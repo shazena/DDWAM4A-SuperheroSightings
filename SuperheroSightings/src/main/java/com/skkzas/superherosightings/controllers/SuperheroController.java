@@ -5,6 +5,8 @@ import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -40,6 +43,11 @@ public class SuperheroController {
     @Autowired
     SightingDao sightingDao;
 
+    @Autowired
+    ImageDao imageDao;
+
+    private final String SUPERHERO_UPLOAD_DIRECTORY = "Superheroes";
+
     @GetMapping("superheroes")
     public String displayAllSuperheroes(Model model) {
         List<Superhero> allSuperheroes = superheroDao.getAllSuperheros();
@@ -52,9 +60,13 @@ public class SuperheroController {
     }
 
     @PostMapping("addSuperhero")
-    public String addSuperhero(Superhero superhero, HttpServletRequest request) {
+    public String addSuperhero(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+        String fileLocation = imageDao.saveImage(file, Long.toString(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), SUPERHERO_UPLOAD_DIRECTORY);
+
         String name = request.getParameter("name");
         String description = request.getParameter("superheroDescription");
+
+        Superhero superhero = new Superhero();
 
         Power power = new Power();
         String powerId = request.getParameter("powerExisting");
@@ -69,6 +81,7 @@ public class SuperheroController {
         superhero.setSuperheroName(name);
         superhero.setPower(power);
         superhero.setSuperheroDescription(description);
+        superhero.setPhotoFileName(fileLocation);
 
         superheroDao.addSuperhero(superhero);
 
@@ -103,6 +116,7 @@ public class SuperheroController {
 
         int id = Integer.parseInt(request.getParameter("id"));
         Superhero superhero = superheroDao.getSuperheroById(id);
+        imageDao.deleteImage(superhero.getPhotoFileName());
 
         superheroDao.deleteSuperheroById(superhero.getSuperheroId());
 
@@ -120,7 +134,7 @@ public class SuperheroController {
     }
 
     @PostMapping("superheroEdit")
-    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action, @RequestParam("file") MultipartFile file) {
         if (action.equals("cancel")) {
             return "redirect:/superheroes";
         }
@@ -135,6 +149,8 @@ public class SuperheroController {
         superhero.setSuperheroName(name);
         superhero.setPower(powerDao.getPowerById(Integer.parseInt(powerId)));
         superhero.setSuperheroDescription(description);
+
+        superhero.setPhotoFileName(imageDao.updateImage(file, superhero.getPhotoFileName(), SUPERHERO_UPLOAD_DIRECTORY));
 
         superheroDao.updateSuperhero(superhero);
 
