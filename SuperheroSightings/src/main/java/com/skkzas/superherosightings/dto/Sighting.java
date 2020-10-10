@@ -1,5 +1,8 @@
 package com.skkzas.superherosightings.dto;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -12,6 +15,8 @@ import java.util.Objects;
 public class Sighting {
 
     private int sightingId;
+    @NotBlank(message = "Date must not be empty.")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
     private Location location;
     private Superhero superhero;
