@@ -103,7 +103,21 @@ public class OrganizationController {
         organization.setListOfSuperheroes(listOfSuperheroes);
 
         if (result.hasErrors()) {
-            model.addAttribute("allOrganizations", organizationDao.getAllOrganizations());
+            List<Organization> allOrganizations = organizationDao.getAllOrganizations();
+
+            for (Organization organizationAdd : allOrganizations) {
+
+                String unformattedPhoneNumber = organizationAdd.getPhoneNumber();
+                String formattedPhoneNumber = "("
+                        + unformattedPhoneNumber.substring(0, 3)
+                        + ") "
+                        + unformattedPhoneNumber.substring(3, 6)
+                        + "-"
+                        + unformattedPhoneNumber.substring(6, 10);
+                organizationAdd.setPhoneNumber(formattedPhoneNumber);
+            }
+
+            model.addAttribute("allOrganizations", allOrganizations);
             model.addAttribute("locations", locationDao.getAllLocations());
             model.addAttribute("listOfSuperheroes", superheroDao.getAllSuperheros());
             model.addAttribute("organization", organization);
