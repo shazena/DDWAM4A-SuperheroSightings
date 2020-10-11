@@ -13,8 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -40,11 +45,15 @@ public class LocationController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Location>> violations = new HashSet<>();
+    Set<ConstraintViolation<Location>> violationsEdit = new HashSet<>();
+
     @GetMapping("locations")
     public String displayAllLocations(Model model) {
         List<Location> allLocations = locationDao.getAllLocations();
 
         model.addAttribute("allLocations", allLocations);
+        model.addAttribute("errors", violations);
 
         return "locations";
     }
@@ -68,11 +77,18 @@ public class LocationController {
         location.setState(state);
         location.setZip(zip);
         location.setDescription(description);
-        location.setLongitude(longitude);
         location.setLatitude(latitude);
+        location.setLongitude(longitude);
 
-        //FIXME: User can try to get the map even though all fields are not filled out!
-        locationDao.addLocation(location);
+
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(location);
+
+        if (violations.isEmpty()) {
+            //FIXME: User can try to get the map even though all fields are not filled out!
+            locationDao.addLocation(location);
+        }
+
         return "redirect:/locations";
     }
 
@@ -88,6 +104,7 @@ public class LocationController {
     public String editLocation(Integer id, Model model) {
         Location location = locationDao.getLocationById(id);
         model.addAttribute("location", location);
+        model.addAttribute("errors", violationsEdit);
 
         return "locationEdit";
     }
