@@ -156,8 +156,21 @@ public class SuperheroController {
             superhero.setPhotoFileName(imageDao.updateImage(file, superhero.getPhotoFileName(), SUPERHERO_UPLOAD_DIRECTORY));
         }
 
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(superhero);
+
+        if (violationsEdit.isEmpty()) {
+            superheroDao.updateSuperhero(superhero);
+            return "redirect:/superheroDetails?id=" + superhero.getSuperheroId();
+        } else {
+            model.addAttribute("superhero", superhero);
+            List<Power> powers = powerDao.getAllPowers();
+            model.addAttribute("powers", powers);
+            model.addAttribute("errors", violationsEdit);
+            return "superheroEdit";
+        }
+
         superheroDao.updateSuperhero(superhero);
 
-        return "redirect:/superheroDetails?id=" + superhero.getSuperheroId();
     }
 }
