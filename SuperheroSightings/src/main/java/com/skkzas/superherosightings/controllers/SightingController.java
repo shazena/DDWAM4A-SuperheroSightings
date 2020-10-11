@@ -152,12 +152,13 @@ public class SightingController {
         model.addAttribute("sighting", sighting);
         model.addAttribute("allSuperheroes", allSuperheroes);
         model.addAttribute("allLocations", allLocations);
+        model.addAttribute("errors", violationsEdit);
 
         return "sightingEdit";
     }
 
     @PostMapping("sightingEdit")
-    public String performSightingEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    public String performSightingEdit(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/sightings";
         }
@@ -166,7 +167,12 @@ public class SightingController {
         Sighting sighting = sightingDao.getSightingById(id);
 
         String date = request.getParameter("date");
-        LocalDate dateOfSighting = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate dateOfSighting;
+        if (date == null || date.isBlank()) {
+            dateOfSighting = null;
+        } else {
+            dateOfSighting = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
         String superheroId = request.getParameter("superheroId");
         String locationId = request.getParameter("locationId");
 
@@ -174,9 +180,20 @@ public class SightingController {
         sighting.setSuperhero(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
         sighting.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
 
-        sightingDao.updateSighting(sighting);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(sighting);
 
-        return "redirect:/sightingDetails?id=" + sighting.getSightingId();
+        if (violationsEdit.isEmpty()) {
+            sightingDao.updateSighting(sighting);
+            return "redirect:/sightingDetails?id=" + sighting.getSightingId();
+        } else {
+            model.addAttribute("sighting", sighting);
+            model.addAttribute("allSuperheroes", superheroDao.getAllSuperheros());
+            model.addAttribute("allLocations", locationDao.getAllLocations());
+            model.addAttribute("errors", violationsEdit);
+            return "sightingEdit";
+        }
+
     }
 
 }
