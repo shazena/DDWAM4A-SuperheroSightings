@@ -181,12 +181,13 @@ public class OrganizationController {
         return "organizationEdit";
     }
 
-    @PostMapping("organizationEdit")
+    @PostMapping(path = "organizationEdit", consumes = "application/x-www-form-urlencoded")
     public String performSuperheroEdit(@Valid Organization organization, BindingResult result, HttpServletRequest request, @RequestParam(value = "action", required = true) String action, Model model) {
         if (action.equals("cancel")) {
             return "redirect:/organizations";
         }
 
+        String id = request.getParameter("id");
         String name = request.getParameter("orgName");
         String phoneFormatted = request.getParameter("phoneNumber");
         String phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
@@ -205,6 +206,7 @@ public class OrganizationController {
             result.addError(error);
         }
 
+        organization.setOrgId(Integer.parseInt(id));
         organization.setOrgName(name);
         organization.setPhoneNumber(phoneUnformatted);
         organization.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
