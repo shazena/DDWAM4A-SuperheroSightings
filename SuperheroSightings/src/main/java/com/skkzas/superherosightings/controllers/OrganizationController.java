@@ -83,31 +83,8 @@ public class OrganizationController {
         //get the location
         Location location = new Location();
 
-        String locationId = request.getParameter("locationExisting");
-        if (locationId != null) {
-            location = locationDao.getLocationById(Integer.parseInt(locationId));
-        } else {
-
-            String locationName = request.getParameter("locationName");
-            String address = request.getParameter("address");
-            String city = request.getParameter("city");
-            String state = request.getParameter("state");
-            String zip = request.getParameter("zip");
-            String locationDescription = request.getParameter("locationDescription");
-            String longitude = request.getParameter("longitude");
-            String latitude = request.getParameter("latitude");
-
-            location.setLocationName(locationName);
-            location.setAddress(address);
-            location.setCity(city);
-            location.setState(state);
-            location.setZip(zip);
-            location.setDescription(locationDescription);
-            location.setLongitude(longitude);
-            location.setLatitude(latitude);
-
-            locationDao.addLocation(location);
-        }
+        String locationId = request.getParameter("locationId");
+        location = locationDao.getLocationById(Integer.parseInt(locationId));
 
         organization.setOrgName(name);
         organization.setPhoneNumber(phoneUnformatted);

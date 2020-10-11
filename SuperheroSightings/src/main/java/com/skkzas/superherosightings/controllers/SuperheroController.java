@@ -69,14 +69,8 @@ public class SuperheroController {
         Superhero superhero = new Superhero();
 
         Power power = new Power();
-        String powerId = request.getParameter("powerExisting");
-        if (powerId != null) {
-            power = powerDao.getPowerById(Integer.parseInt(powerId));
-        } else {
-            String powerName = request.getParameter("powerName");
-            power.setPowerName(powerName);
-            power = powerDao.addPower(power);
-        }
+        String powerId = request.getParameter("powerId");
+        power = powerDao.getPowerById(Integer.parseInt(powerId));
 
         superhero.setSuperheroName(name);
         superhero.setPower(power);
