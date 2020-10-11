@@ -144,7 +144,7 @@
                                         <input type = "text" name = "orgName" id = "orgName" class = "form-control" >
                                         <div th:if="${#fields.hasErrors('organization.orgName')}">
                                             <p th:each="error : ${#fields.errors('organization.orgName')}" 
-                                               class="alert alert-danger" th:text="${error}">
+                                               class="alert alert-danger text-center" th:text="${error}">
                                                 Bad name </p>
                                         </div>
                                     </div>
@@ -156,7 +156,7 @@
                                                class = "form-control" />
                                         <div th:if="${#fields.hasErrors('organization.phoneNumber')}">
                                             <p th:each="error : ${#fields.errors('organization.phoneNumber')}" 
-                                               class="alert alert-danger" th:text="${error}">
+                                               class="alert alert-danger text-center" th:text="${error}">
                                                 Bad name </p>
                                         </div>
                                     </div>
@@ -188,7 +188,7 @@
                                         <textarea name = "description" id = "description" class = "form-control"  ></textarea>
                                         <div th:if="${#fields.hasErrors('organization.description')}">
                                             <p th:each="error : ${#fields.errors('organization.description')}" 
-                                               class="alert alert-danger" th:text="${error}">
+                                               class="alert alert-danger text-center" th:text="${error}">
                                                 Bad name </p>
                                         </div>
                                     </div>
@@ -208,7 +208,7 @@
                                         </select>
                                         <div th:if="${#fields.hasErrors('organization.listOfSuperheroes')}">
                                             <p th:each="error : ${#fields.errors('organization.listOfSuperheroes')}" 
-                                               class="alert alert-danger" th:text="${error}">
+                                               class="alert alert-danger text-center" th:text="${error}">
                                                 Bad name </p>
                                         </div>
                                     </div>
