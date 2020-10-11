@@ -64,7 +64,7 @@ public class SightingController {
     }
 
     @PostMapping("addSighting")
-    public String addSighting(HttpServletRequest request) {
+    public String addLocation(HttpServletRequest request) {
 
         //get the date and parse it
         String dateFromPage = request.getParameter("date");
@@ -77,13 +77,60 @@ public class SightingController {
         }
 
         //get the superhero And Power
+        Power power = new Power();
         Superhero superhero = new Superhero();
 
         String superheroId = request.getParameter("superheroExisting");
-        superhero = superheroDao.getSuperheroById(Integer.parseInt(superheroId));
+        if (superheroId != null) {
+            superhero = superheroDao.getSuperheroById(Integer.parseInt(superheroId));
+        } else {
+            String superheroName = request.getParameter("superheroName");
+            String superheroDescription = request.getParameter("superheroDescription");
+
+            String powerId = request.getParameter("powerExisting");
+            if (powerId != null) {
+                power = powerDao.getPowerById(Integer.parseInt(powerId));
+            } else {
+                String powerName = request.getParameter("powerName");
+                power.setPowerName(powerName);
+                power = powerDao.addPower(power);
+            }
+
+            superhero.setSuperheroName(superheroName);
+            superhero.setPower(power);
+            superhero.setSuperheroDescription(superheroDescription);
+
+            superhero = superheroDao.addSuperhero(superhero);
+        }
+
+        //get the location
+        Location location = new Location();
 
         String locationId = request.getParameter("locationExisting");
-        Location location = locationDao.getLocationById(Integer.parseInt(locationId));
+        if (locationId != null) {
+            location = locationDao.getLocationById(Integer.parseInt(locationId));
+        } else {
+
+            String locationName = request.getParameter("locationName");
+            String address = request.getParameter("address");
+            String city = request.getParameter("city");
+            String state = request.getParameter("state");
+            String zip = request.getParameter("zip");
+            String description = request.getParameter("locationDescription");
+            String longitude = request.getParameter("longitude");
+            String latitude = request.getParameter("latitude");
+
+            location.setLocationName(locationName);
+            location.setAddress(address);
+            location.setCity(city);
+            location.setState(state);
+            location.setZip(zip);
+            location.setDescription(description);
+            location.setLongitude(longitude);
+            location.setLatitude(latitude);
+
+            locationDao.addLocation(location);
+        }
 
         Sighting sighting = new Sighting();
         sighting.setDate(dateOfSighting);

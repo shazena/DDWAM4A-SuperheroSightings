@@ -97,26 +97,16 @@
                             <div class = "col-9 text-right">
                                 <form action = "organizationEdit" method = "POST">
                                     <div class = "form-group row">
-                                        <label for = "orgName" class = "col-4 col-form-label">Name</label>
+                                        <label for = "name" class = "col-4 col-form-label">Name</label>
                                         <div class = "col-8">
-                                            <input th:value="${organization.orgName}" type = "text" name = "orgName" id = "orgName" class = "form-control">
-                                            <div th:if="${#fields.hasErrors('organization.orgName')}">
-                                                <p th:each="error : ${#fields.errors('organization.orgName')}" 
-                                                   class="alert alert-danger text-center" th:text="${error}">
-                                                    Bad name </p>
-                                            </div>
+                                            <input th:value="${organization.orgName}" type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label for="phoneNum" class="col-4 col-form-label">Phone</label>
                                         <div class="col-8">
-                                            <input th:value="${organization.phoneNumber}" type="text" name="phoneNumber" id="phoneNumber" class="form-control" />
-                                            <div th:if="${#fields.hasErrors('organization.phoneNumber')}">
-                                                <p th:each="error : ${#fields.errors('organization.phoneNumber')}" 
-                                                   class="alert alert-danger text-center" th:text="${error}">
-                                                    Bad name </p>
-                                            </div>
+                                            <input th:value="${organization.phoneNumber}" type="text" name="phoneNum" id="phoneNum" maxlength="14" class="form-control" />
                                         </div>
                                     </div>
 
@@ -124,7 +114,7 @@
                                         <label for="location" class="col-4 col-form-label">
                                             Location</label>
                                         <div class="col-8">
-                                            <select id="location" name="locationId" class="form-control" >
+                                            <select id="location" name="locationId" class="form-control" required>
                                                 <option th:each="location : ${locations}"
                                                         th:value="${location.locationId}"
                                                         th:text="${location.locationName}"
@@ -137,32 +127,22 @@
                                     <div class="form-group row">
                                         <label for="description" class="col-4 col-form-label">Organization Description</label>
                                         <div class="col-8">
-                                            <textarea name="description" id="description" class="form-control"  >[[${organization.description}]]</textarea>
-                                            <div th:if="${#fields.hasErrors('organization.description')}">
-                                                <p th:each="error : ${#fields.errors('organization.description')}" 
-                                                   class="alert alert-danger text-center" th:text="${error}">
-                                                    Bad name </p>
-                                            </div>
+                                            <textarea name="description" id="description" class="form-control"  maxlength = "255" required>[[${organization.description}]]</textarea>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label for="listOfSuperheroes" class="col-4 col-form-label">
+                                        <label for="superheroes" class="col-4 col-form-label">
                                             Superheroes</label>
                                         <div class="col-8">
-                                            <select multiple id="listOfSuperheroes" name="listOfSuperheroes"
-                                                    class="form-control" >
+                                            <select multiple id="superheroes" name="superheroId"
+                                                    class="form-control" required>
                                                 <option th:each="superhero : ${superheroes}"
                                                         th:value="${superhero.superheroId}"
                                                         th:text="${superhero.superheroName}"
                                                         th:selected="${organization.listOfSuperheroes.contains(superhero)}">
                                                     Superhero Name</option>
                                             </select>
-                                            <div th:if="${#fields.hasErrors('organization.listOfSuperheroes')}">
-                                                <p th:each="error : ${#fields.errors('organization.listOfSuperheroes')}" 
-                                                   class="alert alert-danger text-center" th:text="${error}">
-                                                    Bad name </p>
-                                            </div>
                                         </div>
                                     </div>
 

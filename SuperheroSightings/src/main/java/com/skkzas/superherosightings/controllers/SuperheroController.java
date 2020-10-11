@@ -16,12 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -51,9 +46,6 @@ public class SuperheroController {
     @Autowired
     ImageDao imageDao;
 
-    Set<ConstraintViolation<Superhero>> violations = new HashSet<>();
-    Set<ConstraintViolation<Superhero>> violationsEdit = new HashSet<>();
-
     private final String SUPERHERO_UPLOAD_DIRECTORY = "Superheroes";
 
     @GetMapping("superheroes")
@@ -63,7 +55,6 @@ public class SuperheroController {
 
         model.addAttribute("allSuperheroes", allSuperheroes);
         model.addAttribute("powers", powers);
-        model.addAttribute("errors", violations);
 
         return "superheroes";
     }
@@ -78,20 +69,22 @@ public class SuperheroController {
         Superhero superhero = new Superhero();
 
         Power power = new Power();
-        String powerId = request.getParameter("powerId");
-        power = powerDao.getPowerById(Integer.parseInt(powerId));
+        String powerId = request.getParameter("powerExisting");
+        if (powerId != null) {
+            power = powerDao.getPowerById(Integer.parseInt(powerId));
+        } else {
+            String powerName = request.getParameter("powerName");
+            power.setPowerName(powerName);
+            power = powerDao.addPower(power);
+        }
 
         superhero.setSuperheroName(name);
         superhero.setPower(power);
         superhero.setSuperheroDescription(description);
         superhero.setPhotoFileName(fileLocation);
 
-        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
-        violations = validate.validate(superhero);
+        superheroDao.addSuperhero(superhero);
 
-        if (violations.isEmpty()) {
-            superheroDao.addSuperhero(superhero);
-        }
         return "redirect:/superheroes";
     }
 
@@ -136,13 +129,12 @@ public class SuperheroController {
         List<Power> powers = powerDao.getAllPowers();
         model.addAttribute("superhero", superhero);
         model.addAttribute("powers", powers);
-        model.addAttribute("errors", violationsEdit);
 
         return "superheroEdit";
     }
 
     @PostMapping("superheroEdit")
-    public String performSuperheroEdit(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action, @RequestParam("file") MultipartFile file) {
+    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action, @RequestParam("file") MultipartFile file) {
         if (action.equals("cancel")) {
             return "redirect:/superheroes";
         }
@@ -177,6 +169,8 @@ public class SuperheroController {
             model.addAttribute("errors", violationsEdit);
             return "superheroEdit";
         }
+
+        superheroDao.updateSuperhero(superhero);
 
     }
 }
