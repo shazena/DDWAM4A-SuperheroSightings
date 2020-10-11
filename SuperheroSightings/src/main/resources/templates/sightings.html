@@ -136,12 +136,15 @@
                             <!--BEGIN ADD FORM-->
 
                             <form action = "addSighting" method = "POST">
-
+                                <div class="col-12 m-1 text-center" 
+                                     th:if="${!errors.isEmpty()}">
+                                    <p class="alert alert-danger" th:each="error : ${errors}" 
+                                       th:text="${error.message}">Error message</p>
+                                </div>
                                 <div class = "form-group row">
                                     <label for = "date" class = "col-3 col-form-label">Date</label>
                                     <div class = "col-9">
-                                        <input type = "date" name = "date" id = "date" class = "form-control"
-                                               required>
+                                        <input type = "date" name = "date" id = "date" class = "form-control">
                                     </div>
 
                                 </div>
@@ -153,7 +156,6 @@
                                         Superhero</label>
                                     <div class = "col-9">
                                         <select id = "superheroExisting" name = "superheroExisting" class = "form-control">
-                                            <option disabled selected value = "?!?">Select Superhero</option>
                                             <option th:each = "superhero : ${allSuperheroes}"
                                                     th:value = "${superhero.superheroId}"
                                                     th:text = "${superhero.superheroName+' - '+superhero.power.powerName}">
@@ -173,7 +175,6 @@
                                         Location</label>
                                     <div class = "col-9">
                                         <select id = "locationExisting" name = "locationExisting" class = "form-control">
-                                            <option disabled selected value = "?!?">Select Location</option>
                                             <option th:each = "location : ${allLocations}"
                                                     th:value = "${location.locationId}"
                                                     th:text = "${location.locationName}">

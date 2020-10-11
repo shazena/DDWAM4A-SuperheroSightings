@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 /**
  *
@@ -38,6 +43,9 @@ public class SightingController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Sighting>> violations = new HashSet<>();
+    Set<ConstraintViolation<Sighting>> violationsEdit = new HashSet<>();
+
     @GetMapping("sightings")
     public String displayAllSightings(Model model) {
 
@@ -50,6 +58,7 @@ public class SightingController {
         model.addAttribute("allSuperheroes", allSuperheroes);
         model.addAttribute("allLocations", allLocations);
         model.addAttribute("allPowers", allPowers);
+        model.addAttribute("errors", violations);
 
         return "sightings";
     }
@@ -59,7 +68,13 @@ public class SightingController {
 
         //get the date and parse it
         String dateFromPage = request.getParameter("date");
-        LocalDate dateOfSighting = LocalDate.parse(dateFromPage, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+        LocalDate dateOfSighting;
+        if (dateFromPage == null || dateFromPage.isBlank()) {
+            dateOfSighting = null;
+        } else {
+            dateOfSighting = LocalDate.parse(dateFromPage, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
 
         //get the superhero And Power
         Superhero superhero = new Superhero();
@@ -74,8 +89,21 @@ public class SightingController {
         sighting.setDate(dateOfSighting);
         sighting.setLocation(location);
         sighting.setSuperhero(superhero);
-        sightingDao.addSighting(sighting);
+
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(sighting);
+
+        if (violations.isEmpty()) {
+            sightingDao.addSighting(sighting);
+        } else {
+//            model.addAttribute(superhero);
+//            List<Power> powers = powerDao.getAllPowers();
+//            model.addAttribute("powers", powers);
+//            model.addAttribute("errors", violationsEdit);
+//            return "superheroEdit";
+        }
         return "redirect:/sightings";
+
     }
 
     @GetMapping("sightingDetails")
