@@ -16,7 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -46,6 +51,8 @@ public class SuperheroController {
     @Autowired
     ImageDao imageDao;
 
+    Set<ConstraintViolation<Superhero>> violations = new HashSet<>();
+
     private final String SUPERHERO_UPLOAD_DIRECTORY = "Superheroes";
 
     @GetMapping("superheroes")
@@ -55,6 +62,7 @@ public class SuperheroController {
 
         model.addAttribute("allSuperheroes", allSuperheroes);
         model.addAttribute("powers", powers);
+        model.addAttribute("errors", violations);
 
         return "superheroes";
     }
@@ -77,8 +85,12 @@ public class SuperheroController {
         superhero.setSuperheroDescription(description);
         superhero.setPhotoFileName(fileLocation);
 
-        superheroDao.addSuperhero(superhero);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(superhero);
 
+        if (violations.isEmpty()) {
+            superheroDao.addSuperhero(superhero);
+        }
         return "redirect:/superheroes";
     }
 
