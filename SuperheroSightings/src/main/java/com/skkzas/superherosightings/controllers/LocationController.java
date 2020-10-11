@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 /**
  *
@@ -40,11 +45,15 @@ public class LocationController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Location>> violations = new HashSet<>();
+    Set<ConstraintViolation<Location>> violations2 = new HashSet<>();
+
     @GetMapping("locations")
     public String displayAllLocations(Model model) {
         List<Location> allLocations = locationDao.getAllLocations();
 
         model.addAttribute("allLocations", allLocations);
+        model.addAttribute("errors", violations);
 
         return "locations";
     }
@@ -71,8 +80,14 @@ public class LocationController {
         location.setLongitude(longitude);
         location.setLatitude(latitude);
 
-        //FIXME: User can try to get the map even though all fields are not filled out!
-        locationDao.addLocation(location);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(location);
+
+        if (violations.isEmpty()) {
+            locationDao.addLocation(location);
+        }
+
+//        locationDao.addLocation(location);
         return "redirect:/locations";
     }
 
@@ -88,12 +103,13 @@ public class LocationController {
     public String editLocation(Integer id, Model model) {
         Location location = locationDao.getLocationById(id);
         model.addAttribute("location", location);
+        model.addAttribute("errors", violations2);
 
         return "locationEdit";
     }
 
     @PostMapping("locationEdit")
-    public String performLocationEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    public String performLocationEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action, Model model) {
         if (action.equals("cancel")) {
             return "redirect:/locations";
         }
@@ -121,9 +137,18 @@ public class LocationController {
         location.setLongitude(longitude);
         location.setLatitude(latitude);
 
-        locationDao.updateLocation(location);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations2 = validate.validate(location);
 
-        return "redirect:/locationDetails?id=" + location.getLocationId();
+        if (violations2.isEmpty()) {
+            locationDao.addLocation(location);
+            return "redirect:/locationDetails?id=" + location.getLocationId();
+        } else {
+            model.addAttribute("errors", violations2);
+            model.addAttribute(location);
+            return "locationEdit";
+        }
+//        locationDao.updateLocation(location);
     }
 
     @GetMapping("locationDelete")
