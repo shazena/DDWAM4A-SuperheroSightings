@@ -130,21 +130,25 @@
                             <!--BEGIN ADD FORM-->
 
                             <form action = "addSuperhero" method = "POST" enctype="multipart/form-data">
-
                                 <div class = "form-group row">
                                     <label for = "name" class = "col-3 col-form-label">Name</label>
                                     <div class = "col-9">
-                                        <input type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
+                                        <input type = "text" name = "superheroName" id = "superheroName" class = "form-control">
+                                        <div th:if="${#fields.hasErrors('superhero.superheroName')}">
+                                            <p th:each="error : ${#fields.errors('superhero.superheroName')}" class="alert alert-danger col-12"
+                                               th:text="${error}"> Bad Superhero Name </p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <!--START POWER NAME SELECT-->
 
                                 <div class = "form-group row" id = "powerExistingDiv">
+
                                     <label for = "powerExisting" class = "col-3 col-form-label">
                                         Power</label>
                                     <div class = "col-9">
-                                        <select id = "powerExisting" name = "powerExisting" class = "form-control">
+                                        <select id = "powerExisting" name = "powerExisting" onchange="powerSelected()" class = "form-control">
                                             <option disabled selected value = "?!?">Select Power</option>
                                             <option th:each = "power : ${powers}"
                                                     th:value = "${power.powerId}"
@@ -154,6 +158,8 @@
                                         </select>
                                     </div>
                                 </div>
+                                <input type="hidden" th:field="${power.powerId}" id="powerIdHiddenInput">
+                                <input type="hidden" th:field="${power.powerName}" id="powerNameHiddenInput">
                                 <!--END POWER NAME SELECT-->
 
                                 <button id = "powerChangeToNewPower" type = "button" onclick = "changeToNewPowerInput()"
@@ -166,12 +172,24 @@
                                     Click here to select a power instead
                                 </button>
 
+                                <div class = "form-group row" id="powerNameErrorDiv">
+                                    <label for = "" id = ""
+                                           class = "col-3 col-form-label"></label>
+                                    <div class = "col-9">
+                                        <div th:if="${#fields.hasErrors('power.powerName')}">
+                                            <p th:each="error : ${#fields.errors('power.powerName')}" class="alert alert-danger col-12"
+                                               th:text="${error}"> Bad Power Name </p>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <!--START POWER NAME ENTRY-->
                                 <div class = "form-group row" id = "powerNameDiv">
-                                    <label for = "powerName" id = "powerNameLabel"
+                                    <label for = "power2Name" id = "power2NameLabel"
                                            class = "col-3 col-form-label">Power</label>
                                     <div class = "col-9">
-                                        <input type = "text" name = "powerName" id = "powerName" class = "form-control" maxlength = "50">
+                                        <!--<input type = "text" name = "powerName" id = "powerName" class = "form-control" maxlength = "50">-->
+                                        <input th:field="*{power2.powerName}" type = "text" class = "form-control" id="power2NameInput">
                                     </div>
                                 </div>
                                 <!--END POWER NAME ENTRY-->
@@ -181,7 +199,13 @@
                                     <label for = "superheroDescription" class = "col-3 col-form-label">Description</label>
                                     <div class = "col-9">
                                         <textarea name = "superheroDescription" id = "superheroDescription"
-                                                  class = "form-control" maxlength = "255" required></textarea>
+                                                  class = "form-control"></textarea>
+                                        <!--                                        <textarea name = "superheroDescription" id = "superheroDescription"
+                                                                                          class = "form-control" maxlength = "255" required></textarea>-->
+                                        <div th:if="${#fields.hasErrors('superhero.superheroDescription')}">
+                                            <p th:each="error : ${#fields.errors('superhero.superheroDescription')}" class="alert alert-danger col-12"
+                                               th:text="${error}"> Bad Superhero description </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -217,7 +241,7 @@
 
                                             //individual inputs
                                             var powerExistingInput = document.getElementById('powerExisting');
-                                            var powerNameInput = document.getElementById('powerName');
+                                            var power2NameInput = document.getElementById('power2NameInput');
 
                                             var powerExistingDiv = document.getElementById('powerExistingDiv');
                                             var powerNameDiv = document.getElementById('powerNameDiv');
@@ -234,7 +258,10 @@
 
                                                 //set required on certain elements
                                                 powerExistingInput.required = true;
-                                                powerNameInput.required = false;
+//                                                power2NameInput.required = false;
+
+                                                power2NameInput.value = "";
+                                                document.getElementById("powerNameHiddenInput").value = "";
 
                                             }
 
@@ -247,10 +274,11 @@
 
                                                 //required fields
                                                 powerExistingInput.required = false;
-                                                powerNameInput.required = true;
+//                                                power2NameInput.required = true;
 
                                                 //clear values of fields that were hidden
                                                 powerExistingInput.value = "?!?";
+                                                power2NameInput.value = "";
                                             }
 
                                             function changeToSelectPowerInput() {
@@ -261,14 +289,23 @@
 
                                                 //required fields
                                                 powerExistingInput.required = true;
-                                                powerNameInput.required = false;
+//                                                power2NameInput.required = false;
 
                                                 //clear values of fields that were hidden
-                                                powerNameInput.value = "";
+                                                power2NameInput.value = "";
 
                                             }
 
 
+        </script>
+        <script>
+            function powerSelected() {
+                var powerExistingInput = document.getElementById("powerExisting").value;
+                document.getElementById("powerIdHiddenInput").value = powerExistingInput;
+                document.getElementById("powerNameHiddenInput").value = "something";
+                document.getElementById("power2NameInput").value = "valid";
+
+            }
         </script>
 
     </body>
