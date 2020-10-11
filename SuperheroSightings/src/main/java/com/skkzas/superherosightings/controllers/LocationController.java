@@ -1,10 +1,7 @@
 package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
-import com.skkzas.superherosightings.dto.Location;
-import com.skkzas.superherosightings.dto.Organization;
-import com.skkzas.superherosightings.dto.Sighting;
-import com.skkzas.superherosightings.dto.Superhero;
+import com.skkzas.superherosightings.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,8 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -40,11 +42,15 @@ public class LocationController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Location>> violations = new HashSet<>();
+    Set<ConstraintViolation<Location>> violationsEdit = new HashSet<>();
+
     @GetMapping("locations")
     public String displayAllLocations(Model model) {
         List<Location> allLocations = locationDao.getAllLocations();
 
         model.addAttribute("allLocations", allLocations);
+        model.addAttribute("errors", violations);
 
         return "locations";
     }
@@ -68,11 +74,18 @@ public class LocationController {
         location.setState(state);
         location.setZip(zip);
         location.setDescription(description);
-        location.setLongitude(longitude);
         location.setLatitude(latitude);
+        location.setLongitude(longitude);
 
-        //FIXME: User can try to get the map even though all fields are not filled out!
-        locationDao.addLocation(location);
+
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(location);
+
+        if (violations.isEmpty()) {
+            //FIXME: User can try to get the map even though all fields are not filled out!
+            locationDao.addLocation(location);
+        }
+
         return "redirect:/locations";
     }
 
@@ -88,12 +101,13 @@ public class LocationController {
     public String editLocation(Integer id, Model model) {
         Location location = locationDao.getLocationById(id);
         model.addAttribute("location", location);
+        model.addAttribute("errors", violationsEdit);
 
         return "locationEdit";
     }
 
     @PostMapping("locationEdit")
-    public String performLocationEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    public String performLocationEdit(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/locations";
         }
@@ -111,7 +125,6 @@ public class LocationController {
         String longitude = request.getParameter("longitude");
         String latitude = request.getParameter("latitude");
 
-        //TODO need to add in map confirmation here too!!!!
         location.setLocationName(locationName);
         location.setAddress(address);
         location.setCity(city);
@@ -121,9 +134,18 @@ public class LocationController {
         location.setLongitude(longitude);
         location.setLatitude(latitude);
 
-        locationDao.updateLocation(location);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(location);
 
-        return "redirect:/locationDetails?id=" + location.getLocationId();
+        if (violationsEdit.isEmpty()) {
+            locationDao.updateLocation(location);
+            return "redirect:/locationDetails?id=" + location.getLocationId();
+        } else {
+            model.addAttribute("location", location);
+            model.addAttribute("errors", violationsEdit);
+
+            return "locationEdit";
+        }
     }
 
     @GetMapping("locationDelete")

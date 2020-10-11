@@ -139,7 +139,7 @@
 
                             <form action = "addOrganization" method = "POST">
                                 <div class = "form-group row">
-                                    <label for = "name" class = "col-4 col-form-label">Name</label>
+                                    <label for = "orgName" class = "col-4 col-form-label">Name</label>
                                     <div class = "col-8">
                                         <input type = "text" name = "orgName" id = "orgName" class = "form-control" >
                                         <div th:if="${#fields.hasErrors('organization.orgName')}">
@@ -150,10 +150,10 @@
                                     </div>
                                 </div>
                                 <div class = "form-group row">
-                                    <label for = "phoneNum" class = "col-4 col-form-label">Phone</label>
+                                    <label for = "phoneNumber" class = "col-4 col-form-label">Phone</label>
                                     <div class = "col-8">
                                         <input type = "text" name = "phoneNumber" id = "phoneNumber"
-                                               class = "form-control" />
+                                               class = "form-control" placeholder="ex: 3657865476 "/>
                                         <div th:if="${#fields.hasErrors('organization.phoneNumber')}">
                                             <p th:each="error : ${#fields.errors('organization.phoneNumber')}" 
                                                class="alert alert-danger text-center" th:text="${error}">
@@ -198,9 +198,9 @@
                                     <label for = "listOfSuperheroes" class = "col-4 col-form-label">
                                         Superheroes</label>
                                     <div class = "col-8">
-                                        <select multiple id = "listOfSuperheroes" name = "listOfSuperheroes"
+                                        <select multiple id = "listOfSuperheroes" name = "superheroId"
                                                 class = "form-control" >
-                                            <option th:each = "superhero : ${superheroes}"
+                                            <option th:each = "superhero : ${listOfSuperheroes}"
                                                     th:value = "${superhero.superheroId}"
                                                     th:text = "${superhero.superheroName}">
                                                 Superhero Name
