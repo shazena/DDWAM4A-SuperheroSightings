@@ -130,11 +130,15 @@
                             <!--BEGIN ADD FORM-->
 
                             <form action = "addSuperhero" method = "POST" enctype="multipart/form-data">
-
+                                <div class="col-12 m-1 text-center" 
+                                     th:if="${!errors.isEmpty()}">
+                                    <p class="alert alert-danger" th:each="error : ${errors}" 
+                                       th:text="${error.message}">Error message</p>
+                                </div>
                                 <div class = "form-group row">
                                     <label for = "name" class = "col-3 col-form-label">Name</label>
                                     <div class = "col-9">
-                                        <input type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
+                                        <input type = "text" name = "name" id = "name" class = "form-control">
                                     </div>
                                 </div>
 
@@ -145,7 +149,6 @@
                                         Power</label>
                                     <div class = "col-9">
                                         <select id = "powerId" name = "powerId" class = "form-control">
-                                            <option disabled selected value = "?!?">Select Power</option>
                                             <option th:each = "power : ${powers}"
                                                     th:value = "${power.powerId}"
                                                     th:text = "${power.powerName}">
@@ -161,7 +164,7 @@
                                     <label for = "superheroDescription" class = "col-3 col-form-label">Description</label>
                                     <div class = "col-9">
                                         <textarea name = "superheroDescription" id = "superheroDescription"
-                                                  class = "form-control" maxlength = "255" required></textarea>
+                                                  class = "form-control"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
