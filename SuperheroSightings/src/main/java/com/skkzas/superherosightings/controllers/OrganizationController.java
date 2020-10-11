@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
 /**
  *
@@ -60,15 +63,16 @@ public class OrganizationController {
         model.addAttribute("allOrganizations", allOrganizations);
         model.addAttribute("locations", locations);
         model.addAttribute("superheroes", superheroes);
+        model.addAttribute("organization", new Organization());
 
         return "organizations";
     }
 
     @PostMapping("addOrganization")
-    public String addOrganization(Organization organization, HttpServletRequest request) {
+    public String addOrganization(@Valid Organization organization, BindingResult result, HttpServletRequest request, Model model) {
         String name = request.getParameter("name");
 
-        String phoneFormatted = request.getParameter("phoneNum");
+        String phoneFormatted = request.getParameter("phoneNumber");
         String phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
 
         String description = request.getParameter("description");
@@ -76,8 +80,13 @@ public class OrganizationController {
         String[] superheroIds = request.getParameterValues("superheroId");
 
         List<Superhero> superheroes = new ArrayList<>();
-        for (String superheroId : superheroIds) {
-            superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+        if (superheroIds != null) {
+            for (String superheroId : superheroIds) {
+                superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+            }
+        } else {
+            FieldError error = new FieldError("organization", "listOfSuperheroes", "Must include one superhero");
+            result.addError(error);
         }
 
         //get the location
@@ -91,6 +100,14 @@ public class OrganizationController {
         organization.setLocation(location);
         organization.setDescription(description);
         organization.setListOfSuperheroes(superheroes);
+
+        if (result.hasErrors()) {
+            model.addAttribute("allOrganizations", organizationDao.getAllOrganizations());
+            model.addAttribute("locations", locationDao.getAllLocations());
+            model.addAttribute("superheroes", superheroDao.getAllSuperheros());
+            model.addAttribute("organization", organization);
+            return "organizations";
+        }
 
         organizationDao.addOrganization(organization);
 

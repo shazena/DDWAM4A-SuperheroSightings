@@ -141,14 +141,24 @@
                                 <div class = "form-group row">
                                     <label for = "name" class = "col-4 col-form-label">Name</label>
                                     <div class = "col-8">
-                                        <input type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
+                                        <input type = "text" name = "orgName" id = "orgName" class = "form-control" >
+                                        <div th:if="${#fields.hasErrors('organization.orgName')}">
+                                            <p th:each="error : ${#fields.errors('organization.orgName')}" 
+                                               class="alert alert-danger" th:text="${error}">
+                                                Bad name </p>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class = "form-group row">
                                     <label for = "phoneNum" class = "col-4 col-form-label">Phone</label>
                                     <div class = "col-8">
-                                        <input type = "text" name = "phoneNum" id = "phoneNum" minlength="14" maxlength = "14"
-                                               class = "form-control" required/>
+                                        <input type = "text" name = "phoneNumber" id = "phoneNumber"
+                                               class = "form-control" />
+                                        <div th:if="${#fields.hasErrors('organization.phoneNumber')}">
+                                            <p th:each="error : ${#fields.errors('organization.phoneNumber')}" 
+                                               class="alert alert-danger" th:text="${error}">
+                                                Bad name </p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -159,7 +169,6 @@
                                         Location</label>
                                     <div class = "col-8">   
                                         <select id = "locationId" name = "locationId" class = "form-control">
-                                            <option disabled selected value = "?!?">Select Location</option>
                                             <option th:each = "location : ${locations}"
                                                     th:value = "${location.locationId}"
                                                     th:text = "${location.locationName}">
@@ -176,23 +185,32 @@
                                     <label for = "description" class = "col-4 col-form-label">
                                         Organization Description</label>
                                     <div class = "col-8">
-                                        <textarea name = "description" id = "description" class = "form-control"  maxlength="255" required></textarea>
+                                        <textarea name = "description" id = "description" class = "form-control"  ></textarea>
+                                        <div th:if="${#fields.hasErrors('organization.description')}">
+                                            <p th:each="error : ${#fields.errors('organization.description')}" 
+                                               class="alert alert-danger" th:text="${error}">
+                                                Bad name </p>
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div class = "form-group row">
-                                    <label for = "superheroes" class = "col-4 col-form-label">
+                                    <label for = "listOfSuperheroes" class = "col-4 col-form-label">
                                         Superheroes</label>
                                     <div class = "col-8">
-                                        <select multiple id = "superheroes" name = "superheroId"
-                                                class = "form-control" required>
-                                            <option disabled selected>Select Superhero</option>
+                                        <select multiple id = "listOfSuperheroes" name = "listOfSuperheroes"
+                                                class = "form-control" >
                                             <option th:each = "superhero : ${superheroes}"
                                                     th:value = "${superhero.superheroId}"
                                                     th:text = "${superhero.superheroName}">
                                                 Superhero Name
                                             </option>
                                         </select>
+                                        <div th:if="${#fields.hasErrors('organization.listOfSuperheroes')}">
+                                            <p th:each="error : ${#fields.errors('organization.listOfSuperheroes')}" 
+                                               class="alert alert-danger" th:text="${error}">
+                                                Bad name </p>
+                                        </div>
                                     </div>
                                 </div>
 
