@@ -1,7 +1,6 @@
 package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
-import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -46,6 +44,7 @@ public class PowerController {
     SightingDao sightingDao;
 
     Set<ConstraintViolation<Power>> violations = new HashSet<>();
+    Set<ConstraintViolation<Power>> violationsEdit = new HashSet<>();
 
     @GetMapping("powers")
     public String displayAllPowers(Model model) {
@@ -109,11 +108,12 @@ public class PowerController {
         Power power = powerDao.getPowerById(id);
 
         model.addAttribute("power", power);
+        model.addAttribute("errors", violationsEdit);
         return "powerEdit";
     }
 
     @PostMapping("powerEdit")
-    public String performEditPower(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    public String performEditPower(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/powers";
         }
@@ -123,8 +123,19 @@ public class PowerController {
 
         power.setPowerName(request.getParameter("name"));
 
-        powerDao.updatePower(power);
+//        powerDao.updatePower(power);
+//
+//        return "redirect:/powers";
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(power);
 
-        return "redirect:/powers";
+        if (violationsEdit.isEmpty()) {
+            powerDao.updatePower(power);
+            return "redirect:/powers";
+        } else {
+            model.addAttribute("power", power);
+            model.addAttribute("errors", violationsEdit);
+            return "powerEdit";
+        }
     }
 }
