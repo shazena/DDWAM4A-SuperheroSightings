@@ -50,7 +50,7 @@
     -->
 
 
-    <body>
+    <body onload = "hideExtraFields()">
         <nav class = "navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
             <a class = "navbar-brand col-sm-3 col-md-2 mr-0" href = "/">Superhero Tracker</a>
         </nav>
@@ -141,34 +141,25 @@
                                 <div class = "form-group row">
                                     <label for = "name" class = "col-4 col-form-label">Name</label>
                                     <div class = "col-8">
-                                        <input type = "text" name = "orgName" id = "orgName" class = "form-control" >
-                                        <div th:if="${#fields.hasErrors('organization.orgName')}">
-                                            <p th:each="error : ${#fields.errors('organization.orgName')}" 
-                                               class="alert alert-danger text-center" th:text="${error}">
-                                                Bad name </p>
-                                        </div>
+                                        <input type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
                                     </div>
                                 </div>
                                 <div class = "form-group row">
                                     <label for = "phoneNum" class = "col-4 col-form-label">Phone</label>
                                     <div class = "col-8">
-                                        <input type = "text" name = "phoneNumber" id = "phoneNumber"
-                                               class = "form-control" />
-                                        <div th:if="${#fields.hasErrors('organization.phoneNumber')}">
-                                            <p th:each="error : ${#fields.errors('organization.phoneNumber')}" 
-                                               class="alert alert-danger text-center" th:text="${error}">
-                                                Bad name </p>
-                                        </div>
+                                        <input type = "text" name = "phoneNum" id = "phoneNum" minlength="14" maxlength = "14"
+                                               class = "form-control" required/>
                                     </div>
                                 </div>
 
                                 <!--START SELECT LOCATION-->
 
                                 <div class = "form-group row" id = "locationExistingDiv">
-                                    <label for = "locationId" class = "col-4 col-form-label">
+                                    <label for = "locationExisting" class = "col-4 col-form-label">
                                         Location</label>
                                     <div class = "col-8">   
-                                        <select id = "locationId" name = "locationId" class = "form-control">
+                                        <select id = "locationExisting" name = "locationExisting" class = "form-control">
+                                            <option disabled selected value = "?!?">Select Location</option>
                                             <option th:each = "location : ${locations}"
                                                     th:value = "${location.locationId}"
                                                     th:text = "${location.locationName}">
@@ -180,37 +171,85 @@
 
                                 <!--END SELECT LOCATION-->
 
+                                <button id = "locationChangeToNewLocation" type = "button"
+                                        onclick = "changeToNewLocationInput()"
+                                        class = "btn btn-outline-dark btn-sm my-2 col-12">
+                                    Click here to enter a new location instead
+                                </button>
+                                <button id = "locationChangeToSelectLocation" type = "button"
+                                        onclick = "changeToSelectLocationInput()"
+                                        class = "btn btn-outline-dark btn-sm my-2 col-12">
+                                    Click here to select a location instead
+                                </button>
+
+
+                                <!--START NEW LOCATION ENTRY-->
+                                <div class = "form-group row" id = "locationNameDiv">
+                                    <label for = "locationName" class = "col-4 col-form-label">Location Name</label>
+                                    <div class = "col-8">
+                                        <input type = "text" name = "locationName" id = "locationName" maxlength="50"
+                                               class = "form-control">
+                                    </div>
+                                </div>
+
+                                <div class = "form-group row" id = "locationAddressDiv">
+                                    <label for = "address" class = "col-4 col-form-label">Address</label>
+                                    <div class = "col-8">
+                                        <input type = "text" name = "address" id = "address" class = "form-control"  maxlength="50">
+                                    </div>
+                                </div>
+                                <div class = "form-group row" id = "locationCityDiv">
+                                    <label for = "city" class = "col-4 col-form-label">
+                                        City</label>
+                                    <div class = "col-8">
+                                        <input type = "text" name = "city" id = "city" class = "form-control"  maxlength="50">
+                                    </div>
+                                </div>
+
+                                <div class = "form-group row" id = "locationStateDiv">
+                                    <label for = "state" class = "col-4 col-form-label">State Abbr.</label>
+                                    <div class = "col-8">
+                                        <input type = "text" name = "state" id = "state" class = "form-control"
+                                               maxlength = "2" minlength = "2">
+                                    </div>
+                                </div>
+                                <div class = "form-group row" id = "locationZipDiv">
+                                    <label for = "zip" class = "col-4 col-form-label">Zip</label>
+                                    <div class = "col-8">
+                                        <input name = "zip" type = "number" min = "0" max = "99999" id = "zip"
+                                               class = "form-control">
+                                    </div>
+                                </div>
+                                <div class = "form-group row" id = "locationDescriptionDiv">
+                                    <label for = "locationDescription" class = "col-4 col-form-label" >Location Description</label>
+                                    <div class = "col-8">
+                                        <textarea name = "locationDescription" id = "locationDescription" class = "form-control"  maxlength="255"></textarea>
+                                    </div>
+                                </div>
+                                <!--END NEW LOCATION ENTRY-->
+
 
                                 <div class = "form-group row">
                                     <label for = "description" class = "col-4 col-form-label">
                                         Organization Description</label>
                                     <div class = "col-8">
-                                        <textarea name = "description" id = "description" class = "form-control"  ></textarea>
-                                        <div th:if="${#fields.hasErrors('organization.description')}">
-                                            <p th:each="error : ${#fields.errors('organization.description')}" 
-                                               class="alert alert-danger text-center" th:text="${error}">
-                                                Bad name </p>
-                                        </div>
+                                        <textarea name = "description" id = "description" class = "form-control"  maxlength="255" required></textarea>
                                     </div>
                                 </div>
 
                                 <div class = "form-group row">
-                                    <label for = "listOfSuperheroes" class = "col-4 col-form-label">
+                                    <label for = "superheroes" class = "col-4 col-form-label">
                                         Superheroes</label>
                                     <div class = "col-8">
-                                        <select multiple id = "listOfSuperheroes" name = "listOfSuperheroes"
-                                                class = "form-control" >
+                                        <select multiple id = "superheroes" name = "superheroId"
+                                                class = "form-control" required>
+                                            <option disabled selected>Select Superhero</option>
                                             <option th:each = "superhero : ${superheroes}"
                                                     th:value = "${superhero.superheroId}"
                                                     th:text = "${superhero.superheroName}">
                                                 Superhero Name
                                             </option>
                                         </select>
-                                        <div th:if="${#fields.hasErrors('organization.listOfSuperheroes')}">
-                                            <p th:each="error : ${#fields.errors('organization.listOfSuperheroes')}" 
-                                               class="alert alert-danger text-center" th:text="${error}">
-                                                Bad name </p>
-                                        </div>
                                     </div>
                                 </div>
 
@@ -218,7 +257,13 @@
                                 <input type = "hidden" id = "latitude" name = "latitude">
                                 <input type = "hidden" id = "longitude" name = "longitude">
 
-
+                                <div id = "confirmLocationGetModalButtonDiv">
+                                    <button id = "confirmLocationGetModalButton" type = "button"
+                                            class = "btn btn-primary col-12"
+                                            onclick = "showConfirmationModal()">
+                                        Confirm Location to Add Organization
+                                    </button>
+                                </div>
 
                                 <div id = "addOrganizationButtonDiv">
                                     <button id = "addOrganizationButton" type = "submit" name = "action" value = "add"
@@ -228,6 +273,45 @@
                                 </div>
                                 <!--END BUTTON AND HIDDEN INPUTS-->
 
+
+                                <!--BEGIN MODAL-->
+
+                                <div class = "modal fade" id = "locationConfirmationModal" tabindex = "-1" role = "dialog"
+                                     aria-labelledby = "locationConfirmationModalLabel" aria-hidden = "true">
+                                    <div class = "modal-dialog modal-lg" role = "document">
+                                        <div class = "modal-content">
+                                            <div class = "modal-header">
+                                                <h5 class = "modal-title" id = "locationConfirmationModalLabel">
+                                                    Confirmation</h5>
+                                                <button type = "button" class = "close" data-dismiss = "modal"
+                                                        aria-label = "Close">
+                                                    <span aria-hidden = "true">&times;</span>
+                                                </button>
+                                            </div> <!--end of modal header-->
+                                            <div class = "modal-body">
+                                                <div class = "row">
+                                                    <!--<input name = "delete-dvd-id" id = "delete-dvd-id" type = "hidden">-->
+                                                    <p>Please confirm the location on the map</p>
+                                                </div>
+                                                <div class = "row" id = "map" style = "height: 400px;"></div>
+
+                                                <div class = "row" style = "justify-content: center;">
+                                                    <button type = "button" class = "btn btn-secondary" name = "action"
+                                                            value = "cancel"
+                                                            data-dismiss = "modal">Cancel
+                                                    </button>
+                                                    <button type = "submit" class = "btn btn-primary mx-2"
+                                                            id = "submitButton" name = "action" value = "add"
+                                                            data-toggle = "modal">Confirm Location and Add Organization
+                                                    </button>
+                                                </div>
+                                            </div> <!--end of modal body-->
+                                        </div> <!-- end of modal content-->
+                                    </div> <!--end of modal dialogue-->
+                                </div>
+
+
+                                <!--END MODAL-->
 
                             </form>
 
@@ -253,26 +337,26 @@
                 integrity = "sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
         crossorigin = ""></script>
 
-        <!--        <script>
-                                                        //js for formatting the phone number as user types it
-        
-                                                        let telEl = document.querySelector('#phoneNum');
-        
-                                                        telEl.addEventListener('keyup', (e) => {
-                                                            let val = e.target.value;
-                                                            e.target.value = val
-                                                                    .replace(/\D/g, '')
-                                                                    .replace(/(\d{1,3})(\d{1,3})?(\d{1,4})?/g, function (txt, f, s, t) {
-                                                                        if (t) {
-                                                                            return `(${f}) ${s}-${t}`
-                                                                        } else if (s) {
-                                                                            return `(${f}) ${s}`
-                                                                        } else if (f) {
-                                                                            return `(${f})`
-                                                                        }
-                                                                    });
-                                                        })
-                </script>-->
+        <script>
+                                                //js for formatting the phone number as user types it
+
+                                                let telEl = document.querySelector('#phoneNum');
+
+                                                telEl.addEventListener('keyup', (e) => {
+                                                    let val = e.target.value;
+                                                    e.target.value = val
+                                                            .replace(/\D/g, '')
+                                                            .replace(/(\d{1,3})(\d{1,3})?(\d{1,4})?/g, function (txt, f, s, t) {
+                                                                if (t) {
+                                                                    return `(${f}) ${s}-${t}`
+                                                                } else if (s) {
+                                                                    return `(${f}) ${s}`
+                                                                } else if (f) {
+                                                                    return `(${f})`
+                                                                }
+                                                            });
+                                                })
+        </script>
 
         <script>
             //makes Location API Calls
@@ -336,7 +420,102 @@
                 $('#locationConfirmationModal').modal('show');
             }
         </script>
+        <script>
+            //For Hiding and Showing various form inputs
 
+            //individual inputs
+            var locationExistingInput = document.getElementById('locationExisting');
+            var locationNameInput = document.getElementById('locationName');
+            var locationAddressInput = document.getElementById('address');
+            var locationCityInput = document.getElementById('city');
+            var locationStateInput = document.getElementById('state');
+            var locationZipInput = document.getElementById('zip');
+            var locationDescriptionInput = document.getElementById('locationDescription');
+
+            var locationNewInputs = [locationNameInput, locationAddressInput, locationCityInput, locationStateInput, locationZipInput]
+
+            var locationExistingDiv = document.getElementById('locationExistingDiv');
+            var locationNameDiv = document.getElementById('locationNameDiv');
+            var locationAddressDiv = document.getElementById('locationAddressDiv');
+            var locationCityDiv = document.getElementById('locationCityDiv');
+            var locationStateDiv = document.getElementById('locationStateDiv');
+            var locationZipDiv = document.getElementById('locationZipDiv');
+            var locationDescriptionDiv = document.getElementById('locationDescriptionDiv');
+
+            var locationNewElements = [locationNameDiv, locationAddressDiv, locationCityDiv, locationStateDiv, locationZipDiv, locationDescriptionDiv];
+
+            //2 location buttons
+            var locationChangeToNewLocationButton = document.getElementById('locationChangeToNewLocation');
+            var locationChangeToSelectLocationButton = document.getElementById('locationChangeToSelectLocation');
+
+
+            var submitSelectedLocationButtonDiv = document.getElementById('addOrganizationButtonDiv');
+            var confirmLocationGetModalButtonDiv = document.getElementById('confirmLocationGetModalButtonDiv');
+
+            function hideExtraFields() {
+                //TODO set requirements on fields!!!
+                //set display status of items on page
+                locationChangeToSelectLocationButton.style.display = 'none';
+                confirmLocationGetModalButtonDiv.style.display = 'none';
+                manipulateNewLocationElementsDisplayStyle('none');
+
+                //set required on certain elements
+                locationExistingInput.required = true;
+
+            }
+
+            function manipulateNewLocationElementsDisplayStyle(displayStyle) {
+                for (var i = 0; i < locationNewElements.length; i++) {
+                    locationNewElements[i].style.display = displayStyle;
+                }
+            }
+
+            function manipulateNewLocationElementsRequiredStatus(trueOrFalse) {
+                for (var i = 0; i < locationNewInputs.length; i++) {
+                    locationNewInputs[i].required = trueOrFalse;
+                }
+            }
+
+            function changeToNewLocationInput() {
+                locationChangeToNewLocationButton.style.display = 'none';
+                locationChangeToSelectLocationButton.style.display = 'inherit';
+                locationExistingDiv.style.display = 'none';
+                submitSelectedLocationButtonDiv.style.display = 'none';
+                confirmLocationGetModalButtonDiv.style.display = 'flex';
+
+                manipulateNewLocationElementsDisplayStyle('flex');
+
+                //required fields
+                for (var i = 0; i < locationNewElements.length; i++) {
+                    locationNewElements[i].required = true;
+                }
+                locationExistingInput.required = false;
+
+                //clear values of fields that were hidden
+                locationExistingInput.value = "?!?";
+
+            }
+
+            function changeToSelectLocationInput() {
+                locationChangeToNewLocationButton.style.display = 'inherit';
+                locationChangeToSelectLocationButton.style.display = 'none';
+                locationExistingDiv.style.display = 'flex';
+                manipulateNewLocationElementsDisplayStyle('none');
+                submitSelectedLocationButtonDiv.style.display = 'inherit';
+                confirmLocationGetModalButtonDiv.style.display = 'none';
+
+                //required fields
+                manipulateNewLocationElementsRequiredStatus(false);
+                locationExistingInput.required = true;
+
+                //clear values of fields that were hidden
+                for (var i = 0; i < locationNewInputs.length; i++) {
+                    locationNewInputs[i].value = "";
+                }
+
+            }
+
+        </script>
 
     </body>
 

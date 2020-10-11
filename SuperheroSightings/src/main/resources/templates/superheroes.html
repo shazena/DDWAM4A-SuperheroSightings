@@ -42,7 +42,7 @@
     -->
 
 
-    <body>
+    <body onload="hideExtraFields()">
         <nav class = "navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
             <a class = "navbar-brand col-sm-3 col-md-2 mr-0" href = "/">Superhero Tracker</a>
         </nav>
@@ -130,25 +130,22 @@
                             <!--BEGIN ADD FORM-->
 
                             <form action = "addSuperhero" method = "POST" enctype="multipart/form-data">
-                                <div class="col-12 m-1 text-center" 
-                                     th:if="${!errors.isEmpty()}">
-                                    <p class="alert alert-danger" th:each="error : ${errors}" 
-                                       th:text="${error.message}">Error message</p>
-                                </div>
+
                                 <div class = "form-group row">
                                     <label for = "name" class = "col-3 col-form-label">Name</label>
                                     <div class = "col-9">
-                                        <input type = "text" name = "name" id = "name" class = "form-control">
+                                        <input type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
                                     </div>
                                 </div>
 
                                 <!--START POWER NAME SELECT-->
 
                                 <div class = "form-group row" id = "powerExistingDiv">
-                                    <label for = "powerId" class = "col-3 col-form-label">
+                                    <label for = "powerExisting" class = "col-3 col-form-label">
                                         Power</label>
                                     <div class = "col-9">
-                                        <select id = "powerId" name = "powerId" class = "form-control">
+                                        <select id = "powerExisting" name = "powerExisting" class = "form-control">
+                                            <option disabled selected value = "?!?">Select Power</option>
                                             <option th:each = "power : ${powers}"
                                                     th:value = "${power.powerId}"
                                                     th:text = "${power.powerName}">
@@ -159,12 +156,32 @@
                                 </div>
                                 <!--END POWER NAME SELECT-->
 
+                                <button id = "powerChangeToNewPower" type = "button" onclick = "changeToNewPowerInput()"
+                                        class = "btn btn-outline-dark btn-sm my-2 col-12 text-center">
+                                    Click here to enter a new power instead
+                                </button>
+                                <button id = "powerChangeToSelectPower" type = "button"
+                                        onclick = "changeToSelectPowerInput()"
+                                        class = "btn btn-outline-dark btn-sm my-2 col-12  text-center">
+                                    Click here to select a power instead
+                                </button>
+
+                                <!--START POWER NAME ENTRY-->
+                                <div class = "form-group row" id = "powerNameDiv">
+                                    <label for = "powerName" id = "powerNameLabel"
+                                           class = "col-3 col-form-label">Power</label>
+                                    <div class = "col-9">
+                                        <input type = "text" name = "powerName" id = "powerName" class = "form-control" maxlength = "50">
+                                    </div>
+                                </div>
+                                <!--END POWER NAME ENTRY-->
+
 
                                 <div class = "form-group row">
                                     <label for = "superheroDescription" class = "col-3 col-form-label">Description</label>
                                     <div class = "col-9">
                                         <textarea name = "superheroDescription" id = "superheroDescription"
-                                                  class = "form-control"></textarea>
+                                                  class = "form-control" maxlength = "255" required></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -195,6 +212,64 @@
                 integrity = "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin = "anonymous"></script>
 
+        <script>
+                                            //For Hiding and Showing various form inputs
+
+                                            //individual inputs
+                                            var powerExistingInput = document.getElementById('powerExisting');
+                                            var powerNameInput = document.getElementById('powerName');
+
+                                            var powerExistingDiv = document.getElementById('powerExistingDiv');
+                                            var powerNameDiv = document.getElementById('powerNameDiv');
+
+                                            //2 power buttons
+                                            var powerChangeToNewPowerButton = document.getElementById('powerChangeToNewPower');
+                                            var powerChangeToSelectPowerButton = document.getElementById('powerChangeToSelectPower');
+
+
+                                            function hideExtraFields() {
+                                                //set display status of items on page
+                                                powerNameDiv.style.display = 'none';
+                                                powerChangeToSelectPowerButton.style.display = 'none';
+
+                                                //set required on certain elements
+                                                powerExistingInput.required = true;
+                                                powerNameInput.required = false;
+
+                                            }
+
+
+                                            function changeToNewPowerInput() {
+                                                powerExistingDiv.style.display = 'none';
+                                                powerChangeToNewPowerButton.style.display = 'none';
+                                                powerChangeToSelectPowerButton.style.display = 'inherit';
+                                                powerNameDiv.style.display = 'flex';
+
+                                                //required fields
+                                                powerExistingInput.required = false;
+                                                powerNameInput.required = true;
+
+                                                //clear values of fields that were hidden
+                                                powerExistingInput.value = "?!?";
+                                            }
+
+                                            function changeToSelectPowerInput() {
+                                                powerExistingDiv.style.display = 'flex';
+                                                powerChangeToNewPowerButton.style.display = 'inherit';
+                                                powerChangeToSelectPowerButton.style.display = 'none';
+                                                powerNameDiv.style.display = 'none';
+
+                                                //required fields
+                                                powerExistingInput.required = true;
+                                                powerNameInput.required = false;
+
+                                                //clear values of fields that were hidden
+                                                powerNameInput.value = "";
+
+                                            }
+
+
+        </script>
 
     </body>
 
