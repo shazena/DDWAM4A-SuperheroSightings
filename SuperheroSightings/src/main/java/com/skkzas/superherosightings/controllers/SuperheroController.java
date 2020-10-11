@@ -71,6 +71,8 @@ public class SuperheroController {
 
         String fileLocation = imageDao.saveImage(file, Long.toString(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), SUPERHERO_UPLOAD_DIRECTORY);
 
+        String[] possiblePowers = request.getParameterValues("powerName");
+
         String name = request.getParameter("superheroName");
         String description = request.getParameter("superheroDescription");
 
@@ -80,11 +82,8 @@ public class SuperheroController {
             power = powerDao.getPowerById(power.getPowerId());
 //            power = powerDao.getPowerById(Integer.parseInt(powerId));
         } else {
-            String powerName = power.getPowerName();
+            String powerName = possiblePowers[1];
 
-            if (powerName.substring(0, 1).equals(",")) {
-                powerName = powerName.substring(1);
-            }
             power.setPowerName(powerName);
         }
 
