@@ -84,11 +84,7 @@
 
                 <main role = "main" class = "col-md-9 ml-sm-auto col-lg-10 px-4">
                     <div class = "content" style="margin: 30px;">
-                        <div class="col-12 m-1 text-center" 
-                             th:if="${!errors.isEmpty()}">
-                            <p class="alert alert-danger" th:each="error : ${errors}" 
-                               th:text="${error.message}">Error message</p>
-                        </div>
+
 
                         <div class = "row">
                             <div class = "col-3 text-center">
@@ -103,7 +99,7 @@
                                     <div class = "form-group row">
                                         <label for = "name" class = "col-4 col-form-label">Name</label>
                                         <div class = "col-8">
-                                            <input th:value="${superhero.superheroName}" type = "text" name = "name" id = "name" class = "form-control">
+                                            <input th:value="${superhero.superheroName}" type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
                                         </div>
                                     </div>
 
@@ -124,7 +120,7 @@
                                     <div class = "form-group row">
                                         <label for = "description" class = "col-4 col-form-label">Description</label>
                                         <div class = "col-8">
-                                            <textarea name = "description" id = "description" class = "form-control" th:inline="text">[[${superhero.superheroDescription}]]</textarea>
+                                            <textarea name = "description" id = "description" class = "form-control" th:inline="text" maxlength = "255" required>[[${superhero.superheroDescription}]]</textarea>
                                         </div>
                                     </div>
                                     <img th:src="${superhero.photoFileName}" style="height: 250px;" />
