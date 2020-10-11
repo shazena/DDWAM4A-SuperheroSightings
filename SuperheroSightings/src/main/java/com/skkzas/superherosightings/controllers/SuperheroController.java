@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -55,30 +59,47 @@ public class SuperheroController {
 
         model.addAttribute("allSuperheroes", allSuperheroes);
         model.addAttribute("powers", powers);
+        model.addAttribute("superhero", new Superhero());
+        model.addAttribute("power", new Power());
+        model.addAttribute("power2", new Power());
 
         return "superheroes";
     }
 
     @PostMapping("addSuperhero")
-    public String addSuperhero(HttpServletRequest request, @RequestParam("file") MultipartFile file) {
+    public String addSuperhero(@Valid @ModelAttribute("power") Power power, BindingResult resultPower, @Valid @ModelAttribute("power2") Power power2, BindingResult resultPower2, @Valid @ModelAttribute("superhero") Superhero superhero, BindingResult resultSuperhero, HttpServletRequest request, @RequestParam("file") MultipartFile file, Model model) {
+
         String fileLocation = imageDao.saveImage(file, Long.toString(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)), SUPERHERO_UPLOAD_DIRECTORY);
 
-        String name = request.getParameter("name");
+        String name = request.getParameter("superheroName");
         String description = request.getParameter("superheroDescription");
 
-        Superhero superhero = new Superhero();
-
-        Power power = new Power();
-        String powerId = request.getParameter("powerExisting");
-        if (powerId != null) {
-            power = powerDao.getPowerById(Integer.parseInt(powerId));
+//        String powerId = request.getParameter("powerExisting");
+//        if (powerId != null) {
+        if (power.getPowerId() != 0) {
+            power = powerDao.getPowerById(power.getPowerId());
+//            power = powerDao.getPowerById(Integer.parseInt(powerId));
         } else {
-            String powerName = request.getParameter("powerName");
+            String powerName = power.getPowerName();
+
+            if (powerName.substring(0, 1).equals(",")) {
+                powerName = powerName.substring(1);
+            }
             power.setPowerName(powerName);
-            power = powerDao.addPower(power);
         }
 
+        if (resultPower.hasErrors() || resultSuperhero.hasErrors()) {
+            List<Superhero> allSuperheroes = superheroDao.getAllSuperheros();
+            List<Power> powers = powerDao.getAllPowers();
+
+            model.addAttribute("allSuperheroes", allSuperheroes);
+            model.addAttribute("powers", powers);
+            return "superheroes";
+        }
         superhero.setSuperheroName(name);
+        if (power.getPowerId() == 0) {
+            power = powerDao.addPower(power);
+        }
         superhero.setPower(power);
         superhero.setSuperheroDescription(description);
         superhero.setPhotoFileName(fileLocation);
