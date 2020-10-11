@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 /**
  *
@@ -38,6 +43,9 @@ public class SightingController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Location>> violationsAdd = new HashSet<>();
+    Set<ConstraintViolation<Location>> violationsEdit = new HashSet<>();
+
     @GetMapping("sightings")
     public String displayAllSightings(Model model) {
 
@@ -50,6 +58,8 @@ public class SightingController {
         model.addAttribute("allSuperheroes", allSuperheroes);
         model.addAttribute("allLocations", allLocations);
         model.addAttribute("allPowers", allPowers);
+
+        model.addAttribute("errors", violationsAdd);
 
         return "sightings";
     }
@@ -121,7 +131,16 @@ public class SightingController {
         sighting.setDate(dateOfSighting);
         sighting.setLocation(location);
         sighting.setSuperhero(superhero);
+
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsAdd = validate.validate(location);
+
+        if (violationsAdd.isEmpty()) {
+            locationDao.addLocation(location);
+        }
+
         sightingDao.addSighting(sighting);
+
         return "redirect:/sightings";
     }
 

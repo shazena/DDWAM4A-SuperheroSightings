@@ -45,15 +45,15 @@ public class LocationController {
     @Autowired
     SightingDao sightingDao;
 
-    Set<ConstraintViolation<Location>> violations = new HashSet<>();
-    Set<ConstraintViolation<Location>> violations2 = new HashSet<>();
+    Set<ConstraintViolation<Location>> violationsAdd = new HashSet<>();
+    Set<ConstraintViolation<Location>> violationsEdit = new HashSet<>();
 
     @GetMapping("locations")
     public String displayAllLocations(Model model) {
         List<Location> allLocations = locationDao.getAllLocations();
 
         model.addAttribute("allLocations", allLocations);
-        model.addAttribute("errors", violations);
+        model.addAttribute("errors", violationsAdd);
 
         return "locations";
     }
@@ -81,9 +81,9 @@ public class LocationController {
         location.setLatitude(latitude);
 
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
-        violations = validate.validate(location);
+        violationsAdd = validate.validate(location);
 
-        if (violations.isEmpty()) {
+        if (violationsAdd.isEmpty()) {
             locationDao.addLocation(location);
         }
 
@@ -103,7 +103,7 @@ public class LocationController {
     public String editLocation(Integer id, Model model) {
         Location location = locationDao.getLocationById(id);
         model.addAttribute("location", location);
-        model.addAttribute("errors", violations2);
+        model.addAttribute("errors", violationsEdit);
 
         return "locationEdit";
     }
@@ -138,13 +138,13 @@ public class LocationController {
         location.setLatitude(latitude);
 
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
-        violations2 = validate.validate(location);
+        violationsEdit = validate.validate(location);
 
-        if (violations2.isEmpty()) {
+        if (violationsEdit.isEmpty()) {
             locationDao.addLocation(location);
             return "redirect:/locationDetails?id=" + location.getLocationId();
         } else {
-            model.addAttribute("errors", violations2);
+            model.addAttribute("errors", violationsEdit);
             model.addAttribute(location);
             return "locationEdit";
         }
