@@ -97,9 +97,13 @@
                             <div class = "col-9 text-right">
                                 <form action = "superheroEdit" method = "POST" enctype="multipart/form-data">
                                     <div class = "form-group row">
-                                        <label for = "name" class = "col-4 col-form-label">Name</label>
+                                        <label for = "superheroName" class = "col-4 col-form-label">Name</label>
                                         <div class = "col-8">
-                                            <input th:value="${superhero.superheroName}" type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
+                                            <input th:value="${superhero.superheroName}" type = "text" name = "superheroName" id = "superheroName" class = "form-control" >
+                                            <div th:if="${#fields.hasErrors('superhero.superheroName')}">
+                                                <p th:each="error : ${#fields.errors('superhero.superheroName')}" class="alert alert-danger col-12"
+                                                   th:text="${error}"> Bad Superhero Name </p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -120,7 +124,11 @@
                                     <div class = "form-group row">
                                         <label for = "description" class = "col-4 col-form-label">Description</label>
                                         <div class = "col-8">
-                                            <textarea name = "description" id = "description" class = "form-control" th:inline="text" maxlength = "255" required>[[${superhero.superheroDescription}]]</textarea>
+                                            <textarea name = "superheroDescription" id = "superheroDescription" class = "form-control" th:inline="text" >[[${superhero.superheroDescription}]]</textarea>
+                                            <div th:if="${#fields.hasErrors('superhero.superheroDescription')}">
+                                                <p th:each="error : ${#fields.errors('superhero.superheroDescription')}" class="alert alert-danger col-12"
+                                                   th:text="${error}"> Bad Superhero description </p>
+                                            </div>
                                         </div>
                                     </div>
                                     <img th:src="${superhero.photoFileName}" style="height: 250px;" />
@@ -131,7 +139,7 @@
                                         <input type="file" name='file' class="form-control-file" />
                                     </div>
                                     <input type ="hidden" name ="originalFileName" th:value="superhero.photoFileName" id="originalFileName">
-                                    <input type="hidden" name="id" th:value="${superhero.superheroId}"/>
+                                    <input type="hidden" name="superheroId" th:value="${superhero.superheroId}"/>
                                     <button type="submit" name="action" value="cancel" class = "btn btn-primary mx-3">Cancel</button>
                                     <button type="submit" name="action" value="update" class = "btn btn-primary">Update Superhero</button>
                                 </form>

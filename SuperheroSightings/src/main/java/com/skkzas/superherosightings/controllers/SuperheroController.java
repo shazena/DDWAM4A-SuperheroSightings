@@ -151,17 +151,17 @@ public class SuperheroController {
     }
 
     @PostMapping("superheroEdit")
-    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action, @RequestParam("file") MultipartFile file) {
+    public String performSuperheroEdit(@Valid @ModelAttribute("superhero") Superhero superhero, BindingResult result, HttpServletRequest request, @RequestParam(value = "action", required = true) String action, @RequestParam("file") MultipartFile file, Model model) {
         if (action.equals("cancel")) {
             return "redirect:/superheroes";
         }
 
-        int id = Integer.parseInt(request.getParameter("id"));
-        Superhero superhero = superheroDao.getSuperheroById(id);
+        int id = Integer.parseInt(request.getParameter("superheroId"));
+        superhero = superheroDao.getSuperheroById(id);
 
-        String name = request.getParameter("name");
+        String name = request.getParameter("superheroName");
         String powerId = request.getParameter("powerId");
-        String description = request.getParameter("description");
+        String description = request.getParameter("superheroDescription");
 
         superhero.setSuperheroName(name);
         superhero.setPower(powerDao.getPowerById(Integer.parseInt(powerId)));
@@ -171,6 +171,14 @@ public class SuperheroController {
 
         if (!fileIsEmpty) {
             superhero.setPhotoFileName(imageDao.updateImage(file, superhero.getPhotoFileName(), SUPERHERO_UPLOAD_DIRECTORY));
+        }
+
+        if (result.hasErrors()) {
+            List<Power> powers = powerDao.getAllPowers();
+
+            model.addAttribute("powers", powers);
+            model.addAttribute("superhero", superhero);
+            return "superheroEdit";
         }
 
         superheroDao.updateSuperhero(superhero);
