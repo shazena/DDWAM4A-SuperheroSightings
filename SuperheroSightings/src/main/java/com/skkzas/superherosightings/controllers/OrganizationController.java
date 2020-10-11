@@ -7,18 +7,17 @@ import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  *
@@ -48,7 +47,7 @@ public class OrganizationController {
     public String displayAllOrganizations(Model model) {
         List<Organization> allOrganizations = organizationDao.getAllOrganizations();
         List<Location> locations = locationDao.getAllLocations();
-        List<Superhero> superheroes = superheroDao.getAllSuperheros();
+        List<Superhero> listOfSuperheroes = superheroDao.getAllSuperheros();
 
         for (Organization organization : allOrganizations) {
 
@@ -64,7 +63,7 @@ public class OrganizationController {
 
         model.addAttribute("allOrganizations", allOrganizations);
         model.addAttribute("locations", locations);
-        model.addAttribute("superheroes", superheroes);
+        model.addAttribute("listOfSuperheroes", listOfSuperheroes);
         model.addAttribute("organization", new Organization());
 
         return "organizations";
@@ -72,7 +71,7 @@ public class OrganizationController {
 
     @PostMapping("addOrganization")
     public String addOrganization(@Valid Organization organization, BindingResult result, HttpServletRequest request, Model model) {
-        String name = request.getParameter("name");
+        String name = request.getParameter("orgName");
 
         String phoneFormatted = request.getParameter("phoneNumber");
         String phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
@@ -81,10 +80,10 @@ public class OrganizationController {
 
         String[] superheroIds = request.getParameterValues("superheroId");
 
-        List<Superhero> superheroes = new ArrayList<>();
+        List<Superhero> listOfSuperheroes = new ArrayList<>();
         if (superheroIds != null) {
             for (String superheroId : superheroIds) {
-                superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+                listOfSuperheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
             }
         } else {
             FieldError error = new FieldError("organization", "listOfSuperheroes", "Must include one superhero");
@@ -101,12 +100,12 @@ public class OrganizationController {
         organization.setPhoneNumber(phoneUnformatted);
         organization.setLocation(location);
         organization.setDescription(description);
-        organization.setListOfSuperheroes(superheroes);
+        organization.setListOfSuperheroes(listOfSuperheroes);
 
         if (result.hasErrors()) {
             model.addAttribute("allOrganizations", organizationDao.getAllOrganizations());
             model.addAttribute("locations", locationDao.getAllLocations());
-            model.addAttribute("superheroes", superheroDao.getAllSuperheros());
+            model.addAttribute("listOfSuperheroes", superheroDao.getAllSuperheros());
             model.addAttribute("organization", organization);
             return "organizations";
         }
