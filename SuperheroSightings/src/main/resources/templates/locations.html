@@ -45,7 +45,7 @@
     -->
 
 
-    <body>
+    <body onload="hideNoZipAlert()">
         <nav class = "navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
             <a class = "navbar-brand col-sm-3 col-md-2 mr-0" href = "/">Superhero Tracker</a>
         </nav>
@@ -139,6 +139,9 @@
                                      th:if="${!errors.isEmpty()}">
                                     <p class="alert alert-danger" th:each="error : ${errors}"
                                        th:text="${error.message}">Error message</p>
+                                </div>
+                                <div class="col-12 m-1 text-center" id="noZipAlert">
+                                    <p class="alert alert-danger">You must fill out all fields</p>
                                 </div>
 
                                 <div class="form-group row">
@@ -301,15 +304,25 @@
                                             },
                                             error: function () {
                                                 alert("something went wrong...");
-
                                             }
                                         });
                                     }
 
 
                                     function showConfirmationModal() {
-                                        makeCallGetLatitudeandLongitude();
-                                        $('#locationConfirmationModal').modal('show');
+                                        var zipCodeInput = document.getElementById("zip").value;
+                                        if (zipCodeInput != "" && zipCodeInput.length === 5) {
+                                            makeCallGetLatitudeandLongitude();
+                                            $('#locationConfirmationModal').modal('show');
+
+                                        } else {
+                                            document.getElementById("noZipAlert").style.display = 'inherit';
+                                        }
+
+                                    }
+
+                                    function hideNoZipAlert() {
+                                        document.getElementById("noZipAlert").style.display = 'none';
                                     }
 
 
