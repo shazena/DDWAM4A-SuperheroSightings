@@ -87,6 +87,11 @@
 
                 <main role = "main" class = "col-md-9 ml-sm-auto col-lg-10 px-4">
                     <div class = "content" style="margin: 30px;">
+                        <div class="col-12 m-1 text-center"
+                             th:if="${!errors.isEmpty()}">
+                            <p class="alert alert-danger" th:each="error : ${errors}"
+                               th:text="${error.message}">Error message</p>
+                        </div>
 
 
                         <div class = "row">
@@ -102,39 +107,39 @@
                                     <div class = "form-group row">
                                         <label for = "locationName" class = "col-4 col-form-label">Name</label>
                                         <div class = "col-8">
-                                            <input th:value="${location.locationName}" type = "text" name = "locationName" id = "locationName" class = "form-control" maxlength="50" required>
+                                            <input th:value="${location.locationName}" type = "text" name = "locationName" id = "locationName" class = "form-control">
                                         </div>
                                     </div>
                                     <div class = "form-group row">
                                         <label for = "address" class = "col-4 col-form-label">
                                             Address</label>
                                         <div class = "col-8">
-                                            <input th:value="${location.address}" type = "text" name = "address" id = "address" class = "form-control" maxlength="50" required>
+                                            <input th:value="${location.address}" type = "text" name = "address" id = "address" class = "form-control">
                                         </div>
                                     </div>
                                     <div class = "form-group row">
                                         <label for = "city" class = "col-4 col-form-label">
                                             City</label>
                                         <div class = "col-8">
-                                            <input th:value="${location.city}" type = "text" name = "city" id = "city" class = "form-control" maxlength="50" required>
+                                            <input th:value="${location.city}" type = "text" name = "city" id = "city" class = "form-control">
                                         </div>
                                     </div>
                                     <div class = "form-group row">
                                         <label for = "state" class = "col-4 col-form-label">State</label>
                                         <div class = "col-8">
-                                            <input th:value="${location.state}" type = "text" name = "state" id = "state" class = "form-control" maxlength="2" required>
+                                            <input th:value="${location.state}" type = "text" name = "state" id = "state" class = "form-control">
                                         </div>
                                     </div>
                                     <div class = "form-group row">
                                         <label for = "zip" class = "col-4 col-form-label">Zip</label>
                                         <div class = "col-8">
-                                            <input th:value="${location.zip}" name="zip" type = "number" min = "00501" max = "99950" id="zip" class="form-control" required>
+                                            <input th:value="${location.zip}" name="zip" type = "number" id="zip" class="form-control">
                                         </div>
                                     </div>
                                     <div class = "form-group row">
                                         <label for = "description" class = "col-4 col-form-label">Description</label>
                                         <div class = "col-8">
-                                            <textarea name = "description" id = "description" class = "form-control" th:inline="text" maxlength="255" required>[[${location.description}]]</textarea>
+                                            <textarea name = "description" id = "description" class = "form-control" th:inline="text">[[${location.description}]]</textarea>
                                         </div>
                                     </div>
                                     <input type="hidden" name="locationId" th:value="${location.locationId}"/>
