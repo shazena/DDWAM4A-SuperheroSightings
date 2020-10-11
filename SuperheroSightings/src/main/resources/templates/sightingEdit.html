@@ -85,7 +85,11 @@
                 <main role = "main" class = "col-md-9 ml-sm-auto col-lg-10 px-4">
                     <div class = "content" style="margin: 30px;">
 
-
+                        <div class="col-12 m-1 text-center" 
+                             th:if="${!errors.isEmpty()}">
+                            <p class="alert alert-danger" th:each="error : ${errors}" 
+                               th:text="${error.message}">Error message</p>
+                        </div>
                         <div class = "row">
                             <div class = "col-3 text-center">
                                 <h2>Edit Sighting</h2>
@@ -99,7 +103,7 @@
                                     <div class = "form-group row">
                                         <label for = "date" class = "col-3 col-form-label">Date</label>
                                         <div class = "col-9">
-                                            <input th:value="${sighting.date}" type = "date" name = "date" id = "date" class = "form-control" required>
+                                            <input th:value="${sighting.date}" type = "date" name = "date" id = "date" class = "form-control" >
                                         </div>
 
                                     </div>
@@ -108,7 +112,7 @@
                                         <label for = "superhero" class = "col-3 col-form-label">
                                             Superhero</label>
                                         <div class = "col-9">
-                                            <select id = "superhero" name = "superheroId" class = "form-control" required>
+                                            <select id = "superhero" name = "superheroId" class = "form-control" >
                                                 <option th:each = "superhero : ${allSuperheroes}"
                                                         th:value = "${superhero.superheroId}"
                                                         th:text = "${superhero.superheroName+' - '+superhero.power.powerName}"
@@ -123,7 +127,7 @@
                                         <label for = "location" class = "col-3 col-form-label">
                                             Location</label>
                                         <div class = "col-9">
-                                            <select id = "location" name = "locationId" class = "form-control" required>
+                                            <select id = "location" name = "locationId" class = "form-control" >
                                                 <option th:each = "location : ${allLocations}"
                                                         th:value = "${location.locationId}"
                                                         th:text = "${location.locationName}"

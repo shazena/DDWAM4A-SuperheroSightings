@@ -171,7 +171,7 @@ public class SuperheroController {
             superheroDao.updateSuperhero(superhero);
             return "redirect:/superheroDetails?id=" + superhero.getSuperheroId();
         } else {
-            model.addAttribute(superhero);
+            model.addAttribute("superhero", superhero);
             List<Power> powers = powerDao.getAllPowers();
             model.addAttribute("powers", powers);
             model.addAttribute("errors", violationsEdit);
