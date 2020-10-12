@@ -218,11 +218,14 @@ public class OrganizationController {
         model.addAttribute("superheroes", superheroes);
         model.addAttribute("formattedPhoneNumber", formattedPhoneNumber);
 
+        violationsEdit.clear();
+        model.addAttribute("errors", violationsEdit);
+
         return "organizationEdit";
     }
 
-    @PostMapping("organizationEdit")
-    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    @PostMapping(path = "organizationEdit", consumes = "application/x-www-form-urlencoded")
+    public String performOrganizationEdit(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/organizations";
         }
@@ -231,7 +234,10 @@ public class OrganizationController {
         Organization organization = organizationDao.getOrganizationById(id);
         String name = request.getParameter("name");
         String phoneFormatted = request.getParameter("phoneNum");
-        String phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
+        String phoneUnformatted = "";
+        if (!phoneFormatted.equals("")) {
+            phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
+        }
 
         String locationId = request.getParameter("locationId");
         String description = request.getParameter("description");
@@ -243,13 +249,49 @@ public class OrganizationController {
         organization.setDescription(description);
 
         List<Superhero> superheroes = new ArrayList<>();
-        for (String superheroId : superheroIds) {
-            superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+        if (superheroIds != null) {
+            for (String superheroId : superheroIds) {
+                superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+            }
+        } else {
+            superheroes = null;
         }
         organization.setListOfSuperheroes(superheroes);
 
-        organizationDao.updateOrganization(organization);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(organization);
 
-        return "redirect:/organizationDetails?id=" + organization.getOrgId();
+        if (violationsEdit.isEmpty()) {
+            organizationDao.updateOrganization(organization);
+            return "redirect:/organizationDetails?id=" + organization.getOrgId();
+
+        } else {
+            List<Location> locations = locationDao.getAllLocations();
+            List<Superhero> allSuperheroes = superheroDao.getAllSuperheros();
+
+            String unformattedPhoneNumber = organization.getPhoneNumber();
+            String formattedPhoneNumber = "";
+            if (unformattedPhoneNumber.length() == 10) {
+                formattedPhoneNumber = "("
+                        + unformattedPhoneNumber.substring(0, 3)
+                        + ") "
+                        + unformattedPhoneNumber.substring(3, 6)
+                        + "-"F
+                        + unformattedPhoneNumber.substring(6, 10);
+            }
+            organization.setPhoneNumber(formattedPhoneNumber);
+            if (organization.getListOfSuperheroes() == null) {
+                organization.setListOfSuperheroes(new ArrayList<Superhero>());
+            }
+
+            model.addAttribute("locations", locations);
+            model.addAttribute("superheroes", allSuperheroes);
+            model.addAttribute("formattedPhoneNumber", formattedPhoneNumber);
+            model.addAttribute("organization", organization);
+
+            model.addAttribute("errors", violationsEdit);
+            return "organizationEdit";
+        }
+
     }
 }
