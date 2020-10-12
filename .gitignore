@@ -1,3 +1,4 @@
 SuperheroSightings/src/main/resources/application.properties
 SuperheroSightings/src/test/resources/application.properties
 SuperheroSightings/src/main/java/com/skkzas/superherosightings/dto/ImageFolder.java
+SuperheroSightingsJSGlory/src/main/java/com/skkzas/superherosightings/dto/ImageFolder.java
