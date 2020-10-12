@@ -276,7 +276,7 @@ public class OrganizationController {
                         + unformattedPhoneNumber.substring(0, 3)
                         + ") "
                         + unformattedPhoneNumber.substring(3, 6)
-                        + "-"F
+                        + "-"
                         + unformattedPhoneNumber.substring(6, 10);
             }
             organization.setPhoneNumber(formattedPhoneNumber);
