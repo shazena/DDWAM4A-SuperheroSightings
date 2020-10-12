@@ -10,6 +10,9 @@
         <link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
               crossorigin = "anonymous">
+        <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+              integrity = "sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+              crossorigin = ""/>
         <!-- Custom styles for this template -->
         <link href = "../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel = "stylesheet">
         <link href = "../static/css/superheroSightingsStyles.css" th:href="@{/css/superheroSightingsStyles.css}" rel = "stylesheet">
@@ -113,8 +116,27 @@
                             <div class = "col-9 text-left">
                                 <span th:text="${superhero.superheroDescription}">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas suscipit, nisi ac malesuada molestie, neque neque fermentum dui, vitae volutpat eros lorem nec nunc. Aenean non pulvinar ipsum. Nulla quis est nibh. Donec elit lacus, posuere eget tellus ac</span>
                             </div>
-                        </div>
 
+                            <div class = "col-3 text-right" th:if="${not #lists.isEmpty(organizations)}"><strong>Member of:</strong></div>
+                            <div class = "col-9 text-left" >
+                                <span th:each="organization, stat : ${organizations}">
+                                    <span th:text="${organization.orgName}"></span>
+                                    <span th:if="${stat.index + 1} !=  ${#lists.size(organizations)}">, </span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row col-12" style="align-items: center; justify-content: center;">
+
+                            <div class="col-5 m-3">
+                                <div id = "map" style = "height: 300px"></div>
+                            </div>
+                            <div class="col-5 m-3">
+                                <!--<span th:if="${(superhero.photoFileName != null && !#strings.isEmpty(superhero.photoFileName))"><img th:src="${superhero.photoFileName}" style="width: 100%;"/></span>-->
+                                <!--<span th:if="${superhero.photoFileName == null}"><a th:href = "@{superheroEdit(id=${superhero.superheroId})}"><img th:src="/images/HERO-Logo-Missing.png" style="width: 100%;"/></a></span>-->
+                                <img th:src="${(superhero.photoFileName != null && !#strings.isEmpty(superhero.photoFileName)) ? superhero.photoFileName : '/images/HERO-Logo-Missing.png'}" style="width: 100%;"/>
+
+                            </div>
+                        </div>
                         <!--END DETAIL PAGE CONTENT-->
 
                     </div> <!--end of main content div-->
@@ -131,6 +153,53 @@
         <script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 integrity = "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin = "anonymous"></script>
+        <!--Leaflet JS--> 
+        <script src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+                integrity = "sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin = ""></script>
+
+
+        <script type="text/javascript" th:inline="javascript">
+            /*<![CDATA[*/
+            var sightings = [[${sightings}]];
+
+            if (sightings.length > 0) {
+                //set to show the whole US
+                var mymap = L.map('map').setView([40.683173, -98.071907], 3);
+
+                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hhemVuYSIsImEiOiJja2ZpeGhicnowNXBkMzVtcWo1bnBsNzdwIn0.0PQfe_ZktBVA1Vr6jUqt-w', {
+                    maxZoom: 18,
+                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                            '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                            'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                    id: 'mapbox/streets-v11',
+                    tileSize: 512,
+                    zoomOffset: -1
+                }).addTo(mymap);
+
+
+
+
+
+                for (i = 0; i < sightings.length; i++) {
+
+                    var longitude = sightings[i].location.longitude;
+                    var latitude = sightings[i].location.latitude;
+                    var date = sightings[i].date;
+//                var theDate = new Date.parse(date);
+//                var dateFormatted = theDate.toLocaleDateString("en-US");
+                    var superheroName = sightings[i].superhero.superheroName;
+                    var locationName = sightings[i].location.locationName;
+                    var popupContents = date + " " + superheroName + " - " + locationName;
+                    L.marker([latitude, longitude]).addTo(mymap).bindPopup(popupContents).openPopup();
+
+                }
+            }
+
+
+
+            /*]]>*/
+        </script>
     </body>
 
 </html>
