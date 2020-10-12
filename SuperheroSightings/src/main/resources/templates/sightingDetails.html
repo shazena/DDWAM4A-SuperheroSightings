@@ -10,6 +10,9 @@
         <link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
               crossorigin = "anonymous">
+        <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+              integrity = "sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+              crossorigin = ""/>
         <!-- Custom styles for this template -->
         <link href = "../static/css/dashboard.css" th:href="@{/css/dashboard.css}" rel = "stylesheet">
         <link href = "../static/css/superheroSightingsStyles.css" th:href="@{/css/superheroSightingsStyles.css}" rel = "stylesheet">
@@ -129,9 +132,17 @@
                                 <span th:text="${sighting.location.city + ', ' + sighting.location.state + ' ' + sighting.location.zip}">City, State Zip</span>
                             </div>
 
-                            <div class="col-12">
-                                <img th:src="${sighting.superhero.photoFileName}" style="height: 300px;" />
+
+                            <div class="row col-12" style="align-items:  center; ">
+
+                                <div class="col-5 m-3">
+                                    <div id = "map" style = "height: 300px"></div>
+                                </div>
+                                <div class="col-5 m-3">
+                                    <img th:src="${sighting.superhero.photoFileName}" style="width: 100%;" />
+                                </div>
                             </div>
+
 
 
 
@@ -153,6 +164,48 @@
         <script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
                 integrity = "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin = "anonymous"></script>
+        <!--Leaflet JS--> 
+        <script src = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+                integrity = "sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin = ""></script>
+
+        <script type="text/javascript" th:inline="javascript">
+            /*<![CDATA[*/
+
+            var sighting = [[${sighting}]]
+
+
+            var longitude = sighting.location.longitude;
+            var latitude = sighting.location.latitude;
+            var date = sighting.date;
+//                var theDate = new Date.parse(date);
+//                var dateFormatted = theDate.toLocaleDateString("en-US");
+            var superheroName = sighting.superhero.superheroName;
+            var locationName = sighting.location.locationName;
+            var popupContents = date + " " + superheroName + " - " + locationName;
+
+
+            var mymap = L.map('map').setView([latitude, longitude], 8);
+
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1Ijoic2hhemVuYSIsImEiOiJja2ZpeGhicnowNXBkMzVtcWo1bnBsNzdwIn0.0PQfe_ZktBVA1Vr6jUqt-w', {
+                maxZoom: 18,
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1
+            }).addTo(mymap);
+
+
+
+
+
+            L.marker([latitude, longitude]).addTo(mymap).bindPopup(popupContents).openPopup();
+
+
+            /*]]>*/
+        </script>
     </body>
 
 </html>
