@@ -4,6 +4,7 @@ import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Superhero;
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -131,7 +132,12 @@ public class OrganizationController {
     @GetMapping("organizationDetails")
     public String organizationDetails(Integer id, Model model) {
         Organization theOrganization = organizationDao.getOrganizationById(id);
+        BigDecimal latitude = new BigDecimal(theOrganization.getLocation().getLatitude());
+        BigDecimal longitude = new BigDecimal(theOrganization.getLocation().getLongitude());
+        
         model.addAttribute("organization", theOrganization);
+        model.addAttribute("latitude", latitude);
+        model.addAttribute("longitude", longitude);
         return "organizationDetails";
     }
 
