@@ -31,7 +31,9 @@ public class Location {
     @NotBlank(message = "Zip must not be empty.")
     @Size(min = 5, max = 5, message = "Zip must contain 5 characters.")
     private String zip;
+    @NotBlank(message = "Sorry, please try again")
     private String latitude;
+    @NotBlank(message = "Sorry, please try again")
     private String longitude;
 
     public String getState() {
@@ -168,5 +170,4 @@ public class Location {
         return "Location{" + "locationId=" + locationId + ", locationName=" + locationName + ", description=" + description + ", address=" + address + ", city=" + city + ", state=" + state + ", zip=" + zip + ", latitude=" + latitude + ", longitude=" + longitude + '}';
     }
 
-    
 }
