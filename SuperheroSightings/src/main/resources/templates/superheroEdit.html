@@ -128,12 +128,23 @@
                                         </div>
                                     </div>
                                     <img th:src="${superhero.photoFileName}" style="height: 250px;" />
-                                    <div class="form-group row">
-                                        <label for="file" class="col-3 col-form-label">
-                                            Profile Picture
-                                        </label>
-                                        <input type="file" name='file' class="form-control-file" />
+
+
+
+                                    <!--                                    <div class="form-group row">
+                                                                            <label for="file" class="col-3 col-form-label">
+                                                                                Profile Picture
+                                                                            </label>
+                                                                            <input type="file" name='file' class="form-control-file" />
+                                                                        </div>-->
+
+                                    <div class="custom-file my-3 text-left col-8 offset-4">
+                                        <input type="file" class="custom-file-input" name = "file" id="file" onchange="$('#nameOfFile').html(this.files[0].name)" >
+                                        <label class="custom-file-label" id="nameOfFile" for="file">Choose file...</label>
                                     </div>
+
+
+
                                     <input type ="hidden" name ="originalFileName" th:value="superhero.photoFileName" id="originalFileName">
                                     <input type="hidden" name="id" th:value="${superhero.superheroId}"/>
                                     <button type="submit" name="action" value="cancel" class = "btn btn-primary mx-3">Cancel</button>
