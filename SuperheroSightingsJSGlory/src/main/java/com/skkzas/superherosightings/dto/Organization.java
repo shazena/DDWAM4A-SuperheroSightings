@@ -26,10 +26,10 @@ public class Organization {
     @NotBlank(message = "Organization phone number must not be empty.")
     @Size(min = 10, max = 10, message = "Organization phone number must contain 10 digits.")
     private String phoneNumber;
-    @NotNull
+    @NotNull(message = "Organization must be at a location")
     @Valid
     private Location location;
-    @NotNull
+    @NotNull(message = "Organization must have at least one member")
     @Valid
     private List<Superhero> listOfSuperheroes = new ArrayList<>();
 

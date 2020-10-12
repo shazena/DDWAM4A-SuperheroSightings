@@ -21,10 +21,10 @@ public class Superhero {
     @NotBlank(message = "Superhero description must not be empty.")
     @Size(max = 255, message = "Superhero description must be at most 255 characters.")
     private String superheroDescription;
-    @NotNull
+    @NotNull(message = "Superhero must have at a power")
     @Valid
     private Power power;
-    
+
     private String photoFileName;
 
     public int getSuperheroId() {

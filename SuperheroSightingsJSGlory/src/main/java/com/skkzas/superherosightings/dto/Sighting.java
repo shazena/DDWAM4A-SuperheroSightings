@@ -22,10 +22,10 @@ public class Sighting {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @PastOrPresent(message = "Date cannot be in the future.")
     private LocalDate date;
-    @NotNull
+    @NotNull(message = "Sighting must be at a location")
     @Valid
     private Location location;
-    @NotNull
+    @NotNull(message = "Sighting must have one Superhero")
     @Valid
     private Superhero superhero;
 
