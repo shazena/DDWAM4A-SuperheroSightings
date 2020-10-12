@@ -3,6 +3,8 @@ package com.skkzas.superherosightings.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -19,6 +21,8 @@ public class Superhero {
     @NotBlank(message = "Superhero description must not be empty.")
     @Size(max = 255, message = "Superhero description must be at most 255 characters.")
     private String superheroDescription;
+    @NotNull
+    @Valid
     private Power power;
     
     private String photoFileName;
