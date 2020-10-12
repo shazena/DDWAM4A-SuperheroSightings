@@ -11,7 +11,7 @@
     <groupId>com.skkzas</groupId>
     <artifactId>SuperheroSightings</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SuperheroSightingsMAIN</name>
+    <name>SuperheroSightingsJSGlory</name>
     <description>Super Hero Sightings Spring Boot Web App</description>
 
     <properties>
