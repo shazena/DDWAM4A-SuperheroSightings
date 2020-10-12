@@ -213,11 +213,17 @@
                 var longitude = lastTenSightings[i].location.longitude;
                 var latitude = lastTenSightings[i].location.latitude;
                 var date = lastTenSightings[i].date;
-//                var theDate = new Date.parse(date);
-//                var dateFormatted = theDate.toLocaleDateString("en-US");
+
+                var d = new Date(date);
+                var ye = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(d);
+                var mo = new Intl.DateTimeFormat('en', {month: 'numeric'}).format(d);
+                var da = new Intl.DateTimeFormat('en', {day: '2-digit'}).format(d);
+//                console.log(mo + "/" + da + "/" + ye);
+                var dateAsString = mo + "/" + da + "/" + ye;
+
                 var superheroName = lastTenSightings[i].superhero.superheroName;
                 var locationName = lastTenSightings[i].location.locationName;
-                var popupContents = date + " " + superheroName + " - " + locationName;
+                var popupContents = dateAsString + " " + superheroName + " - " + locationName;
                 L.marker([latitude, longitude]).addTo(mymap).bindPopup(popupContents).openPopup();
 
             }
