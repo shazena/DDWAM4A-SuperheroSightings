@@ -85,7 +85,11 @@
                 <main role = "main" class = "col-md-9 ml-sm-auto col-lg-10 px-4">
                     <div class = "content" style="margin: 30px;">
 
-
+                        <div class="col-12 m-1 text-center" 
+                             th:if="${!errors.isEmpty()}">
+                            <p class="alert alert-danger" th:each="error : ${errors}" 
+                               th:text="${error.message}">Error message</p>
+                        </div>
                         <div class = "row">
                             <div class = "col-3 text-center">
                                 <h2>Edit Organization</h2>
@@ -99,7 +103,7 @@
                                     <div class = "form-group row">
                                         <label for = "name" class = "col-4 col-form-label">Name</label>
                                         <div class = "col-8">
-                                            <input th:value="${organization.orgName}" type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
+                                            <input th:value="${organization.orgName}" type = "text" name = "name" id = "name" class = "form-control" >
                                         </div>
                                     </div>
 
@@ -114,7 +118,7 @@
                                         <label for="location" class="col-4 col-form-label">
                                             Location</label>
                                         <div class="col-8">
-                                            <select id="location" name="locationId" class="form-control" required>
+                                            <select id="location" name="locationId" class="form-control" >
                                                 <option th:each="location : ${locations}"
                                                         th:value="${location.locationId}"
                                                         th:text="${location.locationName}"
@@ -127,7 +131,7 @@
                                     <div class="form-group row">
                                         <label for="description" class="col-4 col-form-label">Organization Description</label>
                                         <div class="col-8">
-                                            <textarea name="description" id="description" class="form-control"  maxlength = "255" required>[[${organization.description}]]</textarea>
+                                            <textarea name="description" id="description" class="form-control">[[${organization.description}]]</textarea>
                                         </div>
                                     </div>
 
@@ -136,7 +140,7 @@
                                             Superheroes</label>
                                         <div class="col-8">
                                             <select multiple id="superheroes" name="superheroId"
-                                                    class="form-control" required>
+                                                    class="form-control" >
                                                 <option th:each="superhero : ${superheroes}"
                                                         th:value="${superhero.superheroId}"
                                                         th:text="${superhero.superheroName}"
