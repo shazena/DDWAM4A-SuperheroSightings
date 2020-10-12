@@ -112,8 +112,27 @@ public class SightingController {
 
         model.addAttribute(sighting);
 
-        //TODO get the map to show up on this page too!!!
         return "sightingDetails";
+    }
+
+    @PostMapping("sightingSearchByDate")
+    public String getSightingsForDate(HttpServletRequest request, Model model) {
+
+        //get the date and parse it
+        String dateFromPage = request.getParameter("dateForSearch");
+
+        LocalDate dateOfSighting;
+        if (dateFromPage == null || dateFromPage.isBlank()) {
+            dateOfSighting = null;
+        } else {
+            dateOfSighting = LocalDate.parse(dateFromPage, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+
+        List<Sighting> allSightingsForDate = sightingDao.getAllSightingsForDate(dateOfSighting);
+
+        model.addAttribute("sightings", allSightingsForDate);
+
+        return "sightingsForDate";
     }
 
     @GetMapping("sightingDelete")

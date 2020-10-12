@@ -229,20 +229,21 @@
                                                 <!--<input name = "delete-dvd-id" id = "delete-dvd-id" type = "hidden">-->
 
                                             </div>
+                                            <form action="sightingSearchByDate" method="POST">
+                                                <input class="m-4" type="date" name ="dateForSearch" id="dateForSearch"/>
 
-                                            <input class="m-4" type="date" name ="dateForSearch" id="dateForSearch"/>
 
 
-
-                                            <div class = "row" style = "justify-content: center;">
-                                                <button type = "button" class = "btn btn-secondary"
-                                                        data-dismiss = "modal">Cancel
-                                                </button>
-                                                <button type = "submit" class = "btn btn-primary mx-2"
-                                                        id = "submitButton"
-                                                        data-toggle = "modal">Search for Sightings
-                                                </button>
-                                            </div>
+                                                <div class = "row" style = "justify-content: center;">
+                                                    <button type = "button" class = "btn btn-secondary"
+                                                            data-dismiss = "modal">Cancel
+                                                    </button>
+                                                    <button type = "submit" class = "btn btn-primary mx-2"
+                                                            id = "submitButton"
+                                                            data-toggle = "modal">Search for Sightings
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div> <!--end of modal body-->
                                     </div> <!-- end of modal content-->
                                 </div> <!--end of modal dialogue-->
