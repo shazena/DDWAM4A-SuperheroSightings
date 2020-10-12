@@ -2,6 +2,7 @@ package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.*;
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,7 +78,6 @@ public class LocationController {
         location.setLatitude(latitude);
         location.setLongitude(longitude);
 
-
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
         violations = validate.validate(location);
 
@@ -92,8 +92,18 @@ public class LocationController {
     @GetMapping("locationDetails")
     public String locationDetails(Integer id, Model model) {
         Location theLocation = locationDao.getLocationById(id);
+        BigDecimal latitude = new BigDecimal(theLocation.getLatitude());
+        BigDecimal longitude = new BigDecimal(theLocation.getLongitude());
+        String locationName = theLocation.getLocationName();
+
+        List<Superhero> allSuperheroesForLocation = superheroDao.getAllSuperheroesForLocation(theLocation);
+
         model.addAttribute("location", theLocation);
-        //get the map to show up on this page too!!!
+        model.addAttribute("latitude", latitude);
+        model.addAttribute("longitude", longitude);
+        model.addAttribute("locationName", locationName);
+        model.addAttribute("superheroes", allSuperheroesForLocation);
+
         return "locationDetails";
     }
 
