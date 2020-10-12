@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 /**
  *
@@ -38,6 +43,9 @@ public class SightingController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Sighting>> violations = new HashSet<>();
+    Set<ConstraintViolation<Sighting>> violationsEdit = new HashSet<>();
+
     @GetMapping("sightings")
     public String displayAllSightings(Model model) {
 
@@ -50,22 +58,30 @@ public class SightingController {
         model.addAttribute("allSuperheroes", allSuperheroes);
         model.addAttribute("allLocations", allLocations);
         model.addAttribute("allPowers", allPowers);
+        violations.clear();
+        model.addAttribute("errors", violations);
 
         return "sightings";
     }
 
     @PostMapping("addSighting")
-    public String addLocation(HttpServletRequest request) {
+    public String addSighting(Model model, HttpServletRequest request) {
 
         //get the date and parse it
         String dateFromPage = request.getParameter("date");
-        LocalDate dateOfSighting = LocalDate.parse(dateFromPage, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate dateOfSighting;
+        if (dateFromPage == null || dateFromPage.isBlank()) {
+            dateOfSighting = null;
+        } else {
+            dateOfSighting = LocalDate.parse(dateFromPage, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
 
         //get the superhero And Power
         Power power = new Power();
         Superhero superhero = new Superhero();
 
         String superheroId = request.getParameter("superheroExisting");
+
         if (superheroId != null) {
             superhero = superheroDao.getSuperheroById(Integer.parseInt(superheroId));
         } else {
@@ -78,15 +94,12 @@ public class SightingController {
             } else {
                 String powerName = request.getParameter("powerName");
                 power.setPowerName(powerName);
-                power = powerDao.addPower(power);
+//                power = powerDao.addPower(power);
             }
-
             superhero.setSuperheroName(superheroName);
             superhero.setPower(power);
             superhero.setSuperheroDescription(superheroDescription);
-
-            superhero = superheroDao.addSuperhero(superhero);
-        }
+        }//end of else
 
         //get the location
         Location location = new Location();
@@ -114,15 +127,44 @@ public class SightingController {
             location.setLongitude(longitude);
             location.setLatitude(latitude);
 
-            locationDao.addLocation(location);
         }
 
         Sighting sighting = new Sighting();
         sighting.setDate(dateOfSighting);
         sighting.setLocation(location);
         sighting.setSuperhero(superhero);
-        sightingDao.addSighting(sighting);
-        return "redirect:/sightings";
+
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(sighting);
+
+        if (violations.isEmpty()) {
+            if (sighting.getSuperhero().getPower().getPowerId() == 0) {
+                power = powerDao.addPower(power);
+            }
+            if (sighting.getSuperhero().getSuperheroId() == 0) {
+                superhero = superheroDao.addSuperhero(superhero);
+            }
+            if (location.getLocationId() == 0) {
+                location = locationDao.addLocation(location);
+            }
+            sightingDao.addSighting(sighting);
+
+            return "redirect:/sightings";
+
+        } else {
+            List<Sighting> allSightings = sightingDao.getAllSightings();
+            List<Superhero> allSuperheroes = superheroDao.getAllSuperheros();
+            List<Location> allLocations = locationDao.getAllLocations();
+            List<Power> allPowers = powerDao.getAllPowers();
+
+            model.addAttribute("allSightings", allSightings);
+            model.addAttribute("allSuperheroes", allSuperheroes);
+            model.addAttribute("allLocations", allLocations);
+            model.addAttribute("allPowers", allPowers);
+            model.addAttribute("errors", violations);
+            return "sightings";
+        }
+
     }
 
     @GetMapping("sightingDetails")
@@ -131,7 +173,6 @@ public class SightingController {
 
         model.addAttribute(sighting);
 
-        //TODO get the map to show up on this page too!!!
         return "sightingDetails";
     }
 
@@ -171,12 +212,14 @@ public class SightingController {
         model.addAttribute("sighting", sighting);
         model.addAttribute("allSuperheroes", allSuperheroes);
         model.addAttribute("allLocations", allLocations);
+        violationsEdit.clear();
+        model.addAttribute("errors", violationsEdit);
 
         return "sightingEdit";
     }
 
     @PostMapping("sightingEdit")
-    public String performSightingEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    public String performSightingEdit(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/sightings";
         }
@@ -185,7 +228,13 @@ public class SightingController {
         Sighting sighting = sightingDao.getSightingById(id);
 
         String date = request.getParameter("date");
-        LocalDate dateOfSighting = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate dateOfSighting;
+        if (date == null || date.isBlank()) {
+            dateOfSighting = null;
+        } else {
+            dateOfSighting = LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+
         String superheroId = request.getParameter("superheroId");
         String locationId = request.getParameter("locationId");
 
@@ -193,9 +242,19 @@ public class SightingController {
         sighting.setSuperhero(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
         sighting.setLocation(locationDao.getLocationById(Integer.parseInt(locationId)));
 
-        sightingDao.updateSighting(sighting);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(sighting);
 
-        return "redirect:/sightingDetails?id=" + sighting.getSightingId();
+        if (violationsEdit.isEmpty()) {
+            sightingDao.updateSighting(sighting);
+            return "redirect:/sightingDetails?id=" + sighting.getSightingId();
+        } else {
+            model.addAttribute("sighting", sighting);
+            model.addAttribute("allSuperheroes", superheroDao.getAllSuperheros());
+            model.addAttribute("allLocations", locationDao.getAllLocations());
+            model.addAttribute("errors", violationsEdit);
+            return "sightingEdit";
+        }
     }
 
 }

@@ -5,6 +5,8 @@ import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -24,7 +26,11 @@ public class Organization {
     @NotBlank(message = "Organization phone number must not be empty.")
     @Size(min = 10, max = 10, message = "Organization phone number must contain 10 digits.")
     private String phoneNumber;
+    @NotNull(message = "Organization must be at a location")
+    @Valid
     private Location location;
+    @NotNull(message = "Organization must have at least one member")
+    @Valid
     private List<Superhero> listOfSuperheroes = new ArrayList<>();
 
     public int getOrgId() {

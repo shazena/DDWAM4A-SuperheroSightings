@@ -14,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 /**
  *
@@ -40,17 +45,22 @@ public class LocationController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Location>> violations = new HashSet<>();
+    Set<ConstraintViolation<Location>> violationsEdit = new HashSet<>();
+
     @GetMapping("locations")
     public String displayAllLocations(Model model) {
         List<Location> allLocations = locationDao.getAllLocations();
 
         model.addAttribute("allLocations", allLocations);
+        violations.clear();
+        model.addAttribute("errors", violations);
 
         return "locations";
     }
 
     @PostMapping("addLocation")
-    public String addLocation(HttpServletRequest request) {
+    public String addLocation(Model model, HttpServletRequest request) {
 
         String locationName = request.getParameter("locationName");
         String address = request.getParameter("address");
@@ -71,16 +81,25 @@ public class LocationController {
         location.setLongitude(longitude);
         location.setLatitude(latitude);
 
-        //FIXME: User can try to get the map even though all fields are not filled out!
-        locationDao.addLocation(location);
-        return "redirect:/locations";
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(location);
+
+        if (violations.isEmpty()) {
+            locationDao.addLocation(location);
+            return "redirect:/locations";
+        } else {
+            List<Location> allLocations = locationDao.getAllLocations();
+            model.addAttribute("allLocations", allLocations);
+            model.addAttribute("errors", violations);
+            return "locations";
+        }
+
     }
 
     @GetMapping("locationDetails")
     public String locationDetails(Integer id, Model model) {
         Location theLocation = locationDao.getLocationById(id);
         model.addAttribute("location", theLocation);
-        //get the map to show up on this page too!!!
         return "locationDetails";
     }
 
@@ -88,12 +107,14 @@ public class LocationController {
     public String editLocation(Integer id, Model model) {
         Location location = locationDao.getLocationById(id);
         model.addAttribute("location", location);
+        violationsEdit.clear();
+        model.addAttribute("errors", violationsEdit);
 
         return "locationEdit";
     }
 
     @PostMapping("locationEdit")
-    public String performLocationEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    public String performLocationEdit(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/locations";
         }
@@ -121,9 +142,19 @@ public class LocationController {
         location.setLongitude(longitude);
         location.setLatitude(latitude);
 
-        locationDao.updateLocation(location);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(location);
 
-        return "redirect:/locationDetails?id=" + location.getLocationId();
+        if (violationsEdit.isEmpty()) {
+            locationDao.updateLocation(location);
+            return "redirect:/locationDetails?id=" + location.getLocationId();
+        } else {
+            model.addAttribute("location", location);
+            model.addAttribute("errors", violationsEdit);
+
+            return "locationEdit";
+        }
+
     }
 
     @GetMapping("locationDelete")

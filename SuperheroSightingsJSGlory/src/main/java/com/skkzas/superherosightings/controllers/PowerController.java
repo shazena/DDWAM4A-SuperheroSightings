@@ -46,33 +46,42 @@ public class PowerController {
     SightingDao sightingDao;
 
     Set<ConstraintViolation<Power>> violations = new HashSet<>();
+    Set<ConstraintViolation<Power>> violationsEdit = new HashSet<>();
 
     @GetMapping("powers")
     public String displayAllPowers(Model model) {
         List<Power> allPowers = powerDao.getAllPowers();
 
         model.addAttribute("allPowers", allPowers);
+        violations.clear();
         model.addAttribute("errors", violations);
 
         return "powers";
     }
 
     @PostMapping("addPower")
-    public String addPower(HttpServletRequest request) {
+    public String addPower(Model model, HttpServletRequest request) {
         String name = request.getParameter("name");
 
         Power power = new Power();
         power.setPowerName(name);
 
-//        powerDao.addPower(power);
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
         violations = validate.validate(power);
 
         if (violations.isEmpty()) {
-            powerDao.addPower(power);
         }
 
-        return "redirect:/powers";
+        if (violations.isEmpty()) {
+            powerDao.addPower(power);
+            return "redirect:/powers";
+        } else {
+            List<Power> allPowers = powerDao.getAllPowers();
+            model.addAttribute("allPowers", allPowers);
+            model.addAttribute("errors", violations);
+            return "powers";
+        }
+
     }
 
     @GetMapping("powerDelete")
@@ -109,11 +118,13 @@ public class PowerController {
         Power power = powerDao.getPowerById(id);
 
         model.addAttribute("power", power);
+        violationsEdit.clear();
+        model.addAttribute("errors", violationsEdit);
         return "powerEdit";
     }
 
     @PostMapping("powerEdit")
-    public String performEditPower(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    public String performEditPower(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/powers";
         }
@@ -123,8 +134,17 @@ public class PowerController {
 
         power.setPowerName(request.getParameter("name"));
 
-        powerDao.updatePower(power);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(power);
 
-        return "redirect:/powers";
+        if (violationsEdit.isEmpty()) {
+            powerDao.updatePower(power);
+            return "redirect:/powers";
+        } else {
+            model.addAttribute("power", power);
+            model.addAttribute("errors", violationsEdit);
+            return "powerEdit";
+        }
+
     }
 }

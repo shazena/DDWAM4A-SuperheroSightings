@@ -19,7 +19,7 @@
         <style th:inline = "text">
             .sidebar {
                 /*Each page will get a different image for the sidebar. Change the image in the URL property below*/
-                background-image: url([[@{/images/SSightingsF.jpg}]]);
+                background-image: url([[@{/images/SightingsF.jpg}]]);
                 background-position: bottom;
                 background-repeat: no-repeat;
                 background-size: 50%;
@@ -85,7 +85,11 @@
                 <main role = "main" class = "col-md-9 ml-sm-auto col-lg-10 px-4">
                     <div class = "content" style="margin: 30px;">
 
-
+                        <div class="col-12 m-1 text-center" 
+                             th:if="${!errors.isEmpty()}">
+                            <p class="alert alert-danger" th:each="error : ${errors}" 
+                               th:text="${error.message}">Error message</p>
+                        </div>
                         <div class = "row">
                             <div class = "col-3 text-center">
                                 <h2>Edit Sighting</h2>

@@ -3,6 +3,7 @@ package com.skkzas.superherosightings.controllers;
 import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
+import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Superhero;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,7 +14,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 
 /**
  *
@@ -39,6 +45,9 @@ public class OrganizationController {
     @Autowired
     SightingDao sightingDao;
 
+    Set<ConstraintViolation<Organization>> violations = new HashSet<>();
+    Set<ConstraintViolation<Organization>> violationsEdit = new HashSet<>();
+
     @GetMapping("organizations")
     public String displayAllOrganizations(Model model) {
         List<Organization> allOrganizations = organizationDao.getAllOrganizations();
@@ -60,12 +69,14 @@ public class OrganizationController {
         model.addAttribute("allOrganizations", allOrganizations);
         model.addAttribute("locations", locations);
         model.addAttribute("superheroes", superheroes);
+        violations.clear();
+        model.addAttribute("errors", violations);
 
         return "organizations";
     }
 
     @PostMapping("addOrganization")
-    public String addOrganization(Organization organization, HttpServletRequest request) {
+    public String addOrganization(Model model, Organization organization, HttpServletRequest request) {
         String name = request.getParameter("name");
 
         String phoneFormatted = request.getParameter("phoneNum");
@@ -76,8 +87,13 @@ public class OrganizationController {
         String[] superheroIds = request.getParameterValues("superheroId");
 
         List<Superhero> superheroes = new ArrayList<>();
-        for (String superheroId : superheroIds) {
-            superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+        if (superheroIds != null) {
+
+            for (String superheroId : superheroIds) {
+                superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+            }
+        } else {
+            superheroes = null;
         }
 
         //get the location
@@ -106,7 +122,7 @@ public class OrganizationController {
             location.setLongitude(longitude);
             location.setLatitude(latitude);
 
-            locationDao.addLocation(location);
+//            locationDao.addLocation(location);
         }
 
         organization.setOrgName(name);
@@ -115,9 +131,41 @@ public class OrganizationController {
         organization.setDescription(description);
         organization.setListOfSuperheroes(superheroes);
 
-        organizationDao.addOrganization(organization);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violations = validate.validate(organization);
 
-        return "redirect:/organizations";
+        if (violations.isEmpty()) {
+            if (organization.getLocation().getLocationId() == 0) {
+                location = locationDao.addLocation(location);
+            }
+            organizationDao.addOrganization(organization);
+            return "redirect:/organizations";
+        } else {
+            List<Organization> allOrganizations = organizationDao.getAllOrganizations();
+            List<Location> locations = locationDao.getAllLocations();
+            List<Superhero> allSuperheroes = superheroDao.getAllSuperheros();
+
+            for (Organization org : allOrganizations) {
+
+                String unformattedPhoneNumber = org.getPhoneNumber();
+                String formattedPhoneNumber = "("
+                        + unformattedPhoneNumber.substring(0, 3)
+                        + ") "
+                        + unformattedPhoneNumber.substring(3, 6)
+                        + "-"
+                        + unformattedPhoneNumber.substring(6, 10);
+                org.setPhoneNumber(formattedPhoneNumber);
+            }
+
+            model.addAttribute("allOrganizations", allOrganizations);
+            model.addAttribute("locations", locations);
+            model.addAttribute("superheroes", allSuperheroes);
+            model.addAttribute("errors", violations);
+            return "organizations";
+        }
+
+//        organizationDao.addOrganization(organization);
+//        return "redirect:/organizations";
     }
 
     @GetMapping("organizationDetails")
@@ -170,11 +218,14 @@ public class OrganizationController {
         model.addAttribute("superheroes", superheroes);
         model.addAttribute("formattedPhoneNumber", formattedPhoneNumber);
 
+        violationsEdit.clear();
+        model.addAttribute("errors", violationsEdit);
+
         return "organizationEdit";
     }
 
-    @PostMapping("organizationEdit")
-    public String performSuperheroEdit(HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
+    @PostMapping(path = "organizationEdit", consumes = "application/x-www-form-urlencoded")
+    public String performOrganizationEdit(Model model, HttpServletRequest request, @RequestParam(value = "action", required = true) String action) {
         if (action.equals("cancel")) {
             return "redirect:/organizations";
         }
@@ -183,7 +234,10 @@ public class OrganizationController {
         Organization organization = organizationDao.getOrganizationById(id);
         String name = request.getParameter("name");
         String phoneFormatted = request.getParameter("phoneNum");
-        String phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
+        String phoneUnformatted = "";
+        if (!phoneFormatted.equals("")) {
+            phoneUnformatted = phoneFormatted.replaceAll("[^\\d.]", "");
+        }
 
         String locationId = request.getParameter("locationId");
         String description = request.getParameter("description");
@@ -195,13 +249,49 @@ public class OrganizationController {
         organization.setDescription(description);
 
         List<Superhero> superheroes = new ArrayList<>();
-        for (String superheroId : superheroIds) {
-            superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+        if (superheroIds != null) {
+            for (String superheroId : superheroIds) {
+                superheroes.add(superheroDao.getSuperheroById(Integer.parseInt(superheroId)));
+            }
+        } else {
+            superheroes = null;
         }
         organization.setListOfSuperheroes(superheroes);
 
-        organizationDao.updateOrganization(organization);
+        Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
+        violationsEdit = validate.validate(organization);
 
-        return "redirect:/organizationDetails?id=" + organization.getOrgId();
+        if (violationsEdit.isEmpty()) {
+            organizationDao.updateOrganization(organization);
+            return "redirect:/organizationDetails?id=" + organization.getOrgId();
+
+        } else {
+            List<Location> locations = locationDao.getAllLocations();
+            List<Superhero> allSuperheroes = superheroDao.getAllSuperheros();
+
+            String unformattedPhoneNumber = organization.getPhoneNumber();
+            String formattedPhoneNumber = "";
+            if (unformattedPhoneNumber.length() == 10) {
+                formattedPhoneNumber = "("
+                        + unformattedPhoneNumber.substring(0, 3)
+                        + ") "
+                        + unformattedPhoneNumber.substring(3, 6)
+                        + "-"
+                        + unformattedPhoneNumber.substring(6, 10);
+            }
+            organization.setPhoneNumber(formattedPhoneNumber);
+            if (organization.getListOfSuperheroes() == null) {
+                organization.setListOfSuperheroes(new ArrayList<Superhero>());
+            }
+
+            model.addAttribute("locations", locations);
+            model.addAttribute("superheroes", allSuperheroes);
+            model.addAttribute("formattedPhoneNumber", formattedPhoneNumber);
+            model.addAttribute("organization", organization);
+
+            model.addAttribute("errors", violationsEdit);
+            return "organizationEdit";
+        }
+
     }
 }

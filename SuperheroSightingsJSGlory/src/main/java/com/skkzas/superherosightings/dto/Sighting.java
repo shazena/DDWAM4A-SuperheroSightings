@@ -5,6 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 
 /**
  *
@@ -15,10 +18,15 @@ import java.util.Objects;
 public class Sighting {
 
     private int sightingId;
-    @NotBlank(message = "Date must not be empty.")
+    @NotNull(message = "Date must be selected.")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @PastOrPresent(message = "Date cannot be in the future.")
     private LocalDate date;
+    @NotNull(message = "Sighting must be at a location")
+    @Valid
     private Location location;
+    @NotNull(message = "Sighting must have one Superhero")
+    @Valid
     private Superhero superhero;
 
     public int getSightingId() {

@@ -130,11 +130,15 @@
                             <!--BEGIN ADD FORM-->
 
                             <form action = "addSuperhero" method = "POST" enctype="multipart/form-data">
-
+                                <div class="col-12 m-1 text-center" 
+                                     th:if="${!errors.isEmpty()}">
+                                    <p class="alert alert-danger" th:each="error : ${errors}" 
+                                       th:text="${error.message}">Error message</p>
+                                </div>
                                 <div class = "form-group row">
                                     <label for = "name" class = "col-3 col-form-label">Name</label>
                                     <div class = "col-9">
-                                        <input type = "text" name = "name" id = "name" class = "form-control" maxlength = "50" required>
+                                        <input type = "text" name = "name" id = "name" class = "form-control">
                                     </div>
                                 </div>
 
@@ -171,7 +175,7 @@
                                     <label for = "powerName" id = "powerNameLabel"
                                            class = "col-3 col-form-label">Power</label>
                                     <div class = "col-9">
-                                        <input type = "text" name = "powerName" id = "powerName" class = "form-control" maxlength = "50">
+                                        <input type = "text" name = "powerName" id = "powerName" class = "form-control">
                                     </div>
                                 </div>
                                 <!--END POWER NAME ENTRY-->
@@ -181,15 +185,20 @@
                                     <label for = "superheroDescription" class = "col-3 col-form-label">Description</label>
                                     <div class = "col-9">
                                         <textarea name = "superheroDescription" id = "superheroDescription"
-                                                  class = "form-control" maxlength = "255" required></textarea>
+                                                  class = "form-control"></textarea>
                                     </div>
                                 </div>
-                                <div class="form-group row">
-                                    <label for="file" class="col-3 col-form-label">
-                                        Picture
-                                    </label>
-                                    <input type="file" name='file' class="form-control-file" />
+
+                                <div class="custom-file my-3 text-left">
+                                    <input type="file" class="custom-file-input" name = "file" id="file" onchange="$('#nameOfFile').html(this.files[0].name)" >
+                                    <label class="custom-file-label" id="nameOfFile" for="file">Choose file...</label>
                                 </div>
+                                <!--                                <div class="form-group row">
+                                                                    <label for="file" class="col-3 col-form-label">
+                                                                        Picture
+                                                                    </label>
+                                                                    <input type="file" name='file' class="form-control-file" />
+                                                                </div>-->
                                 <button type = "submit" class = "btn btn-primary">Add Superhero</button>
                             </form>
 
@@ -213,60 +222,60 @@
         crossorigin = "anonymous"></script>
 
         <script>
-                                            //For Hiding and Showing various form inputs
+                                        //For Hiding and Showing various form inputs
 
-                                            //individual inputs
-                                            var powerExistingInput = document.getElementById('powerExisting');
-                                            var powerNameInput = document.getElementById('powerName');
+                                        //individual inputs
+                                        var powerExistingInput = document.getElementById('powerExisting');
+                                        var powerNameInput = document.getElementById('powerName');
 
-                                            var powerExistingDiv = document.getElementById('powerExistingDiv');
-                                            var powerNameDiv = document.getElementById('powerNameDiv');
+                                        var powerExistingDiv = document.getElementById('powerExistingDiv');
+                                        var powerNameDiv = document.getElementById('powerNameDiv');
 
-                                            //2 power buttons
-                                            var powerChangeToNewPowerButton = document.getElementById('powerChangeToNewPower');
-                                            var powerChangeToSelectPowerButton = document.getElementById('powerChangeToSelectPower');
-
-
-                                            function hideExtraFields() {
-                                                //set display status of items on page
-                                                powerNameDiv.style.display = 'none';
-                                                powerChangeToSelectPowerButton.style.display = 'none';
-
-                                                //set required on certain elements
-                                                powerExistingInput.required = true;
-                                                powerNameInput.required = false;
-
-                                            }
+                                        //2 power buttons
+                                        var powerChangeToNewPowerButton = document.getElementById('powerChangeToNewPower');
+                                        var powerChangeToSelectPowerButton = document.getElementById('powerChangeToSelectPower');
 
 
-                                            function changeToNewPowerInput() {
-                                                powerExistingDiv.style.display = 'none';
-                                                powerChangeToNewPowerButton.style.display = 'none';
-                                                powerChangeToSelectPowerButton.style.display = 'inherit';
-                                                powerNameDiv.style.display = 'flex';
+                                        function hideExtraFields() {
+                                            //set display status of items on page
+                                            powerNameDiv.style.display = 'none';
+                                            powerChangeToSelectPowerButton.style.display = 'none';
 
-                                                //required fields
-                                                powerExistingInput.required = false;
-                                                powerNameInput.required = true;
+                                            //set required on certain elements
+                                            powerExistingInput.required = true;
+                                            powerNameInput.required = false;
 
-                                                //clear values of fields that were hidden
-                                                powerExistingInput.value = "?!?";
-                                            }
+                                        }
 
-                                            function changeToSelectPowerInput() {
-                                                powerExistingDiv.style.display = 'flex';
-                                                powerChangeToNewPowerButton.style.display = 'inherit';
-                                                powerChangeToSelectPowerButton.style.display = 'none';
-                                                powerNameDiv.style.display = 'none';
 
-                                                //required fields
-                                                powerExistingInput.required = true;
-                                                powerNameInput.required = false;
+                                        function changeToNewPowerInput() {
+                                            powerExistingDiv.style.display = 'none';
+                                            powerChangeToNewPowerButton.style.display = 'none';
+                                            powerChangeToSelectPowerButton.style.display = 'inherit';
+                                            powerNameDiv.style.display = 'flex';
 
-                                                //clear values of fields that were hidden
-                                                powerNameInput.value = "";
+                                            //required fields
+                                            powerExistingInput.required = false;
+                                            powerNameInput.required = true;
 
-                                            }
+                                            //clear values of fields that were hidden
+                                            powerExistingInput.value = "?!?";
+                                        }
+
+                                        function changeToSelectPowerInput() {
+                                            powerExistingDiv.style.display = 'flex';
+                                            powerChangeToNewPowerButton.style.display = 'inherit';
+                                            powerChangeToSelectPowerButton.style.display = 'none';
+                                            powerNameDiv.style.display = 'none';
+
+                                            //required fields
+                                            powerExistingInput.required = true;
+                                            powerNameInput.required = false;
+
+                                            //clear values of fields that were hidden
+                                            powerNameInput.value = "";
+
+                                        }
 
 
         </script>
