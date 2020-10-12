@@ -5,6 +5,7 @@ import com.skkzas.superherosightings.dto.Location;
 import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
+import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -96,12 +97,20 @@ public class LocationController {
 
     }
 
-    @GetMapping("locationDetails")
-    public String locationDetails(Integer id, Model model) {
-        Location theLocation = locationDao.getLocationById(id);
-        model.addAttribute("location", theLocation);
-        return "locationDetails";
-    }
+	@GetMapping("locationDetails")
+	public String locationDetails(Integer id, Model model) {
+	Location theLocation = locationDao.getLocationById(id);
+	BigDecimal latitude = new BigDecimal(theLocation.getLatitude());
+	BigDecimal longitude = new BigDecimal(theLocation.getLongitude());
+	String locationName = theLocation.getLocationName();
+	List<Superhero> allSuperheroesForLocation = superheroDao.getAllSuperheroesForLocation(theLocation);
+	model.addAttribute("location", theLocation);
+	model.addAttribute("latitude", latitude);
+	model.addAttribute("longitude", longitude);
+	model.addAttribute("locationName", locationName);
+	model.addAttribute("superheroes", allSuperheroesForLocation);
+	return "locationDetails";
+	}
 
     @GetMapping("locationEdit")
     public String editLocation(Integer id, Model model) {

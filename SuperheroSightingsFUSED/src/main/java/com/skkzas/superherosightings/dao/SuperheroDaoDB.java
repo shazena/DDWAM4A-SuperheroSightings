@@ -119,7 +119,8 @@ public class SuperheroDaoDB implements SuperheroDao {
         final String SELECT_SUPERHEROES_FOR_LOCATION = "SELECT * FROM Superhero su "
                 + "JOIN Sighting si ON su.SuperheroId = si.SuperheroId "
                 + "JOIN Location l ON si.LocationId = l.LocationId "
-                + "WHERE l.LocationId = ?";
+                + "WHERE l.LocationId = ? "
+	+ "GROUP BY su.superheroID ";
         List<Superhero> superheroesForLocation = jdbc.query(SELECT_SUPERHEROES_FOR_LOCATION, new SuperheroMapper(), location.getLocationId());
         for (Superhero superhero : superheroesForLocation) {
             superhero.setPower(getPowerForSuperhero(superhero.getSuperheroId()));

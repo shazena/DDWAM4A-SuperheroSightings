@@ -91,7 +91,13 @@
 
                             <!--TABLE HEADING BEGIN-->
 
-                            <h2>Sightings</h2>
+                            <div class="row" style="position: relative; justify-content: center;"><h2>Sightings</h2>
+	<span style="position:absolute; right: 0; top:0;">
+	<button id = "searchByDate" type = "button"
+	value = "search" class = "btn btn-outline-primary" onclick = "showDateSelectionModal()">
+	Search By Date
+	</button>
+	</span></div>
 
                             <!--TABLE HEADING END-->
 
@@ -383,6 +389,43 @@
                             </form>
 
                             <!-- END OF FORM -->
+<!--BEGIN MODAL-->
+	<div class = "modal fade" id = "dateSelectionModal" tabindex = "-1" role = "dialog"
+	aria-labelledby = "locationConfirmationModalLabel" aria-hidden = "true">
+	<div class = "modal-dialog modal-lg" role = "document">
+	<div class = "modal-content">
+	<div class = "modal-header">
+	<h5 class = "modal-title" id = "locationConfirmationModalLabel">
+	Date Selection for Sighting Search</h5>
+	<button type = "button" class = "close" data-dismiss = "modal"
+	aria-label = "Close">
+	<span aria-hidden = "true">&times;</span>
+	</button>
+	</div> <!--end of modal header-->
+	<div class = "modal-body">
+	<div class = "row">
+	<!--<input name = "delete-dvd-id" id = "delete-dvd-id" type = "hidden">-->
+	
+	</div>
+	<form action="sightingSearchByDate" method="POST">
+	<input class="m-4" type="date" name ="dateForSearch" id="dateForSearch"/>
+	<div class = "row" style = "justify-content: center;">
+	<button type = "button" class = "btn btn-secondary"
+	
+	data-dismiss = "modal">Cancel
+	</button>
+	<button type = "submit" class = "btn btn-primary mx-2"
+	id = "submitButton"
+	data-toggle = "modal">Search for Sightings
+	</button>
+	</div>
+	</form>
+	</div> <!--end of modal body-->
+	</div> <!-- end of modal content-->
+	</div> <!--end of modal dialogue-->
+	</div>
+	<!--END MODAL-->
+	
                         </div>
                     </div>
 
@@ -420,6 +463,11 @@
 
                                                 today = yyyy + '-' + mm + '-' + dd;
                                                 document.getElementById("date").setAttribute("max", today);
+	document.getElementById("dateForSearch").setAttribute("max", today);
+
+function showDateSelectionModal() {
+	$('#dateSelectionModal').modal('show');
+	$('#dateSelectionModal').on('shown.bs.modal', function () {});}
         </script>
 
         <script>

@@ -2,6 +2,7 @@ package com.skkzas.superherosightings.controllers;
 
 import com.skkzas.superherosightings.dao.*;
 import com.skkzas.superherosightings.dto.Location;
+import com.skkzas.superherosightings.dto.Organization;
 import com.skkzas.superherosightings.dto.Power;
 import com.skkzas.superherosightings.dto.Sighting;
 import com.skkzas.superherosightings.dto.Superhero;
@@ -112,12 +113,26 @@ public class SuperheroController {
 
     }
 
-    @GetMapping("superheroDetails")
-    public String superheroDetails(Integer id, Model model) {
-        Superhero theSuperhero = superheroDao.getSuperheroById(id);
-        model.addAttribute("superhero", theSuperhero);
-        return "superheroDetails";
-    }
+  @GetMapping("superheroDetails")
+	    public String superheroDetails(Integer id, Model model) {
+	        Superhero theSuperhero = superheroDao.getSuperheroById(id);
+	
+	        ArrayList<Superhero> listOfSuperheroes = new ArrayList<Superhero>();
+	        listOfSuperheroes.add(theSuperhero);
+	        List<Sighting> allSightingsForSuperhero = sightingDao.getAllSightingsForListOfSuperheros(listOfSuperheroes);
+	
+	        List<Organization> organizationsForSuperhero = organizationDao.getOrganizationsForSuperhero(theSuperhero);
+	
+	        ////
+	        List<Superhero> allSuperheros = superheroDao.getAllSuperheros();
+	        model.addAttribute("superheroes", allSuperheros);
+	        //
+	
+	        model.addAttribute("superhero", theSuperhero);
+	        model.addAttribute("sightings", allSightingsForSuperhero);
+	        model.addAttribute("organizations", organizationsForSuperhero);
+	        return "superheroDetails";
+	    }
 
     @GetMapping("superheroDelete")
     public String deleteSuperhero(HttpServletRequest request, Model model) {
