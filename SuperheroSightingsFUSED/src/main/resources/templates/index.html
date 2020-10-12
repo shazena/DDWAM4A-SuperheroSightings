@@ -54,7 +54,7 @@
     <body>
 
         <nav class = "navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-            <a class = "navbar-brand col-sm-3 col-md-2 mr-0" href = "/">Superhero Tracker</a>
+            <a class = "navbar-brand col-sm-3 col-md-2 mr-0" href = "/"><img src="/images/HERO-Logo.png" style="height:30px;"/> Superhero Tracker</a>
         </nav>
 
         <div class = "container-fluid">
@@ -104,24 +104,24 @@
                                 </div>
                                 <div class="modal-body">
                                     <img th:src="@{/images/HERO-Logo.png}" style="width: 30%; float:left;"/>
-                                    	<p>
-	Welcome to the Hero Education and Relationship Organization (HERO)
-	Superhero Tracker App where we keep track of Superheroes, Powers, Locations,
-	Organizations, and of course, Sightings! We have all of your Superhero Tracking
-	needs covered!
-	<br/><br/>
-	This Superhero Tracker is a Fullstack Web application that tracks Superheroes,
-	Powers, Sightings, Organizations, and Locations. It was developed using Java,
-	Spring Boot, JavaScript, Thymeleaf, SQL, and Bootstrap.
-	<br/><br/>
-	Special Thanks to: <a href="http://leafletjs.com">Leaflet JS</a>,
-	<a href ="https://www.openstreetmap.org/">OpenStreetMap</a>, and
-	<a href = "http://mapbox.com">Mapbox</a> for the maps,
-	<a href ="https://getbootstrap.com/">Bootstrap</a> for handling practically all of the CSS,
-	<a href="http://github.com">Github</a> for saving us more times than we can count,
-	and all the users of <a href = "http://stackoverflow.com">StackOverflow</a> for asking
-	all those questions all those years ago to help us future coders.
-	</p>
+                                    <p>
+                                        Welcome to the Hero Education and Relationship Organization (HERO)
+                                        Superhero Tracker App where we keep track of Superheroes, Powers, Locations,
+                                        Organizations, and of course, Sightings! We have all of your Superhero Tracking
+                                        needs covered!
+                                        <br/><br/>
+                                        This Superhero Tracker is a Fullstack Web application that tracks Superheroes,
+                                        Powers, Sightings, Organizations, and Locations. It was developed using Java,
+                                        Spring Boot, JavaScript, Thymeleaf, SQL, and Bootstrap.
+                                        <br/><br/>
+                                        Special Thanks to: <a href="http://leafletjs.com">Leaflet JS</a>,
+                                        <a href ="https://www.openstreetmap.org/">OpenStreetMap</a>, and
+                                        <a href = "http://mapbox.com">Mapbox</a> for the maps,
+                                        <a href ="https://getbootstrap.com/">Bootstrap</a> for handling practically all of the CSS,
+                                        <a href="http://github.com">Github</a> for saving us more times than we can count,
+                                        and all the users of <a href = "http://stackoverflow.com">StackOverflow</a> for asking
+                                        all those questions all those years ago to help us future coders.
+                                    </p>
                                     <button type = "button" class = "btn btn-secondary text-center"
                                             data-dismiss = "modal">Close
                                     </button>
@@ -212,12 +212,12 @@
                 var longitude = lastTenSightings[i].location.longitude;
                 var latitude = lastTenSightings[i].location.latitude;
                 var date = lastTenSightings[i].date;
-	var d = new Date(date);
-	var ye = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(d);
-	var mo = new Intl.DateTimeFormat('en', {month: 'numeric'}).format(d);
-	var da = new Intl.DateTimeFormat('en', {day: '2-digit'}).format(d);
-	//                console.log(mo + "/" + da + "/" + ye);
-	var dateAsString = mo + "/" + da + "/" + ye;
+                var d = new Date(date);
+                var ye = new Intl.DateTimeFormat('en', {year: 'numeric'}).format(d);
+                var mo = new Intl.DateTimeFormat('en', {month: 'numeric'}).format(d);
+                var da = new Intl.DateTimeFormat('en', {day: '2-digit'}).format(d);
+                //                console.log(mo + "/" + da + "/" + ye);
+                var dateAsString = mo + "/" + da + "/" + ye;
                 var superheroName = lastTenSightings[i].superhero.superheroName;
                 var locationName = lastTenSightings[i].location.locationName;
                 var popupContents = dateAsString + " " + superheroName + " - " + locationName;
