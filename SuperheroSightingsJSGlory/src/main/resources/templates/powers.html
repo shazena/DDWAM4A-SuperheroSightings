@@ -128,7 +128,7 @@
                                 <div class="form-group row">
                                     <label for="name" class="col-3 col-form-label">Name</label>
                                     <div class="col-9">
-                                        <input type="text" name="name" id="name" class="form-control" required maxlength="50">
+                                        <input type="text" name="name" id="name" class="form-control">
                                     </div>
                                     <div th:if="${!errors.isEmpty()}" class="col-12">
                                         <p class="alert alert-danger" th:each="error : ${errors}"

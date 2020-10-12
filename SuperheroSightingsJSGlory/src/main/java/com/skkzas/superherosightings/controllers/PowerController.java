@@ -52,27 +52,35 @@ public class PowerController {
         List<Power> allPowers = powerDao.getAllPowers();
 
         model.addAttribute("allPowers", allPowers);
+        violations.clear();
         model.addAttribute("errors", violations);
 
         return "powers";
     }
 
     @PostMapping("addPower")
-    public String addPower(HttpServletRequest request) {
+    public String addPower(Model model, HttpServletRequest request) {
         String name = request.getParameter("name");
 
         Power power = new Power();
         power.setPowerName(name);
 
-//        powerDao.addPower(power);
         Validator validate = Validation.buildDefaultValidatorFactory().getValidator();
         violations = validate.validate(power);
 
         if (violations.isEmpty()) {
-            powerDao.addPower(power);
         }
 
-        return "redirect:/powers";
+        if (violations.isEmpty()) {
+            powerDao.addPower(power);
+            return "redirect:/powers";
+        } else {
+            List<Power> allPowers = powerDao.getAllPowers();
+            model.addAttribute("allPowers", allPowers);
+            model.addAttribute("errors", violations);
+            return "powers";
+        }
+
     }
 
     @GetMapping("powerDelete")
