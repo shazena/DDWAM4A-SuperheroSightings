@@ -8,7 +8,7 @@ package com.skkzas.superherosightings.dto;
  */
 public class ImageFolder {
 
-    private final String RESOURCE_ROOT = "C:/Users/Shazena/Documents/GITHUB/DDWAM4A-SuperheroSightings/SuperheroSightings/src/main/resources/static/";
+    private final String RESOURCE_ROOT = "C:/Users/Shazena/Documents/GITHUB/DDWAM4A-SuperheroSightings/SuperheroSightingsFUSED/src/main/resources/static/";
 
     public String getRESOURCE_ROOT() {
         return RESOURCE_ROOT;
