@@ -5,6 +5,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.Objects;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -18,7 +20,11 @@ public class Sighting {
     @NotBlank(message = "Date must not be empty.")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private LocalDate date;
+    @NotNull
+    @Valid
     private Location location;
+    @NotNull
+    @Valid
     private Superhero superhero;
 
     public int getSightingId() {
