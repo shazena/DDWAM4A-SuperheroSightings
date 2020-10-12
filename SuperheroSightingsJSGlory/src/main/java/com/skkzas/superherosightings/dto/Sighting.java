@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
 
 /**
  *
@@ -17,8 +18,9 @@ import javax.validation.constraints.NotNull;
 public class Sighting {
 
     private int sightingId;
-    @NotBlank(message = "Date must not be empty.")
+    @NotNull(message = "Date must be selected.")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @PastOrPresent(message = "Date cannot be in the future.")
     private LocalDate date;
     @NotNull
     @Valid
