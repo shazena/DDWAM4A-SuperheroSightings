@@ -33,8 +33,8 @@ INSERT INTO Organization(OrgName, Description, PhoneNumber, LocationId) VALUES
 ("Injustice League", "Dedicated to destruction, dominating the world, and defeating the Justice League", "4444444444", 6),
 ("Suicide Squad", "Group of super-villains who have license to take drastic action in the name of the mission", "5555555555", 6),
 ("Justice League Dark", "Branch of the Justice League dedicated to dealing with mystical and supernatural threats", "6666666666", 4),
-("Secret Society of Super Villains", "Villains whose goal is to remove 10 of the Justice League and Justice Society members to offset the Multi-verse", "7777777777", 6),
-("Legion of Doom", "Villains who, under Grodd, wanted to rewrite human DNA into becoming Gorillas, and under Luthor, wanted to reconstitute Braniac to fight the Justice League", "8888888888", 6);
+("Secret Society of Super Villains", "Villains whose goal is to remove 10 of the Justice League and Justice Society members to offset the Multi-verse", "7777777777", 1),
+("Legion of Doom", "Villains who, under Grodd, wanted to rewrite human DNA into becoming Gorillas, and under Luthor, wanted to reconstitute Braniac to fight the Justice League", "8888888888", 1);
 
 INSERT INTO superheroorganization(superheroId, orgId) VALUES 
 (1,1),
